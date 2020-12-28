@@ -1,2 +1,2 @@
 # RSSHub-go
-RSSHub go version
+RSSHub go version for https://github.com/DIYgod/RSSHub
