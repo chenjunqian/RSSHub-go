@@ -1,8 +1,7 @@
 package lib
 
 import (
-	"time"
-
+	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/gorilla/feeds"
 )
@@ -13,14 +12,14 @@ func GenerateRSS(data map[string]interface{}) string {
 		Link:        &feeds.Link{Href: gconv.String(data["link"])},
 		Description: gconv.String(data["description"]),
 		Author:      &feeds.Author{Name: gconv.String(data["author"])},
-		Created:     gconv.Time(data["created"]),
+		Created:     gconv.Time(data["pubDate"]),
 	}
 
 	feed.Items = make([]*feeds.Item, 0)
 	itemList := data["items"].([]map[string]string)
 
 	for _, item := range itemList {
-		createdTime, _ := time.Parse(time.RFC3339, item["created"])
+		createdTime := gtime.NewFromStr(item["pubDate"]).Time
 		feedItem := feeds.Item{
 			Title:       item["title"],
 			Link:        &feeds.Link{Href: item["link"]},

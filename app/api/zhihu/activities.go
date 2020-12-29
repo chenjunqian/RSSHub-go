@@ -3,7 +3,6 @@ package zhihu
 import (
 	"fmt"
 	"rsshub/lib"
-	"strconv"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
@@ -24,7 +23,7 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 			if mainDescription != "" {
 				mainDescription = jsonResp.GetString("data.0.actor.description")
 			}
-			rssData["title"] = mainTitle
+			rssData["title"] = fmt.Sprintf("%s的知乎动态", mainTitle)
 			rssData["description"] = mainDescription
 			rssData["link"] = url
 
@@ -32,11 +31,10 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 			for index := range respDataList {
 				var title string
 				var description string
-				var url string
+				var itemUrl string
 				var author string
 				contentType := jsonResp.GetString(fmt.Sprintf("data.%d.target.type", index))
 				switch contentType {
-
 				case "answer":
 					title = jsonResp.GetString(fmt.Sprintf("data.%d.target.question.title", index))
 					author = jsonResp.GetString(fmt.Sprintf("data.%d.target.author.name", index))
@@ -44,7 +42,7 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 					description = jsonResp.GetString(fmt.Sprintf("data.%d.target.content", index))
 					questionId := jsonResp.GetFloat64(fmt.Sprintf("data.%d.target.question.id", index))
 					answerId := jsonResp.GetFloat64(fmt.Sprintf("data.%d.target.id", index))
-					url = fmt.Sprint("https://www.zhihu.com/question/$s/answer/$s", questionId, answerId)
+					itemUrl = fmt.Sprint("https://www.zhihu.com/question/$s/answer/$s", questionId, answerId)
 				case "article":
 				case "pin":
 				case "question":
@@ -59,10 +57,9 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 				itemMap["title"] = title
 				itemMap["description"] = description
 				itemMap["author"] = author
-				timeStampStr := jsonResp.GetFloat64(fmt.Sprintf("data.%d.created_time", index))
-				timeStamp, _ := strconv.ParseInt(fmt.Sprintf("%f000", timeStampStr), 10, 64)
+				timeStamp := jsonResp.GetInt64(fmt.Sprintf("data.%d.created_time", index))
 				itemMap["pubDate"] = time.Unix(timeStamp, 0).String()
-				itemMap["url"] = url
+				itemMap["link"] = itemUrl
 				items = append(items, itemMap)
 			}
 
