@@ -2,6 +2,7 @@ module rsshub
 
 require (
 	github.com/gogf/gf v1.14.6
+	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/grokify/html-strip-tags-go v0.0.0-20200923094847-079d207a09f1 // indirect
 	github.com/kr/text v0.2.0 // indirect
