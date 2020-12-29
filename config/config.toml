@@ -9,3 +9,8 @@
     Path        = "/tmp/log/rsshub"
     Level       = "all"
     Stdout      = true
+
+[redis]
+host = "localhost:6379"
+password = "123456"
+db = 0

@@ -1,6 +1,7 @@
 module rsshub
 
 require (
+	github.com/anaskhan96/soup v1.2.4
 	github.com/gogf/gf v1.14.6
 	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/websocket v1.4.2 // indirect

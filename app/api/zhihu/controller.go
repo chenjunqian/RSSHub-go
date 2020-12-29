@@ -1,5 +1,12 @@
 package zhihu
 
+import (
+	"strings"
+
+	"github.com/gogf/gf/database/gredis"
+	"github.com/gogf/gf/frame/g"
+)
+
 type Controller struct {
 }
 
@@ -10,4 +17,24 @@ func getHeaders() map[string]string {
 	headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36 Edg/84.0.522.63"
 	headers["Authorization"] = "oauth c3cef7c66a1843f8b3a9e6a1e3160e20"
 	return headers
+}
+
+func getCookieMap() map[string]string {
+	redis := gredis.Instance("default")
+	if redis == nil {
+		return nil
+	}
+	zhihuCookies, err := g.Redis().DoVar("GET", "zhihu_cookies")
+	if err != nil {
+		return nil
+	}
+	cookieStringArray := strings.Split(zhihuCookies.String(), ";")
+	cookieMap := make(map[string]string)
+	for _, item := range cookieStringArray {
+		key := strings.Split(item, "=")[0]
+		value := strings.Split(item, "=")[1]
+		cookieMap[key] = value
+	}
+
+	return cookieMap
 }
