@@ -21,13 +21,14 @@ func GenerateRSS(data dao.RSSFeed) string {
 	itemList := data.Items
 
 	for _, item := range itemList {
-		createdTime := gtime.NewFromStr(item.Created).Time
 		feedItem := feeds.Item{
 			Title:       item.Title,
 			Link:        &feeds.Link{Href: item.Link},
 			Description: item.Description,
 			Author:      &feeds.Author{Name: item.Author},
-			Created:     createdTime,
+		}
+		if item.Created != "" {
+			feedItem.Created = gtime.NewFromStr(item.Created).Time
 		}
 		feed.Items = append(feed.Items, &feedItem)
 	}
