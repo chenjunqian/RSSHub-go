@@ -2,6 +2,7 @@ package zhihu
 
 import (
 	"fmt"
+	"rsshub/app/dao"
 	"rsshub/lib"
 	"time"
 
@@ -30,11 +31,11 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 			}
 		}
 
-		rssData := make(map[string]interface{})
-		rssData["title"] = fmt.Sprintf("%s的知乎回答", peopleName)
-		rssData["link"] = fmt.Sprintf("https://www.zhihu.com/people/%s/answers", peopleId)
+		rssData := dao.RSSFeed{}
+		rssData.Title = fmt.Sprintf("%s的知乎回答", peopleName)
+		rssData.Link = fmt.Sprintf("https://www.zhihu.com/people/%s/answers", peopleId)
 
-		items := make([]map[string]string, 0)
+		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {
 			title := jsonResp.GetString(fmt.Sprintf("data.%d.question.title", index))
 			questionId := jsonResp.GetString(fmt.Sprintf("data.%d.question.id", index))
@@ -55,18 +56,19 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 				description = fmt.Sprintf("<a href='%s' target='_blank'>%s</a>", link, title)
 			}
 
-			itemMap := make(map[string]string)
-			itemMap["title"] = title
-			itemMap["description"] = description
-			itemMap["author"] = peopleName
 			timeStamp := jsonResp.GetInt64(fmt.Sprintf("data.%d.created_time", index))
-			itemMap["pubDate"] = time.Unix(timeStamp, 0).String()
-			itemMap["link"] = link
-			items = append(items, itemMap)
+			rssItem := dao.RSSItem{
+				Title:       title,
+				Description: description,
+				Author:      peopleName,
+				Link:        link,
+				Created:     time.Unix(timeStamp, 0).String(),
+			}
+			items = append(items, rssItem)
 
 		}
 
-		rssData["items"] = items
+		rssData.Items = items
 		rssStr := lib.GenerateRSS(rssData)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}

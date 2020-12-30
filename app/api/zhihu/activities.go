@@ -2,6 +2,7 @@ package zhihu
 
 import (
 	"fmt"
+	"rsshub/app/dao"
 	"rsshub/lib"
 	"time"
 
@@ -20,17 +21,17 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("data")
 
-		rssData := make(map[string]interface{})
+		rssData := dao.RSSFeed{}
 		mainTitle := jsonResp.GetString("data.0.actor.name")
 		mainDescription := jsonResp.GetString("data.0.actor.headline")
 		if mainDescription != "" {
 			mainDescription = jsonResp.GetString("data.0.actor.description")
 		}
-		rssData["title"] = fmt.Sprintf("%s的知乎动态", mainTitle)
-		rssData["description"] = mainDescription
-		rssData["link"] = url
+		rssData.Title = fmt.Sprintf("%s的知乎动态", mainTitle)
+		rssData.Description = mainDescription
+		rssData.Link = url
 
-		items := make([]map[string]string, 0)
+		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {
 			var title string
 			var description string
@@ -119,17 +120,19 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 				itemUrl = fmt.Sprintf("https://www.zhihu.com/roundtable/%s", jsonResp.GetString(fmt.Sprintf("data.%d.target.id", index)))
 
 			}
-			itemMap := make(map[string]string)
-			itemMap["title"] = title
-			itemMap["description"] = description
-			itemMap["author"] = author
+
 			timeStamp := jsonResp.GetInt64(fmt.Sprintf("data.%d.created_time", index))
-			itemMap["pubDate"] = time.Unix(timeStamp, 0).String()
-			itemMap["link"] = itemUrl
-			items = append(items, itemMap)
+			rssItem := dao.RSSItem{
+				Title:       title,
+				Description: description,
+				Author:      author,
+				Link:        itemUrl,
+				Created:     time.Unix(timeStamp, 0).String(),
+			}
+			items = append(items, rssItem)
 		}
 
-		rssData["items"] = items
+		rssData.Items = items
 		rssStr := lib.GenerateRSS(rssData)
 		_ = req.Response.WriteXmlExit(rssStr)
 

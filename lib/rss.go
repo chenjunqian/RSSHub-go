@@ -1,30 +1,32 @@
 package lib
 
 import (
+	"rsshub/app/dao"
+
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/gorilla/feeds"
 )
 
-func GenerateRSS(data map[string]interface{}) string {
+func GenerateRSS(data dao.RSSFeed) string {
 	feed := &feeds.Feed{
-		Title:       gconv.String(data["title"]),
-		Link:        &feeds.Link{Href: gconv.String(data["link"])},
-		Description: gconv.String(data["description"]),
-		Author:      &feeds.Author{Name: gconv.String(data["author"])},
-		Created:     gconv.Time(data["pubDate"]),
+		Title:       data.Title,
+		Link:        &feeds.Link{Href: data.Link},
+		Description: data.Description,
+		Author:      &feeds.Author{Name: data.Author},
+		Created:     gconv.Time(data.Created),
 	}
 
 	feed.Items = make([]*feeds.Item, 0)
-	itemList := data["items"].([]map[string]string)
+	itemList := data.Items
 
 	for _, item := range itemList {
-		createdTime := gtime.NewFromStr(item["pubDate"]).Time
+		createdTime := gtime.NewFromStr(item.Created).Time
 		feedItem := feeds.Item{
-			Title:       item["title"],
-			Link:        &feeds.Link{Href: item["link"]},
-			Description: item["description"],
-			Author:      &feeds.Author{Name: item["author"]},
+			Title:       item.Title,
+			Link:        &feeds.Link{Href: item.Link},
+			Description: item.Description,
+			Author:      &feeds.Author{Name: item.Author},
 			Created:     createdTime,
 		}
 		feed.Items = append(feed.Items, &feedItem)

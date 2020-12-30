@@ -2,6 +2,7 @@ package zhihu
 
 import (
 	"fmt"
+	"rsshub/app/dao"
 	"rsshub/lib"
 
 	"github.com/anaskhan96/soup"
@@ -18,12 +19,12 @@ func (ctl *Controller) GetCollections(req *ghttp.Request) {
 	if resp, err := g.Client().SetHeaderMap(headers).SetCookieMap(cookieMap).Get(collectionGetUrl); err == nil {
 		doc := soup.HTMLParse(resp.ReadAllString())
 
-		rssData := make(map[string]interface{})
+		rssData := dao.RSSFeed{}
 		collectionTitle := doc.Find("div", "class", "CollectionDetailPageHeader-title").Text()
-		rssData["title"] = collectionTitle
-		rssData["link"] = collectionGetUrl
+		rssData.Title = collectionTitle
+		rssData.Link = collectionGetUrl
 
-		items := make([]map[string]string, 0)
+		items := make([]dao.RSSItem, 0)
 		collectionList := doc.FindAll("div", "class", "CollectionDetailPageItem-innerContainer")
 		fmt.Println("collectionList length : ", len(collectionList))
 		for _, collectionItem := range collectionList {
@@ -39,14 +40,15 @@ func (ctl *Controller) GetCollections(req *ghttp.Request) {
 				description = text
 			}
 
-			itemMap := make(map[string]string)
-			itemMap["title"] = itemTitle
-			itemMap["description"] = description
-			itemMap["link"] = linkUrl
-			items = append(items, itemMap)
+			rssItem := dao.RSSItem{
+				Title:       itemTitle,
+				Description: description,
+				Link:        linkUrl,
+			}
+			items = append(items, rssItem)
 		}
 
-		rssData["items"] = items
+		rssData.Items = items
 		rssStr := lib.GenerateRSS(rssData)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
