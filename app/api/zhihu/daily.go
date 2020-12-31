@@ -13,6 +13,12 @@ import (
 
 func (ctl *Controller) GetDaily(req *ghttp.Request) {
 
+	if value, err := g.Redis().DoVar("GET", "ZHIHU_DAILY"); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value)
+		}
+	}
+
 	dailyUrl := "https://news-at.zhihu.com/api/4/news/latest"
 	headers := getHeaders()
 	headers["Referer"] = dailyUrl
@@ -55,6 +61,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 					reg = regexp.MustCompile(`<\/?h2.*?>`)
 					feedItem.Description = reg.ReplaceAllString(feedItem.Description, "")
 					g.Redis().DoVar("SET", key, feedItem.Description)
+					g.Redis().DoVar("EXPIRE", key, 60*60*3)
 				}
 			}
 
@@ -63,6 +70,8 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := lib.GenerateRSS(rssData)
+		g.Redis().DoVar("SET", "ZHIHU_DAILY", rssData)
+		g.Redis().DoVar("EXPIRE", "ZHIHU_DAILY", 60*60*1)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }
