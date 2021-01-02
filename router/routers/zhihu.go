@@ -16,5 +16,6 @@ func ZhihubRouter(group *ghttp.RouterGroup) {
 		group.GET("/daily", zhihuController.GetDaily)
 		group.GET("/daily/section/:id", zhihuController.GetZhihuDailySection)
 		group.GET("/daily/hotlist", zhihuController.GetZhihuHostList)
+		group.GET("/pin/daily", zhihuController.GetZhihuPinDaily)
 	})
 }
