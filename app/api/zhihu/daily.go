@@ -45,7 +45,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 				continue
 			}
 			storyId := jsonResp.GetString(fmt.Sprintf("stories.%d.id", index))
-			key := fmt.Sprintf("zhihu_daily_%s", storyId)
+			key := fmt.Sprintf("ZHIHU_DAILY_%s", storyId)
 			value, _ := g.Redis().DoVar("GET", key)
 			if value.String() != "" {
 				// 如果缓存里有就使用缓存内容
@@ -60,8 +60,6 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 					feedItem.Description = reg.ReplaceAllString(feedItem.Description, `<strong>${1}</strong>`)
 					reg = regexp.MustCompile(`<\/?h2.*?>`)
 					feedItem.Description = reg.ReplaceAllString(feedItem.Description, "")
-					g.Redis().DoVar("SET", key, feedItem.Description)
-					g.Redis().DoVar("EXPIRE", key, 60*60*3)
 				}
 			}
 
@@ -70,7 +68,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := lib.GenerateRSS(rssData)
-		g.Redis().DoVar("SET", "ZHIHU_DAILY", rssData)
+		g.Redis().DoVar("SET", "ZHIHU_DAILY", rssStr)
 		g.Redis().DoVar("EXPIRE", "ZHIHU_DAILY", 60*60*1)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
