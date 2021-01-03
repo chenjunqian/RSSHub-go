@@ -25,7 +25,6 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Authorization"] = "oauth c3cef7c66a1843f8b3a9e6a1e3160e20"
 	headers["Referer"] = link
-	fmt.Println("topicGetUrl : ", topicGetUrl)
 	if resp, err := g.Client().SetHeaderMap(headers).Get(topicGetUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetJsons("data")
