@@ -21,7 +21,7 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 	apiMenuUrl := "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=" + userId
 	header := getHeaders()
 	header["Referer"] = "https://space.bilibili.com/" + userId
-	if menuResp, err := g.Client().SetHeaderMap(header).Get(apiMenuUrl); err == nil {
+	if menuResp, err := g.Client().SetHeaderMap(header).SetCookieMap(getCookieMap()).Get(apiMenuUrl); err == nil {
 		menuJsonResp := gjson.New(menuResp.ReadAllString())
 		dataJson := menuJsonResp.GetJson("data")
 		rssData.Description = dataJson.GetString("intro")

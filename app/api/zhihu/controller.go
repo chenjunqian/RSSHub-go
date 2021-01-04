@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"regexp"
 	"rsshub/app/dao"
-	"strings"
 	"time"
 
-	"github.com/gogf/gf/database/gredis"
+	"rsshub/app/service"
+
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 )
 
 type Controller struct {
@@ -25,22 +24,7 @@ func getHeaders() map[string]string {
 }
 
 func getCookieMap() map[string]string {
-	redis := gredis.Instance("default")
-	if redis == nil {
-		return nil
-	}
-	zhihuCookies, err := g.Redis().DoVar("GET", "zhihu_cookies")
-	if err != nil {
-		return nil
-	}
-	cookieStringArray := strings.Split(zhihuCookies.String(), ";")
-	cookieMap := make(map[string]string)
-	for _, item := range cookieStringArray {
-		key := strings.Split(item, "=")[0]
-		value := strings.Split(item, "=")[1]
-		cookieMap[key] = value
-	}
-
+	cookieMap := service.GetSiteCookies("zhihu")
 	return cookieMap
 }
 

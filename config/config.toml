@@ -1,14 +1,18 @@
 # HTTP Server
 [server]
-	Address     = ":8199"
-	ServerAgent = "rsshub"
-	LogPath     = "/tmp/log/rsshub/server"
+Address = ":8199"
+ServerAgent = "rsshub"
+LogPath = "/tmp/log/rsshub/server"
 
 # Logger.
 [logger]
-    Path        = "/tmp/log/rsshub"
-    Level       = "all"
-    Stdout      = true
+Path = "/tmp/log/rsshub"
+Level = "all"
+Stdout = true
 
 [redis]
 default = "127.0.0.1:6379,0,123456?idleTimeout=600"
+
+[cookies]
+zhihu = ''
+bilibili = ''
