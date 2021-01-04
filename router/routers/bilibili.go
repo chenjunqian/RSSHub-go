@@ -12,5 +12,6 @@ func BilibiliRouter(group *ghttp.RouterGroup) {
 		group.GET("/appversion/:id", bilibiliController.GetAppVersion)
 		group.GET("/user/article/:id", bilibiliController.GetUserArticle)
 		group.GET("/user/audio/:id", bilibiliController.GetUserAudio)
+		group.GET("/bangumi/:id", bilibiliController.GetBangumi)
 	})
 }
