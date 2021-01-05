@@ -44,3 +44,46 @@ func getUsernameFromUserId(id string) string {
 
 	return username
 }
+
+func getLiveIDFromShortID(id string) string {
+	redisKey := "BILI_LIVE_ID_FROM_SHORT_ID_" + id
+	var liveID string
+	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
+		if value.String() != "" {
+			liveID = value.String()
+			return liveID
+		}
+	}
+
+	apiUrl := "https://api.live.bilibili.com/room/v1/Room/room_init?id=" + id
+	header := getHeaders()
+	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+		respJson := gjson.New(resp.ReadAllString())
+		liveID = respJson.GetString("data.room_id")
+		g.Redis().DoVar("SET", redisKey, liveID)
+		g.Redis().DoVar("EXPIRE", redisKey, 60*60*24)
+	}
+
+	return liveID
+}
+
+func getUsernameFromLiveID(id string) string {
+	redisKey := "BILI_USERNAME_FROM_SHORT_ID_" + id
+	var username string
+	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
+		if value.String() != "" {
+			username = value.String()
+			return username
+		}
+	}
+
+	apiUrl := "https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid=" + id
+	header := getHeaders()
+	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+		respJson := gjson.New(resp.ReadAllString())
+		username = respJson.GetString("data.info.uname")
+		g.Redis().DoVar("SET", redisKey, username)
+		g.Redis().DoVar("EXPIRE", redisKey, 60*60*24)
+	}
+	return username
+}

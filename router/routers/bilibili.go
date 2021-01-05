@@ -16,5 +16,6 @@ func BilibiliRouter(group *ghttp.RouterGroup) {
 		group.GET("/blackboard", bilibiliController.GetBlackboard)
 		group.GET("/linkNews/:product", bilibiliController.GetLinkNews)
 		group.GET("/live/area/:areaId/:order", bilibiliController.GetLinvArea)
+		group.GET("/live/room/:roomId", bilibiliController.GetLinkRoom)
 	})
 }
