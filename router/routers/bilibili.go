@@ -20,5 +20,6 @@ func BilibiliRouter(group *ghttp.RouterGroup) {
 		group.GET("/manga/update/:id", bilibiliController.GetMangaUpdate)
 		group.GET("/readlist/:id", bilibiliController.GetReadList)
 		group.GET("/topic/:topicName", bilibiliController.GetTopic)
+		group.GET("/user/fav/:id", bilibiliController.GetUserFav)
 	})
 }
