@@ -17,7 +17,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 	redisKey := fmt.Sprintf("ZHIHU_DAILY_SECTION_%s", sectionId)
 	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value)
+			_ = req.Response.WriteXmlExit(value.String())
 		}
 	}
 

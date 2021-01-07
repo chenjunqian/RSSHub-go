@@ -12,7 +12,7 @@ func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
 	redisKey := "ZHIHU_PIN_DAILY"
 	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value)
+			_ = req.Response.WriteXmlExit(value.String())
 		}
 	}
 	hotListUrl := "https://api.zhihu.com/pins/special/972884951192113152/moments?order_by=newest&reverse_order=0&limit=20"

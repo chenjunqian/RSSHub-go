@@ -15,7 +15,7 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 	redisKey := "ZHIHU_HOT_LIST"
 	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value)
+			_ = req.Response.WriteXmlExit(value.String())
 		}
 	}
 	hotListUrl := "https://www.zhihu.com/api/v3/explore/guest/feeds?limit=40"

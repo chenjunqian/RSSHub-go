@@ -16,7 +16,7 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 	redisKey := "ZHIHU_TOPIC"
 	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value)
+			_ = req.Response.WriteXmlExit(value.String())
 		}
 	}
 

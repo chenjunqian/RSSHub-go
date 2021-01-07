@@ -12,7 +12,7 @@ func (ctl *Controller) GetZhihuPinHotList(req *ghttp.Request) {
 	redisKey := "ZHIHU_PIN_HOT_LIST"
 	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value)
+			_ = req.Response.WriteXmlExit(value.String())
 		}
 	}
 	hotListUrl := "https://api.zhihu.com/pins/hot_list?reverse_order=0"

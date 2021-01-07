@@ -15,7 +15,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 
 	if value, err := g.Redis().DoVar("GET", "ZHIHU_DAILY"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value)
+			_ = req.Response.WriteXmlExit(value.String())
 		}
 	}
 
