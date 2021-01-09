@@ -11,5 +11,6 @@ func init() {
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.Group("/zhihu", routers.ZhihubRouter)
 		group.Group("/bilibili", routers.BilibiliRouter)
+		group.Group("/bing", routers.BingRouter)
 	})
 }
