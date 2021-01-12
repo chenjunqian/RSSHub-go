@@ -14,5 +14,6 @@ func init() {
 		group.Group("/bing", routers.BingRouter)
 		group.Group("/weibo", routers.WeiboRouter)
 		group.Group("/199IT", routers.IT199Router)
+		group.Group("/36kr", routers.Kr36Router)
 	})
 }
