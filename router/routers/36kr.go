@@ -21,6 +21,6 @@ func Kr36Router(group *ghttp.RouterGroup) {
 		group.GET("/news/estate", kr36Controller.Get36krNews)
 		group.GET("/news/workplace", kr36Controller.Get36krNews)
 		group.GET("/news/other", kr36Controller.Get36krNews)
-
+		group.GET("/news/flashes", kr36Controller.Get36krNewsFlashes)
 	})
 }
