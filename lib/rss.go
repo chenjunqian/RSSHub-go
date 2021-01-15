@@ -14,6 +14,7 @@ func GenerateRSS(data dao.RSSFeed) string {
 		Link:        &feeds.Link{Href: data.Link},
 		Description: data.Description,
 		Author:      &feeds.Author{Name: data.Author},
+		Image:       &feeds.Image{Url: data.ImageUrl},
 		Created:     gconv.Time(data.Created),
 	}
 
@@ -28,7 +29,9 @@ func GenerateRSS(data dao.RSSFeed) string {
 			Author:      &feeds.Author{Name: item.Author},
 		}
 		if item.Created != "" {
-			feedItem.Created = gtime.NewFromStr(item.Created).Time
+			if gtime.NewFromStr(item.Created) != nil {
+				feedItem.Created = gtime.NewFromStr(item.Created).Time
+			}
 		}
 		feed.Items = append(feed.Items, &feedItem)
 	}

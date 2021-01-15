@@ -6,6 +6,7 @@ type RSSFeed struct {
 	Description string
 	Author      string
 	Created     string
+	ImageUrl    string
 	Items       []RSSItem
 }
 
