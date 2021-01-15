@@ -23,6 +23,7 @@ func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
 	rssData.Title = fmt.Sprintf("%s 直播间开播状态", name)
 	rssData.Link = "https://live.bilibili.com/" + roomId
 	rssData.Description = rssData.Title
+	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 	apiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/Room/get_info?room_id=%s&from=room", roomId)
 	header := getHeaders()

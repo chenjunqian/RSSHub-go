@@ -23,6 +23,7 @@ func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
 		rssData.Link = "https://www.zhihu.com/pin/special/972884951192113152"
 		rssData.Description = "汇集每天的社会大事、行业资讯，让你用最简单的方式获得想法里的新闻"
 		rssData.Items = getPinRSSItems(resp.ReadAllString())
+		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		rssStr := lib.GenerateRSS(rssData)
 		g.Redis().DoVar("SET", redisKey, rssStr)
 		g.Redis().DoVar("EXPIRE", redisKey, 60*60*6)

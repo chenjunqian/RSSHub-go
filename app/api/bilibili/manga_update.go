@@ -32,6 +32,7 @@ func (ctl *Controller) GetMangaUpdate(req *ghttp.Request) {
 		rssData.Title = title + " - 哔哩哔哩漫画"
 		rssData.Author = author
 		rssData.Description = dataJson.GetString("classic_lines")
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 		epJsonList := dataJson.GetJsons("ep_list")[:20]
 		rssItems := make([]dao.RSSItem, 0)

@@ -22,6 +22,7 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 		rssData.Title = topicName + "的全部话题"
 		rssData.Link = fmt.Sprintf("https://www.bilibili.com/tag/%s/feed", topicName)
 		rssData.Description = rssData.Title
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 		rssItems := make([]dao.RSSItem, 0)
 		for _, cardJson := range cardJsonList {
 			cardStr := cardJson.GetString("card")

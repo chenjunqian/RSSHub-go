@@ -28,6 +28,7 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 		rssData.Title = "知乎热榜"
 		rssData.Link = "https://www.zhihu.com/billboard"
 		rssData.Description = "知乎热榜"
+		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {
 			itemType := jsonResp.GetString(fmt.Sprintf("data.%d.target.type", index))

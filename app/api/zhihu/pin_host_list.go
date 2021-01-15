@@ -23,6 +23,7 @@ func (ctl *Controller) GetZhihuPinHotList(req *ghttp.Request) {
 		rssData.Link = "https://www.zhihu.com/"
 		rssData.Description = "每小时更新一次"
 		rssData.Items = getPinRSSItems(resp.ReadAllString())
+		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		rssStr := lib.GenerateRSS(rssData)
 		g.Redis().DoVar("SET", redisKey, rssStr)
 		g.Redis().DoVar("EXPIRE", redisKey, 60*60*6)

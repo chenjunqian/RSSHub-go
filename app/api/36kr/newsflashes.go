@@ -21,8 +21,9 @@ func (ctl *Controller) Get36krNewsFlashes(req *ghttp.Request) {
 
 	apiUrl := "https://36kr.com/newsflashes"
 	rssData := dao.RSSFeed{
-		Title: "快讯 - 36氪",
-		Link:  apiUrl,
+		Title:    "快讯 - 36氪",
+		Link:     apiUrl,
+		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 

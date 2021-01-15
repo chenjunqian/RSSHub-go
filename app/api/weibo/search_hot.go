@@ -24,6 +24,7 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 		Title:       "微博热搜榜",
 		Link:        "https://s.weibo.com/top/summary?cate=realtimehot",
 		Description: "实时热点，每10分钟更新一次",
+		ImageUrl:    "https://h5.sinaimg.cn/m/weibo-lite/icon-default-192.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(headers).Get(apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())

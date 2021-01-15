@@ -17,6 +17,7 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 
 	rssData := dao.RSSFeed{}
 	rssData.Link = link
+	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 	apiMenuUrl := "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=" + userId
 	header := getHeaders()

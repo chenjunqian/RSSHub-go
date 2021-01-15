@@ -32,6 +32,7 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 		rssData := dao.RSSFeed{}
 		rssData.Title = fmt.Sprintf("知乎话题-%s", topicId)
 		rssData.Link = link
+		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		items := make([]dao.RSSItem, 0)
 		for _, dataJson := range respDataList {
 			var title string

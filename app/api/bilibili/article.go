@@ -26,6 +26,7 @@ func (ctl *Controller) GetUserArticle(req *ghttp.Request) {
 		rssData.Title = username + " 的 bilibili 专栏"
 		rssData.Link = fmt.Sprintf("https://space.bilibili.com/%s/#/article", userId)
 		rssData.Description = rssData.Title
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 		items := make([]dao.RSSItem, 0)
 		for _, articleJson := range articleJsons {
 			rssItem := dao.RSSItem{}

@@ -20,6 +20,7 @@ func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
 	rssData.Title = "bilibili 话题列表"
 	rssData.Link = "https://www.bilibili.com/blackboard/topic_list.html#/"
 	rssData.Description = "bilibili 话题列表"
+	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		dataJsonList := jsonResp.GetJsons("data.list")

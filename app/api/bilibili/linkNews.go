@@ -35,6 +35,7 @@ func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
 		rssData.Title = fmt.Sprintf("bilibili %s公告", productTitle)
 		rssData.Link = fmt.Sprintf("https://link.bilibili.com/p/eden/news#/?tab=%s&tag=all&page_no=1", product)
 		rssData.Description = rssData.Title
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 		items := make([]dao.RSSItem, 0)
 		itemJsons := jsonResp.GetJsons("data.items")

@@ -22,6 +22,7 @@ func (ctl *Controller) GetReadList(req *ghttp.Request) {
 		dataJson := respData.GetJson("data")
 		rssData.Title = "bilibili 专栏文集 - " + dataJson.GetString("list.name")
 		rssData.Link = "https://www.bilibili.com/read/readlist/rl" + id
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 		if dataJson.GetString("list.summary") == "" {
 			rssData.Description = "作者很懒，还木有写简介.....((/- -)/"

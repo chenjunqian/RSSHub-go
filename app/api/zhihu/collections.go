@@ -23,6 +23,7 @@ func (ctl *Controller) GetCollections(req *ghttp.Request) {
 		collectionTitle := doc.Find("div", "class", "CollectionDetailPageHeader-title").Text()
 		rssData.Title = collectionTitle
 		rssData.Link = collectionGetUrl
+		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 
 		items := make([]dao.RSSItem, 0)
 		collectionList := doc.FindAll("div", "class", "CollectionDetailPageItem-innerContainer")

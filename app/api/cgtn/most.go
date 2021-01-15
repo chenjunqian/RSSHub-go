@@ -22,8 +22,9 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 
 	apiUrl := "https://www.cgtn.com/most-read"
 	rssData := dao.RSSFeed{
-		Title: "CGTN - Most " + linkType,
-		Link:  apiUrl,
+		Title:    "CGTN - Most " + linkType,
+		Link:     apiUrl,
+		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		docs := soup.HTMLParse(resp.ReadAllString())

@@ -65,6 +65,7 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 		rssData.Title = fmt.Sprintf("哔哩哔哩直播-%s·%s分区-%s", parentTitle, areaTitle, orderTitle)
 		rssData.Link = areaLink
 		rssData.Description = rssData.Title
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 		rssItems := make([]dao.RSSItem, 0)
 		areaApiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/area/getRoomList?area_id=%s&sort_type=%s&page_size=30&page_no=1", areaId, order)

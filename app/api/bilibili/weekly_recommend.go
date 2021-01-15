@@ -25,6 +25,7 @@ func (ctl *Controller) GetWeeklyRecommend(req *ghttp.Request) {
 	rssData.Description = "B站每周必看"
 	rssData.Title = "B站每周必看"
 	rssData.Link = "https://www.bilibili.com/h5/weekly-recommend"
+	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 	if statusResp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
 		statusDataJson := gjson.New(statusResp.ReadAllString())
 		weeklyNumber := statusDataJson.GetString("data.0.number")

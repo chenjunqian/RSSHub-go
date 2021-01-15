@@ -30,6 +30,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 		rssData.Title = "知乎日报"
 		rssData.Link = dailyUrl
 		rssData.Description = "每天3次，每次7分钟"
+		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 
 		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {

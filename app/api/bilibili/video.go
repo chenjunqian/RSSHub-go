@@ -21,6 +21,7 @@ func (ctl *Controller) GetUserVideo(req *ghttp.Request) {
 		rssData.Title = username + " 的 bilibili 空间"
 		rssData.Link = "https://space.bilibili.com/" + id
 		rssData.Description = rssData.Title
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 		videoJsonList := dataJson.GetJsons("data.list.vlist")
 		rssItems := make([]dao.RSSItem, 0)

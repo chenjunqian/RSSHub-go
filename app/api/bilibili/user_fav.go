@@ -21,6 +21,7 @@ func (ctl *Controller) GetUserFav(req *ghttp.Request) {
 		rssData.Title = username + " 的 bilibili 收藏夹"
 		rssData.Link = fmt.Sprintf("https://space.bilibili.com/%s/#/favlist", id)
 		rssData.Description = rssData.Title
+		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
 
 		archiveJsonList := dataJson.GetJsons("data.archives")
 		rssItems := make([]dao.RSSItem, 0)

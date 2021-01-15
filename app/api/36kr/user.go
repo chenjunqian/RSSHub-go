@@ -22,7 +22,8 @@ func (ctl *Controller) Get36krUserNews(req *ghttp.Request) {
 
 	apiUrl := "https://36kr.com/user/" + userId
 	rssData := dao.RSSFeed{
-		Link: apiUrl,
+		Link:     apiUrl,
+		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		reg := regexp.MustCompile(`"authorDetailData":(.*?),"channel":`)

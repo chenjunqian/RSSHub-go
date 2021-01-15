@@ -18,8 +18,9 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 
 	apiUrl := "https://www.cgtn.com/"
 	rssData := dao.RSSFeed{
-		Title: "CGTN - Top News",
-		Link:  apiUrl,
+		Title:    "CGTN - Top News",
+		Link:     apiUrl,
+		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		docs := soup.HTMLParse(resp.ReadAllString())
