@@ -12,11 +12,11 @@ import (
 
 func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 
-	//if value, err := g.Redis().DoVar("GET", "DAY_ONE_BLOG"); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", "DAY_ONE_BLOG"); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	apiUrl := "https://dayoneapp.com/blog/"
 	rssData := dao.RSSFeed{
 		Title: "Day One Blog",
