@@ -45,7 +45,7 @@ func (ctl *Controller) GetWeeklyRecommend(req *ghttp.Request) {
 
 				recommendReason := dataJson.GetString("rcmd_reason")
 				cover := dataJson.GetString("cover")
-				itemDescription := fmt.Sprintf("%s %s<br>%s<br><img src=\"%s\">", weeklyName, itemTitle, recommendReason, cover)
+				itemDescription := fmt.Sprintf("<br><img src=\"%s\"><br>%s %s<br>%s", cover, weeklyName, itemTitle, recommendReason)
 				rssItem.Description = itemDescription
 
 				weeklyNumberFloat, _ := strconv.ParseFloat(weeklyNumber, 64)

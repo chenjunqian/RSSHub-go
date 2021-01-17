@@ -38,7 +38,7 @@ func (ctl *Controller) Get36krUserNews(req *ghttp.Request) {
 			for _, itemJson := range itemListJson {
 				widgetContent := itemJson.GetString("templateMaterial.widgetContent")
 				widgetImage := itemJson.GetString("templateMaterial.widgetImage")
-				description := fmt.Sprintf("%s<br><img src='%s'>", widgetContent, widgetImage)
+				description := fmt.Sprintf("<img src='%s'><br>%s", widgetImage, widgetContent)
 				rssItem := dao.RSSItem{
 					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
 					Created:     itemJson.GetString("templateMaterial.publishTime"),

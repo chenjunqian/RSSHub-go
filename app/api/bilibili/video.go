@@ -30,7 +30,7 @@ func (ctl *Controller) GetUserVideo(req *ghttp.Request) {
 			rssItem.Title = videoJson.GetString("title")
 			desc := videoJson.GetString("description")
 			picId := videoJson.GetString("pic")
-			rssItem.Description = fmt.Sprintf("%s<br><img src=\"%s\">", desc, picId)
+			rssItem.Description = fmt.Sprintf("<img src=\"%s\"><br>%s", picId, desc)
 			rssItem.Created = videoJson.GetString("created")
 			if videoJson.GetFloat64("created") > videoJson.GetFloat64("bvidTime") && videoJson.GetFloat64("created") > videoJson.GetFloat64("bvid") {
 				rssItem.Link = "https://www.bilibili.com/video/" + videoJson.GetString("bvid")

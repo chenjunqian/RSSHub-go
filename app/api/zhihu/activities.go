@@ -102,7 +102,7 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 				// TODO format the content with images
 				intro := jsonResp.GetString(fmt.Sprintf("data.%d.target.intro", index))
 				imageUrl := jsonResp.GetString(fmt.Sprintf("data.%d.target.image_url", index))
-				description = fmt.Sprintf("<p>%s}</p><p><img src='%s'/></p>", intro, imageUrl)
+				description = fmt.Sprintf("<p>%s</p><p><img src='%s'/></p>", intro, imageUrl)
 				itemUrl = fmt.Sprintf("https://zhuanlan.zhihu.com/%s", jsonResp.GetString(fmt.Sprintf("data.%d.target.id", index)))
 			case "topic":
 				title = jsonResp.GetString(fmt.Sprintf("data.%d.target.name", index))

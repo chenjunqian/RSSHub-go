@@ -41,7 +41,7 @@ func parseNews(htmlStr string) []dao.RSSItem {
 		summary := informationJson.GetString("templateMaterial.summary")
 		author := informationJson.GetString("templateMaterial.authorName")
 		imgLink := informationJson.GetString("templateMaterial.widgetImage")
-		rssItem.Description = fmt.Sprintf("%s<br><img src='%s'>", summary, imgLink)
+		rssItem.Description = fmt.Sprintf("<img src='%s'><br>%s", imgLink, summary)
 		rssItem.Author = author
 
 		rssItems = append(rssItems, rssItem)

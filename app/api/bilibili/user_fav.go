@@ -30,7 +30,7 @@ func (ctl *Controller) GetUserFav(req *ghttp.Request) {
 			rssItem.Title = archiveJson.GetString("title")
 			desc := archiveJson.GetString("desc")
 			picId := archiveJson.GetString("pic")
-			rssItem.Description = fmt.Sprintf("%s<br><img src=\"%s\">", desc, picId)
+			rssItem.Description = fmt.Sprintf("<img src=\"%s\"><br>%s", picId, desc)
 			rssItem.Created = archiveJson.GetString("fav_at")
 			if archiveJson.GetFloat64("fav_at") > archiveJson.GetFloat64("bvidTime") && archiveJson.GetFloat64("fav_at") > archiveJson.GetFloat64("bvid") {
 				rssItem.Link = archiveJson.GetString("bvid")
