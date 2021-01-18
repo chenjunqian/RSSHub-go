@@ -30,7 +30,13 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataDocs := range dataDocsList {
 			title := dataDocs.Find("a", "class", "link-title").Text()
-			link := dataDocs.Find("a", "class", "link-title").Attrs()["href"]
+			linkFrom := dataDocs.Find("div", "class", "link-from")
+			var link string
+			if linkFrom.Error != nil || linkFrom.Text() == "" {
+				link = apiUrl + dataDocs.Find("a", "class", "link-title").Attrs()["href"]
+			} else {
+				link = dataDocs.Find("a", "class", "link-title").Attrs()["href"]
+			}
 			imageLink := dataDocs.Find("img", "class", "image-scale").Attrs()["src"]
 			time := dataDocs.Find("span", "class", "time-update").Attrs()["data-time"]
 			author := dataDocs.Find("span", "class", "author-name").Text()
