@@ -17,11 +17,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "DSB_INDEX_" + linkType
-	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	apiUrl := "https://www.dsb.cn/" + linkConfig.ChannelId
 	rssData := dao.RSSFeed{
 		Title:       "电商报 - " + linkConfig.Title,
