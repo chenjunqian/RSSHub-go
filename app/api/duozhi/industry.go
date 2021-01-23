@@ -24,7 +24,7 @@ func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
 		Title:       "多知 - " + linkConfig.Title,
 		Link:        apiUrl,
 		Description: "多知网 - 独立商业视角 新锐教育观察",
-		ImageUrl:    "ttp://www.duozhi.com/favicon.ico",
+		ImageUrl:    "http://www.duozhi.com/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssData.Items = commonParser(resp.ReadAllString())
