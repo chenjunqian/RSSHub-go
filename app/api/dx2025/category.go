@@ -20,11 +20,11 @@ func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
 	}
 
 	cacheKey := fmt.Sprintf("DX2025_%s_%s", categoryType, linkConfig.ChannelId)
-	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	var dxRouteType string
 	var apiUrl string
 	var feedTitle string
