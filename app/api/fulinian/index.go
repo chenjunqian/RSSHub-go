@@ -15,11 +15,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	linkConfig := getInfoLinks()[linkType]
 
 	cacheKey := "FULINIAN_INDEX_" + linkConfig.ChannelId
-	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	apiUrl := "https://www.fulinian.com/" + linkConfig.ChannelId
 	rssData := dao.RSSFeed{
 		Title:       "福利年 " + linkConfig.Title,
