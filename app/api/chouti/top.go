@@ -1,7 +1,6 @@
 package chouti
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -43,7 +42,7 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>", imageLink),
+				Description: lib.GenerateDescription(imageLink, ""),
 				Author:      author,
 				Created:     time,
 			}

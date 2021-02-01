@@ -1,7 +1,6 @@
 package dianshangbao
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -53,7 +52,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+				Description: lib.GenerateDescription(imageLink, content),
 			}
 			rssItems = append(rssItems, rssItem)
 		}

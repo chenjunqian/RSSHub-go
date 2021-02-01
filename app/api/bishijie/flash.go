@@ -1,7 +1,6 @@
 package bishijie
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -46,7 +45,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 				imageDiv := newsSubDiv.Find("img")
 				if imageDiv.Error == nil {
 					imageLink = imageDiv.Attrs()["src"]
-					description = fmt.Sprintf("<img src='%s'><br>%s", imageLink, content)
+					description = lib.GenerateDescription(imageLink, content)
 				} else {
 					description = content
 				}

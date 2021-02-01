@@ -1,7 +1,6 @@
 package idaily
 
 import (
-	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -39,7 +38,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", coverImageLink, content),
+				Description: lib.GenerateDescription(coverImageLink, content),
 				Created:     time,
 			}
 			rssItems = append(rssItems, rssItem)

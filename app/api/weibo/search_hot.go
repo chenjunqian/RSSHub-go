@@ -34,7 +34,7 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 			rssItem := dao.RSSItem{}
 			rssItem.Title = dataJson.GetString("desc")
 			rssItem.Link = "https://m.weibo.cn/search?containerid=100103type%3D1%26q%3D" + dataJson.GetString("desc")
-			rssItem.Description = dataJson.GetString("desc")
+			rssItem.Description = lib.GenerateDescription("", dataJson.GetString("desc"))
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems

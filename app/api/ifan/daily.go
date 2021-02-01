@@ -1,7 +1,6 @@
 package ifan
 
 import (
-	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -35,7 +34,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			time := itemJson.GetString("created_at")
 			imageLink := itemJson.GetString("post_cover_image")
 			content := itemJson.GetString("post_content")
-			description := fmt.Sprintf("<img src='%s'><br>%s", imageLink, content)
+			description := lib.GenerateDescription(imageLink, content)
 
 			rssItem.Title = title
 			rssItem.Created = time

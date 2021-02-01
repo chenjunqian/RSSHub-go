@@ -48,7 +48,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>", imageLink),
+				Description: lib.GenerateDescription(imageLink, ""),
 				Author:      author,
 				Created:     time,
 			}

@@ -1,9 +1,9 @@
 package _199IT
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"rsshub/app/dao"
+	"rsshub/lib"
 )
 
 type Controller struct {
@@ -23,7 +23,7 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 	for _, article := range articleList {
 		title := article.Find("h2", "class", "entry-title").Find("a").Attrs()["title"]
 		thumbnail := article.Find("img", "class", "attachment-post-thumbnail").Attrs()["src"]
-		description := fmt.Sprintf("<img src='%s'>", thumbnail)
+		description := lib.GenerateDescription(thumbnail, "")
 		time := article.Find("time", "class", "entry-date").Attrs()["datetime"]
 		link := article.Find("h2", "class", "entry-title").Find("a").Attrs()["href"]
 		rssItem := dao.RSSItem{

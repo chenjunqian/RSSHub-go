@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"regexp"
 	"rsshub/app/dao"
+	"rsshub/lib"
 )
 
 type Controller struct {
@@ -52,7 +53,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,
-			Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+			Description: lib.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

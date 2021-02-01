@@ -33,7 +33,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        "http://www.mittrchina.com/newsflash",
-				Description: content,
+				Description: lib.GenerateDescription("", content),
 				Author:      "MIT 中国",
 				Created:     time,
 			}

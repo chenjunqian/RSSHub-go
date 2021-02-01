@@ -1,7 +1,6 @@
 package bishijie
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -12,11 +11,11 @@ import (
 
 func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 
-	//if value, err := g.Redis().DoVar("GET", "BISHIJIE_SHENDU"); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", "BISHIJIE_SHENDU"); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	apiUrl := "https://www.bishijie.com/shendu"
 	rssData := dao.RSSFeed{
 		Title:       "币世界-深度",
@@ -43,7 +42,7 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+				Description: lib.GenerateDescription(imageLink, content),
 			}
 			rssItems = append(rssItems, rssItem)
 		}

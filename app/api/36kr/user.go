@@ -1,7 +1,6 @@
 package _36kr
 
 import (
-	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -38,7 +37,7 @@ func (ctl *Controller) Get36krUserNews(req *ghttp.Request) {
 			for _, itemJson := range itemListJson {
 				widgetContent := itemJson.GetString("templateMaterial.widgetContent")
 				widgetImage := itemJson.GetString("templateMaterial.widgetImage")
-				description := fmt.Sprintf("<img src='%s'><br>%s", widgetImage, widgetContent)
+				description := lib.GenerateDescription(widgetImage, widgetContent)
 				rssItem := dao.RSSItem{
 					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
 					Created:     itemJson.GetString("templateMaterial.publishTime"),

@@ -1,10 +1,10 @@
 package _36kr
 
 import (
-	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
 	"regexp"
 	"rsshub/app/dao"
+	"rsshub/lib"
 )
 
 type Controller struct {
@@ -41,7 +41,7 @@ func parseNews(htmlStr string) []dao.RSSItem {
 		summary := informationJson.GetString("templateMaterial.summary")
 		author := informationJson.GetString("templateMaterial.authorName")
 		imgLink := informationJson.GetString("templateMaterial.widgetImage")
-		rssItem.Description = fmt.Sprintf("<img src='%s'><br>%s", imgLink, summary)
+		rssItem.Description = lib.GenerateDescription(imgLink, summary)
 		rssItem.Author = author
 
 		rssItems = append(rssItems, rssItem)

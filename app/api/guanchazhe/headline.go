@@ -1,7 +1,6 @@
 package guanchazhe
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -50,7 +49,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Author:      author,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+				Description: lib.GenerateDescription(imageLink, content),
 				Created:     time,
 			}
 			rssItemList = append(rssItemList, rssItem)

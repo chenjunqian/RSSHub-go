@@ -1,7 +1,6 @@
 package baidu
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gcharset"
 	"github.com/gogf/gf/frame/g"
@@ -45,7 +44,7 @@ func (ctl *Controller) GetZhiDaoDaily(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+				Description: lib.GenerateDescription(imageLink, content),
 			}
 			rssItems = append(rssItems, rssItem)
 		}

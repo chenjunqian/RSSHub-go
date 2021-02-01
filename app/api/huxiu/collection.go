@@ -53,7 +53,7 @@ func (ctl *Controller) GetCollection(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Author:      author,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+				Description: lib.GenerateDescription(imageLink, content),
 				Created:     time,
 			}
 			rssItems = append(rssItems, rssItem)

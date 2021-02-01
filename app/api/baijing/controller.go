@@ -1,9 +1,9 @@
 package baijing
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"rsshub/app/dao"
+	"rsshub/lib"
 )
 
 type Controller struct {
@@ -28,7 +28,7 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 		if articleDoc.Find("div", "class", "articleSingle-content").Error == nil {
 			content = articleDoc.Find("div", "class", "articleSingle-content").Find("p").Text()
 		}
-		description := fmt.Sprintf("<img src='%s'><br>%s", imageLink, content)
+		description := lib.GenerateDescription(imageLink, content)
 
 		rssItem := dao.RSSItem{
 			Title:       title,

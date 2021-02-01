@@ -1,7 +1,6 @@
 package huxiu
 
 import (
-	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/encoding/gurl"
 	"github.com/gogf/gf/frame/g"
@@ -54,7 +53,7 @@ func (ctl *Controller) GetArticle(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Author:      author,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+				Description: lib.GenerateDescription(imageLink, content),
 				Created:     time,
 			}
 			rssItems = append(rssItems, rssItem)

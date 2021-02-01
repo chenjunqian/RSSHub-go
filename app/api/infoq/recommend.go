@@ -1,7 +1,6 @@
 package infoq
 
 import (
-	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -36,7 +35,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, summary),
+				Description: lib.GenerateDescription(imageLink, summary),
 				Author:      author,
 			}
 			rssItems = append(rssItems, rssItem)
