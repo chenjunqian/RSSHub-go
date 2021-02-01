@@ -45,11 +45,16 @@ func GenerateRSS(data dao.RSSFeed) string {
 
 func GenerateDescription(imageLink, content string) (description string) {
 	var imageHtml string
+	var contentHtml string
+	var htmlString string
 	if imageLink != "" {
 		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
+		contentHtml = "<div style='position: absolute;bottom: 8px;left: 8px;' >" + content + "</div>"
+		htmlString = "<div style='position: relative;text-align: left;color: White;'>" + imageHtml + contentHtml + "</div>"
+	} else {
+		contentHtml = "<div >" + content + "</div>"
+		htmlString = "<div style='position: relative;text-align: left;'>" + contentHtml + "</div>"
 	}
-	contentHtml := "<div style='position: absolute;bottom: 8px;left: 8px;' >" + content + "</div>"
-	htmlString := "<div style='position: relative;text-align: center;color: white;'>" + imageHtml + contentHtml + "</div>"
 	description = htmlString
 	return
 }
