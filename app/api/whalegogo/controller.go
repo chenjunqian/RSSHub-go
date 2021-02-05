@@ -24,7 +24,6 @@ func getHeaders() map[string]string {
 
 func indexParser(jsonString string) (items []dao.RSSItem) {
 	respJson := gjson.New(jsonString)
-	fmt.Println(jsonString)
 	articleList := respJson.GetJsons("response.items.item")
 
 	for _, article := range articleList {
