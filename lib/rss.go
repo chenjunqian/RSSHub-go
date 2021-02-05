@@ -49,11 +49,11 @@ func GenerateDescription(imageLink, content string) (description string) {
 	var htmlString string
 	if imageLink != "" {
 		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
-		contentHtml = "<div style='position: absolute;bottom: 8px;left: 8px;' >" + content + "</div>"
+		contentHtml = "<div style='position: absolute;bottom: 8px;left: 8px;font-size: 25px;' >" + content + "</div>"
 		htmlString = "<div style='position: relative;text-align: left;color: White;'>" + imageHtml + contentHtml + "</div>"
 	} else {
 		contentHtml = "<div >" + content + "</div>"
-		htmlString = "<div style='position: relative;text-align: left;'>" + contentHtml + "</div>"
+		htmlString = "<div style='position: relative;text-align: left;font-size: 25px;'>" + contentHtml + "</div>"
 	}
 	description = htmlString
 	return

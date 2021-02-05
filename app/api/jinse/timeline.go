@@ -19,7 +19,7 @@ func (ctl *Controller) GetTimeline(req *ghttp.Request) {
 		Title:       "金色财经 - 头条",
 		Link:        "https://www.jinse.com/",
 		Description: "金色财经是集行业新闻、资讯、行情、数据等一站式区块链产业服务平台，我们追求及时、全面、专业、准确的资讯与数据，致力于为区块链创业者以及数字货币投资者提供最好的产品和服务。",
-		ImageUrl:    "https://www.gcores.com/favicon.ico?",
+		ImageUrl:    "https://www.jinse.com/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := timelineParser(resp.ReadAllString())
