@@ -43,5 +43,6 @@ func init() {
 		group.Group("/gcore", routers.GCoreRouter)
 		group.Group("/jinse", routers.JinseRouter)
 		group.Group("/whalegogo", routers.WhaleGoGoRouter)
+		group.Group("/juesheng", routers.JueShengRouter)
 	})
 }
