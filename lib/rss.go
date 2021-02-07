@@ -50,7 +50,7 @@ func GenerateDescription(imageLink, content string) (description string) {
 	if imageLink != "" {
 		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
 		contentHtml = "<div style='position: absolute;bottom: 8px;left: 8px;font-size: 20px;' >" + content + "</div>"
-		htmlString = "<div style='position: relative;text-align: left;color: White;'>" + imageHtml + contentHtml + "</div>"
+		htmlString = "<meta name='referrer' content='no-referrer' /><div style='position: relative;text-align: left;color: White;'>" + imageHtml + contentHtml + "</div>"
 	} else {
 		contentHtml = "<div >" + content + "</div>"
 		htmlString = "<div style='position: relative;text-align: left;font-size: 18px;'>" + contentHtml + "</div>"
