@@ -71,6 +71,9 @@ func getInfoLinks() map[string]LinkRouteConfig {
 		"hot": {
 			ChannelId: "hot",
 			Title:     "热门博文"},
+		"new": {
+			ChannelId: "new",
+			Title:     "最新博文"},
 	}
 
 	return Links

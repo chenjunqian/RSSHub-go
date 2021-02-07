@@ -10,5 +10,6 @@ func ScienceNetRouter(group *ghttp.RouterGroup) {
 		sciencenetCtl := new(sciencenet.Controller)
 		group.GET("/recommend", sciencenetCtl.GetIndex)
 		group.GET("/hot", sciencenetCtl.GetIndex)
+		group.GET("/new", sciencenetCtl.GetIndex)
 	})
 }
