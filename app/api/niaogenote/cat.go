@@ -15,11 +15,11 @@ func (ctl *Controller) GetCat(req *ghttp.Request) {
 	linkConfig := getInfoLinks()[linkType]
 
 	cacheKey := "NGBJ_CAT_" + linkConfig.ChannelId
-	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	apiUrl := "https://www.niaogebiji.com/cat/" + linkConfig.ChannelId
 	rssData := dao.RSSFeed{
 		Title:       "鸟哥笔记 - " + linkConfig.Title,
