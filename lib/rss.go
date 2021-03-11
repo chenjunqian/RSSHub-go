@@ -32,6 +32,11 @@ func GenerateRSS(data dao.RSSFeed) string {
 			if gtime.NewFromStr(item.Created) != nil {
 				feedItem.Created = gtime.NewFromStr(item.Created).Time
 			}
+		} else {
+			nowTime := gtime.Now().Format("Y-m-d H:i:s.u")
+			if gtime.NewFromStr(nowTime) != nil {
+				feedItem.Created = gtime.NewFromStr(nowTime).Time
+			}
 		}
 		feed.Items = append(feed.Items, &feedItem)
 	}
