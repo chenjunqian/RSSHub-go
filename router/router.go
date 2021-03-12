@@ -50,5 +50,6 @@ func init() {
 		group.Group("/niaogebiji", routers.NiaogeNoteRouter)
 		group.Group("/pintu", routers.PintuRouter)
 		group.Group("/pingwest", routers.PingwestRouter)
+		group.Group("/ccg", routers.CCGRouter)
 	})
 }
