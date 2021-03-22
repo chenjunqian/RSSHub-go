@@ -53,5 +53,6 @@ func init() {
 		group.Group("/ccg", routers.CCGRouter)
 		group.Group("/woshipm", routers.WoshipmRouter)
 		group.Group("/sspai", routers.SSPaiRouter)
+		group.Group("/api", routers.WebRouter)
 	})
 }
