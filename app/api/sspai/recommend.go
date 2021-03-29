@@ -15,11 +15,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getInfoLinks()[linkType]
 	cacheKey := "SSPAI_INDEX_" + linkConfig.ChannelId
-	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	var apiUrl string
 	if linkConfig.ChannelId == "recommend" {
 		apiUrl = "https://sspai.com/api/v1/article/index/page/get?limit=10&offset=0&created_at=0"
