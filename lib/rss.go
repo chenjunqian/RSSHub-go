@@ -1,7 +1,9 @@
 package lib
 
 import (
+	"github.com/gogf/gf/os/glog"
 	"rsshub/app/dao"
+	"rsshub/app/service"
 
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
@@ -41,7 +43,15 @@ func GenerateRSS(data dao.RSSFeed) string {
 		feed.Items = append(feed.Items, &feedItem)
 	}
 
+	feedToStore := feed
 	if result, err := feed.ToRss(); err == nil {
+		go func() {
+			err := service.AddFeedChannelAndItem(feedToStore)
+			if err != nil {
+				glog.Line().Println(err)
+			}
+		}()
+
 		return result
 	} else {
 		return ""
