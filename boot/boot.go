@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"rsshub/app/cronJob"
 	_ "rsshub/packed"
 
 	"github.com/gogf/gf/frame/g"
@@ -14,6 +15,7 @@ func init() {
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
 	setCookiesToRedis()
+	cronJob.RegisterJob()
 }
 
 func setCookiesToRedis() {
