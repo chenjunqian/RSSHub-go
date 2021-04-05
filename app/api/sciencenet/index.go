@@ -24,6 +24,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "科学网博客 -" + linkConfig.Title,
 		Link:        "http://blog.sciencenet.cn/",
+		Tag:         []string{"科技"},
 		Description: "科学网博客-构建全球华人科学博客圈",
 		ImageUrl:    "http://blog.sciencenet.cn/favicon.ico",
 	}

@@ -14,6 +14,7 @@ type LinkRouteConfig struct {
 	ChannelId string
 	Title     string
 	LinkType  string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -128,22 +129,27 @@ func getInfoLinks() map[string]LinkRouteConfig {
 		"internation": {
 			ChannelId: "internation?s=dhguoji",
 			LinkType:  "index",
+			Tags:      []string{"海外"},
 			Title:     "国际"},
 		"military": {
 			ChannelId: "military-affairs?s=dhjunshi",
 			LinkType:  "index",
+			Tags:      []string{"军事"},
 			Title:     "军事"},
 		"economy": {
 			ChannelId: "economy?s=dhcaijing",
 			LinkType:  "common",
+			Tags:      []string{"财经"},
 			Title:     "财经"},
 		"tech": {
 			ChannelId: "gongye·keji?s=dhgongye·keji",
 			LinkType:  "common",
+			Tags:      []string{"科技"},
 			Title:     "科技"},
 		"auto": {
 			ChannelId: "qiche?s=dhqiche",
 			LinkType:  "common",
+			Tags:      []string{"汽车"},
 			Title:     "汽车"},
 	}
 

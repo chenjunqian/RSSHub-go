@@ -20,6 +20,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		Title:       "InfoQ推荐",
 		Link:        apiUrl,
 		Description: "InfoQ推荐",
+		Tag:         []string{"汽车"},
 		ImageUrl:    "https://static001.infoq.cn/static/infoq/template/img/logo-fasdkjfasdf.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

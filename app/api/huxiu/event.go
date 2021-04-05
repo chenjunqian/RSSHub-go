@@ -23,6 +23,7 @@ func (ctl *Controller) GetEvent(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "虎嗅 - 号外",
 		Link:        apiUrl,
+		Tag:         []string{"商业", "科技", "互联网"},
 		Description: "聚合优质的创新信息与人群，捕获精选|深度|犀利的商业科技资讯。在虎嗅，不错过互联网的每个重要时刻。",
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}

@@ -14,6 +14,7 @@ type Controller struct {
 type LinkRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -59,27 +60,35 @@ func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"recommend": {
 			ChannelId: "0",
+			Tags:      []string{"其他"},
 			Title:     "推荐"},
 		"sell": {
 			ChannelId: "7",
+			Tags:      []string{"电商"},
 			Title:     "零售前沿"},
 		"tech": {
 			ChannelId: "10",
+			Tags:      []string{"科技"},
 			Title:     "科技智能"},
 		"entertainment": {
 			ChannelId: "9",
+			Tags:      []string{"娱乐"},
 			Title:     "泛文娱"},
 		"edu": {
 			ChannelId: "98",
+			Tags:      []string{"教育"},
 			Title:     "教育"},
 		"health": {
 			ChannelId: "70",
+			Tags:      []string{"健康"},
 			Title:     "大健康"},
 		"consume": {
 			ChannelId: "8",
+			Tags:      []string{"消费"},
 			Title:     "新消费"},
 		"startup": {
 			ChannelId: "72",
+			Tags:      []string{"创业"},
 			Title:     "创业投资"},
 	}
 

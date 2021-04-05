@@ -19,6 +19,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "爱范-早报",
 		Link:        "https://sso.ifanr.com/api/v5/wp/article/?post_category=早报",
+		Tag:         []string{"媒体", "科技"},
 		Description: "爱范每日早报",
 		ImageUrl:    "https://images.ifanr.cn/wp-content/themes/ifanr-5.0-pc/static/images/favicon.ico",
 	}

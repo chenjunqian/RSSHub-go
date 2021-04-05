@@ -23,6 +23,7 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	rssData := dao.RSSFeed{}
 	rssData.Title = "Bing每日壁纸"
 	rssData.Link = "https://cn.bing.com/"
+	rssData.Tag = []string{"壁纸", "图片"}
 	rssData.ImageUrl = "https://cn.bing.com/sa/simg/favicon-2x.ico"
 	if statusResp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respJson := gjson.New(statusResp.ReadAllString())

@@ -19,6 +19,7 @@ func (ctl *Controller) GetEBusiness(req *ghttp.Request) {
 		Title:       "白鲸出海-电商",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海电商",
+		Tag:         []string{"电商", "数据"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

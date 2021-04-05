@@ -6,6 +6,7 @@ type Controller struct {
 type NewsRouteConfig struct {
 	Caty  string
 	Title string
+	Tags  []string
 }
 
 func getHeaders() map[string]string {
@@ -19,21 +20,27 @@ func getNewsLinks() map[string]NewsRouteConfig {
 	Links := map[string]NewsRouteConfig{
 		"game": {
 			Caty:  "1",
+			Tags:  []string{"游戏"},
 			Title: "游戏"},
 		"techNews": {
 			Caty:  "3",
+			Tags:  []string{"科技"},
 			Title: "科技新鲜事"},
 		"techFun": {
 			Caty:  "5",
+			Tags:  []string{"科技"},
 			Title: "趣味科技"},
 		"debugTime": {
 			Caty:  "6",
+			Tags:  []string{"科技", "IT"},
 			Title: "DEBUG TIME"},
 		"internetFun": {
 			Caty:  "6",
+			Tags:  []string{"互联网"},
 			Title: "互联网槽点"},
 		"car": {
 			Caty:  "9",
+			Tags:  []string{"汽车"},
 			Title: "公里每小时"},
 	}
 

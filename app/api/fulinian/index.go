@@ -24,6 +24,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "福利年 " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "福利年|免费分享互联网资源",
 		ImageUrl:    "https://www.fulinian.com/favicon.ico",
 	}

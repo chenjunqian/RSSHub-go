@@ -24,6 +24,7 @@ func (ctl *Controller) GetCat(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "鸟哥笔记 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         []string{"运营"},
 		Description: "鸟哥笔记新媒体运营栏目，提供微信、微博、贴吧等新兴媒体平台运营策略，研究如何通过现代化互联网手段进行产品宣传、推广、产品营销，如何策划品牌相关的优质、高度传播性的内容和线上活动，如何向客户广泛或者精准推送消息，如何充分利用粉丝经济，达到相应营销目的。",
 		ImageUrl:    "https://www.niaogebiji.com/favicon.ico",
 	}

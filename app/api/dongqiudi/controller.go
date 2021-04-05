@@ -11,6 +11,7 @@ type Controller struct {
 type NewsRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -42,42 +43,55 @@ func getNewsLinks() map[string]NewsRouteConfig {
 	Links := map[string]NewsRouteConfig{
 		"toutiao": {
 			ChannelId: "1",
+			Tags:      []string{"体育"},
 			Title:     "头条"},
 		"shendu": {
 			ChannelId: "55",
+			Tags:      []string{"体育"},
 			Title:     "深度"},
 		"xianqing": {
 			ChannelId: "37",
+			Tags:      []string{"体育"},
 			Title:     "闲情"},
 		"dzhan": {
 			ChannelId: "219",
+			Tags:      []string{"体育"},
 			Title:     "D 站"},
 		"zhongchao": {
 			ChannelId: "56",
+			Tags:      []string{"体育"},
 			Title:     "中超"},
 		"guoji": {
 			ChannelId: "120",
+			Tags:      []string{"体育", "海外"},
 			Title:     "国际"},
 		"yingchao": {
 			ChannelId: "3",
+			Tags:      []string{"体育", "海外"},
 			Title:     "英超"},
 		"xijia": {
 			ChannelId: "8",
+			Tags:      []string{"体育", "海外"},
 			Title:     "西甲"},
 		"yijia": {
 			ChannelId: "4",
+			Tags:      []string{"体育", "海外"},
 			Title:     "意甲"},
 		"dejia": {
 			ChannelId: "6",
+			Tags:      []string{"体育", "海外"},
 			Title:     "德甲"},
 		"xinwendabaozha": {
 			ChannelId: "41",
+			Tags:      []string{"体育"},
 			Title:     "新闻大爆炸"},
 		"shijiaqiu": {
 			ChannelId: "52",
+			Tags:      []string{"体育"},
 			Title:     "懂球帝十佳球"},
 		"mvp": {
 			ChannelId: "53",
+			Tags:      []string{"体育"},
 			Title:     "懂球帝本周 MVP"},
 	}
 

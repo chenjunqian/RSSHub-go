@@ -19,6 +19,7 @@ func (ctl *Controller) GetGanHuo(req *ghttp.Request) {
 		Title:       "白鲸出海-干货",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海干货",
+		Tag:         []string{"互联网", "新闻"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

@@ -23,6 +23,7 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "微博热搜榜",
 		Link:        "https://s.weibo.com/top/summary?cate=realtimehot",
+		Tag:         []string{"时事"},
 		Description: "实时热点，每10分钟更新一次",
 		ImageUrl:    "https://h5.sinaimg.cn/m/weibo-lite/icon-default-192.png",
 	}

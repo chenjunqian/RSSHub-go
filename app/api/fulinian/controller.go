@@ -12,6 +12,7 @@ type Controller struct {
 type LinkRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -56,24 +57,31 @@ func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"index": {
 			ChannelId: "",
+			Tags:      []string{"其他"},
 			Title:     "最新发布"},
 		"technical-course": {
 			ChannelId: "technical-course",
+			Tags:      []string{"科技"},
 			Title:     "技术教程"},
 		"learning": {
 			ChannelId: "learning",
+			Tags:      []string{"其他"},
 			Title:     "学习资料"},
 		"chuangye": {
 			ChannelId: "chuangye",
+			Tags:      []string{"创业"},
 			Title:     "创业"},
 		"fulinian": {
 			ChannelId: "fulinian",
+			Tags:      []string{"其他"},
 			Title:     "福利年惠"},
 		"network-resource": {
 			ChannelId: "network-resource",
+			Tags:      []string{"科技"},
 			Title:     "网络资源"},
 		"quality-software": {
 			ChannelId: "quality-software",
+			Tags:      []string{"互联网", "IT"},
 			Title:     "精品软件"},
 	}
 

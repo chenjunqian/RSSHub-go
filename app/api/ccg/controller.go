@@ -12,6 +12,7 @@ type Controller struct {
 type LinkRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -71,9 +72,11 @@ func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"news": {
 			ChannelId: "news",
+			Tags:      []string{"新闻", "时事政治"},
 			Title:     "新闻动态"},
 		"media": {
 			ChannelId: "mtbd",
+			Tags:      []string{"新闻", "媒体", "时事政治"},
 			Title:     "媒体报道"},
 	}
 

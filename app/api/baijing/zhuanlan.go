@@ -19,6 +19,7 @@ func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
 		Title:       "白鲸出海-专栏",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海专栏",
+		Tag:         []string{"新闻"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

@@ -8,6 +8,7 @@ type RSSFeed struct {
 	Created     string
 	ImageUrl    string
 	Items       []RSSItem
+	Tag         []string
 }
 
 type RSSItem struct {

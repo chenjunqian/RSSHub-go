@@ -23,6 +23,7 @@ func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "多知 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "多知网 - 独立商业视角 新锐教育观察",
 		ImageUrl:    "http://www.duozhi.com/favicon.ico",
 	}

@@ -19,6 +19,7 @@ func (ctl *Controller) GetMobilePhone(req *ghttp.Request) {
 		Title:       "白鲸出海-智能手机",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海智能手机",
+		Tag:         []string{"手机", "移动互联网"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

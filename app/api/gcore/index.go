@@ -24,6 +24,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "机核 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "机核从2010年开始一直致力于分享游戏玩家的生活，以及深入探讨游戏相关的文化。我们开发原创的电台以及视频节目，一直在不断寻找民间高质量的内容创作者。",
 		ImageUrl:    "https://www.gcores.com/favicon.ico",
 	}

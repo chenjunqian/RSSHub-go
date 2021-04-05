@@ -24,6 +24,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "观察家 " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "经济观察网，经济观察报，电子报纸,电子杂志,财经媒体,观察家,eeo",
 		ImageUrl:    "http://www.eeo.com.cn/favicon.ico",
 	}

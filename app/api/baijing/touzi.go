@@ -19,6 +19,7 @@ func (ctl *Controller) GetTouzi(req *ghttp.Request) {
 		Title:       "白鲸出海-投融资",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海投融资",
+		Tag:         []string{"投资"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

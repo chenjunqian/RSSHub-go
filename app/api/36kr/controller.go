@@ -13,6 +13,7 @@ type Controller struct {
 type NewsRouteConfig struct {
 	Link  string
 	Title string
+	Tags  []string
 }
 
 func getHeaders() map[string]string {
@@ -54,52 +55,65 @@ func getNewsLinks() map[string]NewsRouteConfig {
 	Links := map[string]NewsRouteConfig{
 		"latest": {
 			Link:  "/information/web_news/latest",
+			Tags:  []string{"新闻", "互联网", "数据", "金融", "创业", "投资", "快讯", "生活", "科技", "旅游", "职场"},
 			Title: "最新"},
 		"recommend": {
 			Link:  "/information/web_recommend",
+			Tags:  []string{"互联网", "数据", "金融", "创业", "投资", "快讯", "生活", "科技", "旅游", "职场"},
 			Title: "推荐"},
 		"contact": {
 			Link:  "/information/contact",
+			Tags:  []string{"创业", "投资", "科技", "创投"},
 			Title: "创投",
 		},
 		"ccs": {
 			Link:  "/information/ccs",
+			Tags:  []string{"互联网", "数据", "金融", "投资", "股票"},
 			Title: "中概股",
 		},
 		"travel": {
 			Link:  "/information/travel",
+			Tags:  []string{"汽车", "科技"},
 			Title: "汽车",
 		},
 		"technology": {
 			Link:  "/technology",
+			Tags:  []string{"互联网", "科技", "IT"},
 			Title: "科技",
 		},
 		"enterpriseservice": {
 			Link:  "/information/enterpriseservice",
+			Tags:  []string{"互联网", "金融", "创业", "企服"},
 			Title: "企服",
 		},
 		"banking": {
 			Link:  "/information/banking",
+			Tags:  []string{"互联网", "金融", "创业"},
 			Title: "金融",
 		},
 		"life": {
 			Link:  "/information/happy_life",
+			Tags:  []string{"生活", "互联网"},
 			Title: "生活",
 		},
 		"innovate": {
 			Link:  "/information/innovate",
+			Tags:  []string{"创新", "互联网"},
 			Title: "创新",
 		},
 		"estate": {
 			Link:  "/information/real_estate",
+			Tags:  []string{"房产"},
 			Title: "房产",
 		},
 		"workplace": {
 			Link:  "/information/web_zhichang",
+			Tags:  []string{"职场"},
 			Title: "职场",
 		},
 		"other": {
 			Link:  "/information/other",
+			Tags:  []string{"其他"},
 			Title: "其他",
 		},
 	}

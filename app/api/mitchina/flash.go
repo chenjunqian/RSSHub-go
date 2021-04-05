@@ -20,6 +20,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Title:       "MIT 中国",
 		Link:        "http://www.mittrchina.com/newsflash",
 		Description: "MIT科技评论快讯",
+		Tag:         []string{"科技"},
 		ImageUrl:    "http://www.mittrchina.com/logo.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Post(apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {

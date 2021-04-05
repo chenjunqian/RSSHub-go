@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func AddFeedChannelAndItem(feed *feeds.Feed) error {
+func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string) error {
 
 	feedID := strconv.FormatUint(ghash.RSHash64([]byte(feed.Link.Href)), 32)
 	feedChannelModel := model.RssFeedChannel{
@@ -30,10 +30,25 @@ func AddFeedChannelAndItem(feed *feeds.Feed) error {
 			Title:       item.Title,
 			ChannelDesc: item.Description,
 			Link:        item.Link.Href,
-			Date:        gtime.New(item.Updated.String()),
+			Date:        gtime.New(item.Created.String()),
 			Author:      item.Author.Name,
 		}
 		feedItemModeList = append(feedItemModeList, feedItem)
+	}
+
+	tagModeList := make([]model.RssFeedTag, 0)
+	for _, tagStr := range tagList {
+		if tagStr == "" {
+			continue
+		}
+		tagModel := model.RssFeedTag{
+			Name:      tagStr,
+			ChannelId: feedID,
+			Title:     feed.Title,
+			Date:      gtime.Now(),
+		}
+
+		tagModeList = append(tagModeList, tagModel)
 	}
 
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
@@ -44,6 +59,10 @@ func AddFeedChannelAndItem(feed *feeds.Feed) error {
 			return err
 		}
 		_, err = tx.BatchInsertIgnore("rss_feed_item", feedItemModeList)
+		if err != nil {
+			return err
+		}
+		_, err = tx.BatchInsertIgnore("rss_feed_tag", tagModeList)
 		if err != nil {
 			return err
 		}

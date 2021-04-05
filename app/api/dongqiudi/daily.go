@@ -19,6 +19,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "懂球帝 - 早报",
 		Link:        apiUrl,
+		Tag:         []string{"体育"},
 		Description: "早报 — 专题|专业权威的足球网站|懂球帝",
 		ImageUrl:    "https://static1.dongqiudi.com/web-new/web/images/fav.ico",
 	}

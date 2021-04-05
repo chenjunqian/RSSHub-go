@@ -19,6 +19,7 @@ func (ctl *Controller) GetShouyou(req *ghttp.Request) {
 		Title:       "白鲸出海-手游",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海手游",
+		Tag:         []string{"手游"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

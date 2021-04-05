@@ -20,6 +20,7 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "抽屉新热榜Top",
 		Link:        "https://dig.chouti.com",
+		Tag:         []string{"社区", "门户", "其他"},
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}

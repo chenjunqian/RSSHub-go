@@ -46,7 +46,7 @@ func GenerateRSS(data dao.RSSFeed) string {
 	feedToStore := feed
 	if result, err := feed.ToRss(); err == nil {
 		go func() {
-			err := service.AddFeedChannelAndItem(feedToStore)
+			err := service.AddFeedChannelAndItem(feedToStore, data.Tag)
 			if err != nil {
 				glog.Line().Println(err)
 			}

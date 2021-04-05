@@ -23,6 +23,7 @@ func (ctl *Controller) Get36krNews(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:    "36氪资讯 - " + linkConfig.Title,
 		Link:     apiUrl,
+		Tag:      linkConfig.Tags,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

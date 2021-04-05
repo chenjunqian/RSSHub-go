@@ -20,6 +20,7 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "币世界-深度",
 		Link:        "https://www.baijingapp.com",
+		Tag:         []string{"比特币", "金融", "科技", "投资"},
 		Description: "币世界网-比特币等数字货币交易所导航、投资理财、快讯、深度、币圈、市场行情第一站。",
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}

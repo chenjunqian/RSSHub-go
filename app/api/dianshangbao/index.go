@@ -25,6 +25,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "电商报 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "电商报行业观察栏目，重点针对电子商务行业、互联网行业、it行业重大新闻24小时跟踪报道，揭示电子商务、互联网等行业的发展趋势和分析报告。",
 		ImageUrl:    "https://www.dsb.cn/favicon.ico",
 	}

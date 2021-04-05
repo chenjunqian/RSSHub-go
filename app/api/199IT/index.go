@@ -19,6 +19,7 @@ func (ctl *Controller) Get199ITIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "199it",
 		Link:        apiUrl,
+		Tag:         []string{"互联网", "IT", "科技"},
 		Description: "互联网数据资讯网-199IT",
 	}
 	if resp, err := g.Client().SetHeaderMap(headers).Get(apiUrl); err == nil {

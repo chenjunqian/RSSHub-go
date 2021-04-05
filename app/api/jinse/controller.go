@@ -12,6 +12,7 @@ type Controller struct {
 type LinkRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -117,30 +118,39 @@ func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"zhengce": {
 			ChannelId: "zhengce",
+			Tags:      []string{"政治"},
 			Title:     "政策"},
 		"fenxishishuo": {
 			ChannelId: "fenxishishuo",
+			Tags:      []string{"财经"},
 			Title:     "行情"},
 		"defi": {
 			ChannelId: "defi",
+			Tags:      []string{"财经"},
 			Title:     "DeFi"},
 		"kuang": {
 			ChannelId: "kuang",
+			Tags:      []string{"财经"},
 			Title:     "矿业"},
 		"industry": {
 			ChannelId: "industry",
+			Tags:      []string{"财经"},
 			Title:     "产业"},
 		"IPFS": {
 			ChannelId: "IPFS",
+			Tags:      []string{"财经"},
 			Title:     "IPFS"},
 		"tech": {
 			ChannelId: "tech",
+			Tags:      []string{"技术"},
 			Title:     "技术"},
 		"baike": {
 			ChannelId: "baike",
+			Tags:      []string{"财经"},
 			Title:     "百科"},
 		"capitalmarket": {
 			ChannelId: "capitalmarket",
+			Tags:      []string{"财经"},
 			Title:     "研报"},
 	}
 

@@ -18,6 +18,7 @@ func (ctl *Controller) GetLives(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "金色财经 - 直播",
 		Link:        "https://www.jinse.com/",
+		Tag:         []string{"财经"},
 		Description: "金色财经是集行业新闻、资讯、行情、数据等一站式区块链产业服务平台，我们追求及时、全面、专业、准确的资讯与数据，致力于为区块链创业者以及数字货币投资者提供最好的产品和服务。",
 		ImageUrl:    "https://www.jinse.com/favicon.ico",
 	}

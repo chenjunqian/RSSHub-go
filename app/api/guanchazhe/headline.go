@@ -20,6 +20,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "观察者网 - 头条",
 		Link:        apiUrl,
+		Tag:         []string{"文化", "时事", "政治", "经济", "历史"},
 		Description: "观察者网，致力于荟萃中外思想者精华，鼓励青年学人探索，建中西文化交流平台，为崛起中的精英提供决策参考。",
 		ImageUrl:    "https://i.guancha.cn/images/favorite.ico",
 	}

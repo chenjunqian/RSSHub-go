@@ -13,6 +13,7 @@ type Controller struct {
 type IndustryNewsRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -71,30 +72,39 @@ func getIndustryNewsLinks() map[string]IndustryNewsRouteConfig {
 	Links := map[string]IndustryNewsRouteConfig{
 		"insight": {
 			ChannelId: "insight",
+			Tags:      []string{"教育", "其他"},
 			Title:     "观察"},
 		"preschool": {
 			ChannelId: "preschool",
+			Tags:      []string{"教育", "早教"},
 			Title:     "早教"},
 		"K12": {
 			ChannelId: "K12",
+			Tags:      []string{"教育", "K12"},
 			Title:     "K12"},
 		"qualityedu": {
 			ChannelId: "qualityedu",
+			Tags:      []string{"教育"},
 			Title:     "素质教育"},
 		"adultedu": {
 			ChannelId: "adult",
+			Tags:      []string{"教育", "职教"},
 			Title:     "职教/大学生"},
 		"EduInformatization": {
 			ChannelId: "EduInformatization",
+			Tags:      []string{"教育", "科技"},
 			Title:     "信息化教育"},
 		"earnings": {
 			ChannelId: "earnings",
+			Tags:      []string{"教育", "财经"},
 			Title:     "财报"},
 		"privateschools": {
 			ChannelId: "privateschools",
+			Tags:      []string{"教育"},
 			Title:     "民办教育"},
 		"overseas": {
 			ChannelId: "overseas",
+			Tags:      []string{"教育", "留学"},
 			Title:     "留学"},
 	}
 

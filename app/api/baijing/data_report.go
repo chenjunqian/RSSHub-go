@@ -19,6 +19,7 @@ func (ctl *Controller) GetDataReport(req *ghttp.Request) {
 		Title:       "白鲸出海-数据报告",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海数据报告",
+		Tag:         []string{"财经", "科技", "数据"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

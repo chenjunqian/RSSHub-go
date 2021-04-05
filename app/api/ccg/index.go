@@ -24,6 +24,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "全球化智库 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "以全球的视野为中国建言，以中国智慧为全球贡献。",
 		ImageUrl:    "http://www.ccg.org.cn/wp-content/uploads/2020/06/ccg.ico",
 	}

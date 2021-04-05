@@ -19,6 +19,7 @@ func (ctl *Controller) GetActivity(req *ghttp.Request) {
 		Title:       "白鲸出海-活动",
 		Link:        "https://www.baijingapp.com",
 		Description: "白鲸出海活动",
+		Tag:         []string{"互联网", "开发者", "科技", "社区"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

@@ -21,6 +21,7 @@ func (ctl *Controller) GetZhiDaoDaily(req *ghttp.Request) {
 		Title:       "百度知道日报",
 		Link:        apiUrl,
 		Description: "百度知道日报精选",
+		Tag:         []string{"知识", "百科", "问答"},
 		ImageUrl:    "www.baidu.com/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

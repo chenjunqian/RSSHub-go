@@ -29,6 +29,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "少数派 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         []string{"科技"},
 		Description: "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
 		ImageUrl:    "https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico",
 	}

@@ -41,6 +41,7 @@ func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
 		Title:       feedTitle,
 		Link:        apiUrl,
 		Description: "东西智库专注中国制造业高质量发展",
+		Tag:         []string{"其他"},
 		ImageUrl:    "https://www.dx2025.com/wp-content/uploads/2020/04/cropped-east_west_think_tank_800x800-32x32.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

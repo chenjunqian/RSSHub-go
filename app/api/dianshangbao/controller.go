@@ -6,6 +6,7 @@ type Controller struct {
 type NewsRouteConfig struct {
 	ChannelId string
 	Title     string
+	Tags      []string
 }
 
 func getHeaders() map[string]string {
@@ -19,27 +20,35 @@ func getNewsLinks() map[string]NewsRouteConfig {
 	Links := map[string]NewsRouteConfig{
 		"lingshou": {
 			ChannelId: "lingshou",
+			Tags:      []string{"电商", "零售"},
 			Title:     "零售"},
 		"wuliu": {
 			ChannelId: "wuliu",
+			Tags:      []string{"电商", "物流"},
 			Title:     "物流"},
 		"O2O": {
 			ChannelId: "O2O",
+			Tags:      []string{"电商"},
 			Title:     "O2O"},
 		"zhifu": {
 			ChannelId: "zhifu",
+			Tags:      []string{"电商", "金融"},
 			Title:     "支付"},
 		"B2B": {
 			ChannelId: "B2B",
+			Tags:      []string{"电商"},
 			Title:     "B2B"},
 		"renwu": {
 			ChannelId: "renwu",
+			Tags:      []string{"电商", "其他"},
 			Title:     "人物"},
 		"kuajing": {
 			ChannelId: "kuajing",
+			Tags:      []string{"电商", "海外"},
 			Title:     "跨境电商"},
 		"guancha": {
 			ChannelId: "guancha",
+			Tags:      []string{"电商", "其他"},
 			Title:     "行业观察"},
 	}
 

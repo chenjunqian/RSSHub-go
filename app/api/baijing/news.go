@@ -19,6 +19,7 @@ func (ctl *Controller) GetNews(req *ghttp.Request) {
 		Title:       "白鲸出海-快讯",
 		Link:        apiUrl,
 		Description: "白鲸出海快讯",
+		Tag:         []string{"新闻"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

@@ -21,6 +21,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:    "Day One Blog",
 		Link:     apiUrl,
+		Tag:      []string{"其他"},
 		ImageUrl: "https://dayoneapp.com/favicon-32x32.png?v=9277df7ae7503b6e383587ae0e7210ee",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {

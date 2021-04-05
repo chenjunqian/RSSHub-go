@@ -22,6 +22,7 @@ func (ctl *Controller) GetState(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "品玩 - 时事要闻",
 		Link:        apiUrl,
+		Tag:         []string{"时事", "科技"},
 		Description: "品玩是具有全球化视野的科技内容平台和创新连接器，致力于服务全球科技创新者。",
 		ImageUrl:    "https://cdn.pingwest.com/static/pingwest-logo-cn.jpg",
 	}

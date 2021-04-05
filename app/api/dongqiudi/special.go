@@ -24,6 +24,7 @@ func (ctl *Controller) GetSpecial(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "懂球帝专题 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "懂球帝专题|专业权威的足球网站",
 		ImageUrl:    "https://static1.dongqiudi.com/web-new/web/images/fav.ico",
 	}

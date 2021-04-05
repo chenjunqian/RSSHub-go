@@ -25,6 +25,7 @@ func (ctl *Controller) GetIPortal(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "鲸跃汽车 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         []string{"汽车"},
 		Description: "我们是一帮在传统汽车门户、汽车杂志战斗过数年的老司机，关于车与理想生活的种种，我们有很多思考，现在用一个全新的网站和 APP，将车型快讯、试驾体验、行业深度、生活方式等原创内容，用简洁的设计与排版呈现在你的面前。",
 		ImageUrl:    "https://api.whalegogo.com/favicon.ico",
 	}

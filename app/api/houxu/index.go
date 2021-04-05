@@ -21,6 +21,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "后续 - 热点",
 		Link:        apiUrl,
+		Tag:         []string{"互联网"},
 		Description: "后续 · 有记忆的新闻，持续追踪热点新闻",
 		ImageUrl:    "https://assets-1256259474.cos.ap-shanghai.myqcloud.com/static/img/icon-180.jpg",
 	}

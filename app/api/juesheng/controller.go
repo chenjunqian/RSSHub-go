@@ -12,6 +12,7 @@ type Controller struct {
 type LinkRouteConfig struct {
 	ChannelUrl string
 	Title      string
+	Tags       []string
 }
 
 func getHeaders() map[string]string {
@@ -54,21 +55,27 @@ func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"news": {
 			ChannelUrl: "http://www.juesheng.com/",
+			Tags:       []string{"媒体"},
 			Title:      "快讯"},
 		"12k": {
 			ChannelUrl: "http://news.juesheng.com/",
+			Tags:       []string{"教育"},
 			Title:      "12K"},
 		"e-edu": {
 			ChannelUrl: "http://e.juesheng.com/",
+			Tags:       []string{"互联网"},
 			Title:      "互联网+"},
 		"zhijiao": {
 			ChannelUrl: "http://news.juesheng.com/zhijiao/",
+			Tags:       []string{"教育"},
 			Title:      "职业教育"},
 		"xingqu": {
 			ChannelUrl: "http://news.juesheng.com/xingqu/",
+			Tags:       []string{"教育"},
 			Title:      "素质教育"},
 		"xueqian": {
 			ChannelUrl: "http://www.juesheng.com/xqjy/",
+			Tags:       []string{"教育"},
 			Title:      "学前教育"},
 	}
 

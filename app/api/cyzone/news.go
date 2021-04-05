@@ -30,6 +30,7 @@ func (ctl *Controller) GetNews(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "创业邦 - " + linkConfig.Title,
 		Link:        apiUrl,
+		Tag:         linkConfig.Tags,
 		Description: "创业,资本,股权融资,风险投资,VC,IPO,PE,私募,私募股权,上市,融资,天使投资,创业故事,创业项目,投资机构,互联网创业,创业平台",
 		ImageUrl:    "https://www.cyzone.cn/favicon.ico",
 	}

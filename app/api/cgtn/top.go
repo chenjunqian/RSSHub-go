@@ -20,6 +20,7 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:    "CGTN - Top News",
 		Link:     apiUrl,
+		Tag:      []string{"英文", "海外"},
 		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
