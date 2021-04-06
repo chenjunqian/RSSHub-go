@@ -19,6 +19,7 @@ func (ctl *Controller) Get199ITIndex(req *ghttp.Request) {
 	rssData := dao.RSSFeed{
 		Title:       "199it",
 		Link:        apiUrl,
+		ImageUrl:    "http://www.199it.com/favicon.ico",
 		Tag:         []string{"互联网", "IT", "科技"},
 		Description: "互联网数据资讯网-199IT",
 	}

@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"rsshub/app/dao"
 	"rsshub/lib"
+	"strings"
 )
 
 type Controller struct {
@@ -24,6 +25,9 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 		title := imgDoc.Attrs()["title"]
 		imageLink := "https://www.baijingapp.com" + imgDoc.Attrs()["src"]
 		link := articleDoc.Find("a", "class", "article").Attrs()["href"]
+		if !strings.Contains(link, "http") {
+			link = "https://www.baijingapp.com" + link
+		}
 		var content string
 		if articleDoc.Find("div", "class", "articleSingle-content").Error == nil {
 			content = articleDoc.Find("div", "class", "articleSingle-content").Find("p").Text()

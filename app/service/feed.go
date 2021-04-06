@@ -12,7 +12,7 @@ import (
 
 func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string) error {
 
-	feedID := strconv.FormatUint(ghash.RSHash64([]byte(feed.Link.Href)), 32)
+	feedID := strconv.FormatUint(ghash.RSHash64([]byte(feed.Link.Href+feed.Title)), 32)
 	feedChannelModel := model.RssFeedChannel{
 		Id:          feedID,
 		Title:       feed.Title,
@@ -23,7 +23,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string) error {
 
 	feedItemModeList := make([]model.RssFeedItem, 0)
 	for _, item := range feed.Items {
-		itemID := strconv.FormatUint(ghash.RSHash64([]byte(item.Link.Href)), 32)
+		itemID := strconv.FormatUint(ghash.RSHash64([]byte(item.Link.Href+item.Title)), 32)
 		feedItem := model.RssFeedItem{
 			Id:          itemID,
 			ChannelId:   feedID,
