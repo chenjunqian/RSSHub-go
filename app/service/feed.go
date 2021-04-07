@@ -32,6 +32,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string) error {
 			Link:        item.Link.Href,
 			Date:        gtime.New(item.Created.String()),
 			Author:      item.Author.Name,
+			InputDate:   gtime.Now(),
 		}
 		feedItemModeList = append(feedItemModeList, feedItem)
 	}

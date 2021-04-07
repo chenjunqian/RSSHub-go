@@ -33,6 +33,7 @@ type rssFeedItemColumns struct {
 	Link        string //
 	Date        string //
 	Author      string //
+	InputDate   string //
 }
 
 var (
@@ -49,6 +50,7 @@ var (
 			Link:        "link",
 			Date:        "date",
 			Author:      "author",
+			InputDate:   "input_date",
 		},
 	}
 )
