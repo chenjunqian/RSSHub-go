@@ -8,7 +8,7 @@ import (
 )
 
 func RegisterJob() {
-	_, _ = gcron.AddSingleton("0 */10 * * * *", feedRefreshCronJob)
+	_, _ = gcron.AddSingleton("0 */20 * * * *", feedRefreshCronJob)
 }
 
 func feedRefreshCronJob() {
