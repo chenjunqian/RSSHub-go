@@ -16,6 +16,9 @@ func (ctl *Controller) GetFeedTag(req *ghttp.Request) {
 			response.JsonExit(req, 1, err.Error())
 		}
 	}
-	tagList := service.GetFeedTag(reqData.Start, reqData.End)
+	if reqData.Size == 0 {
+		reqData.Size = 10
+	}
+	tagList := service.GetFeedTag(reqData.Start, reqData.Size)
 	response.JsonExit(req, 0, "success", tagList)
 }

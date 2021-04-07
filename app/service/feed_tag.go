@@ -6,13 +6,13 @@ import (
 	"rsshub/app/model/biz"
 )
 
-func GetFeedTag(start, end int) (tagList []biz.RespFeedTagData) {
+func GetFeedTag(start, size int) (tagList []biz.RespFeedTagData) {
 
 	if err := g.DB().Table("rss_feed_tag").
 		Fields("name, count(channel_id) as count ").
 		Group("name").
 		Order("count(channel_id) desc").
-		Limit(start, end).
+		Limit(start, size).
 		Structs(&tagList); err != nil {
 		glog.Line().Error(err)
 	}

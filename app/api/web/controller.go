@@ -10,5 +10,5 @@ type RouterInfoData struct {
 
 type FeedTagReqData struct {
 	Start int
-	End   int
+	Size  int
 }
