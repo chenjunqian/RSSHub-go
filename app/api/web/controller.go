@@ -7,3 +7,8 @@ type RouterInfoData struct {
 	Route string
 	Port  string
 }
+
+type FeedTagReqData struct {
+	Start int
+	End   int
+}
