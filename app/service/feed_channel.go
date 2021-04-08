@@ -4,9 +4,11 @@ import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/encoding/ghash"
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/os/glog"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gorilla/feeds"
 	"rsshub/app/model"
+	"rsshub/app/model/biz"
 	"strconv"
 )
 
@@ -72,4 +74,17 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string) error {
 	})
 
 	return err
+}
+
+func GetFeedChannelByTag(start, size int, name string) (feedList []biz.RssFeedChannelData) {
+
+	if err := g.DB().Table("rss_feed_tag rft").LeftJoin("rss_feed_channel rsc", "rft.channel_id=rsc.id").
+		Fields("rsc.*").
+		Where("rft.name", name).
+		Limit(start, size).
+		Structs(&feedList); err != nil {
+		glog.Line().Error(err)
+	}
+
+	return
 }
