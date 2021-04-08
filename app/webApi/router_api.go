@@ -1,4 +1,4 @@
-package web
+package webApi
 
 import (
 	"github.com/gogf/gf/frame/g"
