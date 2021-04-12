@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/houxu"
+	"rsshub/app/api/rssapi/houxu"
 )
 
 func HouXuRouter(group *ghttp.RouterGroup) {

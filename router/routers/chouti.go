@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/chouti"
+	"rsshub/app/api/rssapi/chouti"
 )
 
 func ChouTiRouter(group *ghttp.RouterGroup) {

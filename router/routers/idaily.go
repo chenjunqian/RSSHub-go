@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/idaily"
+	"rsshub/app/api/rssapi/idaily"
 )
 
 func IDailyRouter(group *ghttp.RouterGroup) {

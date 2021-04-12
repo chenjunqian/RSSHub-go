@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/guokr"
+	"rsshub/app/api/rssapi/guokr"
 )
 
 func GuoKrRouter(group *ghttp.RouterGroup) {

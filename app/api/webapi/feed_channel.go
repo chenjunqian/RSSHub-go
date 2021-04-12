@@ -1,4 +1,4 @@
-package webApi
+package webapi
 
 import (
 	"github.com/gogf/gf/net/ghttp"
@@ -7,8 +7,8 @@ import (
 	response "rsshub/middleware"
 )
 
-func (ctl *Controller) GetFeedTag(req *ghttp.Request) {
-	var reqData *FeedTagReqData
+func (ctl *Controller) GetFeedChannelByTag(req *ghttp.Request) {
+	var reqData *FeedChannelReqData
 	if err := req.Parse(&reqData); err != nil {
 		if v, ok := err.(*gvalid.Error); ok {
 			response.JsonExit(req, 1, v.FirstString())
@@ -19,6 +19,6 @@ func (ctl *Controller) GetFeedTag(req *ghttp.Request) {
 	if reqData.Size == 0 {
 		reqData.Size = 10
 	}
-	tagList := service.GetFeedTag(reqData.Start, reqData.Size)
+	tagList := service.GetFeedChannelByTag(reqData.Start, reqData.Size, reqData.Name)
 	response.JsonExit(req, 0, "success", tagList)
 }

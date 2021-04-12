@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/dongqiudi"
+	"rsshub/app/api/rssapi/dongqiudi"
 )
 
 func DongQiuDiRouter(group *ghttp.RouterGroup) {

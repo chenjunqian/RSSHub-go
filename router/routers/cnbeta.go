@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/cnbeta"
+	"rsshub/app/api/rssapi/cnbeta"
 )
 
 func CNBetaRouter(group *ghttp.RouterGroup) {

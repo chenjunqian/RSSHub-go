@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/bing"
+	"rsshub/app/api/rssapi/bing"
 )
 
 func BingRouter(group *ghttp.RouterGroup) {

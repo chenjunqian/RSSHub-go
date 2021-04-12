@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/dayone"
+	"rsshub/app/api/rssapi/dayone"
 )
 
 func DayOneRouter(group *ghttp.RouterGroup) {

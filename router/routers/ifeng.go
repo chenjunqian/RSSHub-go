@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/ifeng"
+	"rsshub/app/api/rssapi/ifeng"
 )
 
 func IFengRouter(group *ghttp.RouterGroup) {

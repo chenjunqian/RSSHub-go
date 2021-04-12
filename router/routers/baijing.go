@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/baijing"
+	"rsshub/app/api/rssapi/baijing"
 )
 
 func BaijingRouter(group *ghttp.RouterGroup) {

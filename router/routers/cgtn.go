@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/cgtn"
+	"rsshub/app/api/rssapi/cgtn"
 )
 
 func CGTNRouter(group *ghttp.RouterGroup) {

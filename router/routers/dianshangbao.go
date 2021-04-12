@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/dianshangbao"
+	"rsshub/app/api/rssapi/dianshangbao"
 )
 
 func DSBRouter(group *ghttp.RouterGroup) {

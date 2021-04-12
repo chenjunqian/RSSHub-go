@@ -1,4 +1,4 @@
-package webApi
+package webapi
 
 type Controller struct {
 }

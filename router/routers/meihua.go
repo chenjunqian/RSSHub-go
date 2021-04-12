@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/meihua"
+	"rsshub/app/api/rssapi/meihua"
 )
 
 func MeiHuaRouter(group *ghttp.RouterGroup) {

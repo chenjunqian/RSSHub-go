@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/sciencenet"
+	"rsshub/app/api/rssapi/sciencenet"
 )
 
 func ScienceNetRouter(group *ghttp.RouterGroup) {

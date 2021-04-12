@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/whalegogo"
+	"rsshub/app/api/rssapi/whalegogo"
 )
 
 func WhaleGoGoRouter(group *ghttp.RouterGroup) {

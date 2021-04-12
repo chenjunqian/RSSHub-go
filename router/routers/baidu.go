@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/baidu"
+	"rsshub/app/api/rssapi/baidu"
 )
 
 func BaiduRouter(group *ghttp.RouterGroup) {

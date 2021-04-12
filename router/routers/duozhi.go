@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/duozhi"
+	"rsshub/app/api/rssapi/duozhi"
 )
 
 func DuoZhiRouter(group *ghttp.RouterGroup) {

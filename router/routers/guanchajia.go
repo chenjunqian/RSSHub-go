@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/guanchajia"
+	"rsshub/app/api/rssapi/guanchajia"
 )
 
 func GuanChaJiaRouter(group *ghttp.RouterGroup) {

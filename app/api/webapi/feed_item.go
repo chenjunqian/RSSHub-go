@@ -1,4 +1,4 @@
-package webApi
+package webapi
 
 import (
 	"github.com/gogf/gf/net/ghttp"

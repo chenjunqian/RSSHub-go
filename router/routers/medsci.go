@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/medsci"
+	"rsshub/app/api/rssapi/medsci"
 )
 
 func MedsciRouter(group *ghttp.RouterGroup) {

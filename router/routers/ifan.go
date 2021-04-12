@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/ifan"
+	"rsshub/app/api/rssapi/ifan"
 )
 
 func IFanRouter(group *ghttp.RouterGroup) {

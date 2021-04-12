@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/gcore"
+	"rsshub/app/api/rssapi/gcore"
 )
 
 func GCoreRouter(group *ghttp.RouterGroup) {

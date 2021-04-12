@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/chaping"
+	"rsshub/app/api/rssapi/chaping"
 )
 
 func ChaPingRouter(group *ghttp.RouterGroup) {

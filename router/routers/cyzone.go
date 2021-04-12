@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/cyzone"
+	"rsshub/app/api/rssapi/cyzone"
 )
 
 func CYZoneRouter(group *ghttp.RouterGroup) {

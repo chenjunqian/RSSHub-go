@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/jinse"
+	"rsshub/app/api/rssapi/jinse"
 )
 
 func JinseRouter(group *ghttp.RouterGroup) {

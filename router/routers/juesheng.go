@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/juesheng"
+	"rsshub/app/api/rssapi/juesheng"
 )
 
 func JueShengRouter(group *ghttp.RouterGroup) {

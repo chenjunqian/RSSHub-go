@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/bishijie"
+	"rsshub/app/api/rssapi/bishijie"
 )
 
 func BiShiJieRouter(group *ghttp.RouterGroup) {

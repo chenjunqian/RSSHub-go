@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/infoq"
+	"rsshub/app/api/rssapi/infoq"
 )
 
 func InfoQRouter(group *ghttp.RouterGroup) {

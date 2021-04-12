@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/pintu"
+	"rsshub/app/api/rssapi/pintu"
 )
 
 func PintuRouter(group *ghttp.RouterGroup) {

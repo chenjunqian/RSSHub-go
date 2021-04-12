@@ -3,7 +3,7 @@ package routers
 import (
 	"github.com/gogf/gf/net/ghttp"
 
-	"rsshub/app/api/bilibili"
+	"rsshub/app/api/rssapi/bilibili"
 )
 
 func BilibiliRouter(group *ghttp.RouterGroup) {

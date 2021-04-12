@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"rsshub/app/api/zhihu"
+	"rsshub/app/api/rssapi/zhihu"
 
 	"github.com/gogf/gf/net/ghttp"
 )

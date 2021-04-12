@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/api/woshipm"
+	"rsshub/app/api/rssapi/woshipm"
 )
 
 func WoshipmRouter(group *ghttp.RouterGroup) {
