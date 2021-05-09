@@ -25,9 +25,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string) error {
 
 	feedItemModeList := make([]model.RssFeedItem, 0)
 	for _, item := range feed.Items {
-		itemID := strconv.FormatUint(ghash.RSHash64([]byte(item.Link.Href+item.Title)), 32)
 		feedItem := model.RssFeedItem{
-			Id:          itemID,
 			ChannelId:   feedID,
 			Title:       item.Title,
 			ChannelDesc: item.Description,

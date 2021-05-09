@@ -10,7 +10,7 @@ import (
 
 // RssFeedItem is the golang structure for table rss_feed_item.
 type RssFeedItem struct {
-	Id          string      `orm:"id,primary"   json:"id"`          //
+	Id          int         `orm:"id,primary"   json:"id"`          //
 	ChannelId   string      `orm:"channel_id"   json:"channelId"`   //
 	Title       string      `orm:"title"        json:"title"`       //
 	ChannelDesc string      `orm:"channel_desc" json:"channelDesc"` //

@@ -3,7 +3,7 @@ package biz
 import "github.com/gogf/gf/os/gtime"
 
 type RssFeedItemData struct {
-	Id              string
+	Id              int
 	ChannelId       string
 	Title           string
 	ChannelDesc     string
