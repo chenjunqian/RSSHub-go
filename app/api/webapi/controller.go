@@ -19,8 +19,14 @@ type FeedChannelReqData struct {
 	Name  string `v:"required"`
 }
 
-type FeedTagByChannelIdReqData struct {
+type FeedItemListByChannelIdReqData struct {
 	Start     int
 	Size      int
 	ChannelId string `p:"channelId" v:"required"`
+}
+
+type FeedItemListByUserIdReqData struct {
+	Start  int
+	Size   int
+	UserId string `p:"userId" v:"required"`
 }

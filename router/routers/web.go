@@ -14,6 +14,7 @@ func WebRouter(group *ghttp.RouterGroup) {
 			group.GET("/feed_tag", webController.GetFeedTag)
 			group.GET("/feed_channel_by_tag", webController.GetFeedChannelByTag)
 			group.GET("/feed_item_by_channel_id", webController.GetFeedItemByChannelId)
+			group.GET("/feed_item_by_user_id", webController.GetFeedItemListByUserId)
 		})
 	})
 }
