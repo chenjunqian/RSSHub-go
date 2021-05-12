@@ -20,6 +20,7 @@ func (ctl *Controller) Get199ITCategoryReport(req *ghttp.Request) {
 		Title:       "199it",
 		Link:        apiUrl,
 		Tag:         []string{"互联网", "IT", "科技"},
+		ImageUrl:    "http://www.199it.com/favicon.ico",
 		Description: "互联网数据资讯网-研究报告-199IT",
 	}
 	if resp, err := g.Client().SetHeaderMap(headers).Get(apiUrl); err == nil {
