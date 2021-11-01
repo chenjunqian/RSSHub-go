@@ -25,6 +25,7 @@ func init() {
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
 	setCookiesToRedis()
+	initES()
 	cronJob.RegisterJob()
 }
 
