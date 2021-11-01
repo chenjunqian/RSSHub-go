@@ -55,7 +55,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData)
+		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 		g.Redis().DoVar("SET", redisKey, rssStr)
 		g.Redis().DoVar("EXPIRE", redisKey, 60*60*6)
 		_ = req.Response.WriteXmlExit(rssStr)

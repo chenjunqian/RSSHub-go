@@ -37,6 +37,9 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 		for _, articleJson := range articleJsonList {
 			title := articleJson.GetString("title")
 			link := articleJson.GetString("url")
+			if !strings.HasPrefix(link, "http") {
+				link = articleJson.GetString("share")
+			}
 			imageLink := articleJson.GetString("thumb")
 			time := articleJson.GetString("published_at")
 			author := articleJson.GetString("author_classify")
@@ -52,7 +55,7 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*6)
 	_ = req.Response.WriteXmlExit(rssStr)

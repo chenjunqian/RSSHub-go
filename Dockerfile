@@ -10,8 +10,8 @@ LABEL maintainer="chenjunqia0810@foxmail.com"
 ENV WORKDIR /var/www/rsshub
 
 # 添加应用可执行文件，并设置执行权限
-ADD ./bin/linux_amd64/main   $WORKDIR/main
-RUN chmod +x $WORKDIR/main
+ADD ./bin/v1.0.0/linux_amd64/rsshub   $WORKDIR/rsshub
+RUN chmod +x $WORKDIR/rsshub
 
 # 添加I18N多语言文件、静态文件、配置文件、模板文件
 ADD i18n     $WORKDIR/i18n
@@ -23,4 +23,4 @@ ADD template $WORKDIR/template
 #                                   START
 ###############################################################################
 WORKDIR $WORKDIR
-CMD ./main
+CMD ./rsshub

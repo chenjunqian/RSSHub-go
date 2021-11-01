@@ -25,7 +25,7 @@ func (ctl *Controller) GetZhihuPinPeople(req *ghttp.Request) {
 		rssData.Link = fmt.Sprintf("https://www.zhihu.com/people/%s/pins", peopleId)
 		rssData.Items = getPinRSSItems(respString)
 		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
-		rssStr := lib.GenerateRSS(rssData)
+		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

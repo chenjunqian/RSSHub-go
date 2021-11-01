@@ -92,7 +92,7 @@ func commonHtmlParser(htmlStr, linkType string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+			Description: lib.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

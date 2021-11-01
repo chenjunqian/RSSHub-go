@@ -61,7 +61,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BISHIJIE_FLASH", rssStr)
 	g.Redis().DoVar("EXPIRE", "BISHIJIE_FLASH", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

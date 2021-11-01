@@ -42,7 +42,7 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BING_DAILY_IMG", rssStr)
 	g.Redis().DoVar("EXPIRE", "BING_DAILY_IMG", 60*60*6)
 	_ = req.Response.WriteXmlExit(rssStr)

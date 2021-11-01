@@ -41,7 +41,7 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "WEIBO_HOT", rssStr)
 	g.Redis().DoVar("EXPIRE", "WEIBO_HOT", 60*10)
 	_ = req.Response.WriteXmlExit(rssStr)

@@ -31,6 +31,7 @@ type rssFeedChannelColumns struct {
 	ChannelDesc string //
 	ImageUrl    string //
 	Link        string //
+	RsshubLink  string //
 }
 
 var (
@@ -45,6 +46,7 @@ var (
 			ChannelDesc: "channel_desc",
 			ImageUrl:    "image_url",
 			Link:        "link",
+			RsshubLink:  "rsshub_link",
 		},
 	}
 )

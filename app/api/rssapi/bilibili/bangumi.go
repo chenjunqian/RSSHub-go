@@ -61,7 +61,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 		rssData.Description = contentData.GetString("mediaInfo.evaluate")
 		rssData.Items = items
 		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-		rssStr := lib.GenerateRSS(rssData)
+		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

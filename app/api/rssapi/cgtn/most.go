@@ -49,7 +49,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "36KR_NEWS_FLASHES", rssStr)
 	g.Redis().DoVar("EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
 	_ = req.Response.WriteXmlExit(rssStr)

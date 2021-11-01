@@ -55,7 +55,7 @@ func (ctl *Controller) Get36krUserNews(req *ghttp.Request) {
 		}
 
 	}
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "36KR_USER_"+userId, rssStr)
 	g.Redis().DoVar("EXPIRE", "36KR_USER_"+userId, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

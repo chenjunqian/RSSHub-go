@@ -25,13 +25,13 @@ func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
 		Link:        apiUrl,
 		Tag:         linkConfig.Tags,
 		Description: "多知网 - 独立商业视角 新锐教育观察",
-		ImageUrl:    "http://www.duozhi.com/favicon.ico",
+		ImageUrl:    "https://www.duozhi.com/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssData.Items = commonParser(resp.ReadAllString())
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*6)
 	_ = req.Response.WriteXmlExit(rssStr)

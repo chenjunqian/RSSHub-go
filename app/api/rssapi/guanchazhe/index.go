@@ -26,7 +26,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Link:        apiUrl,
 		Tag:         linkConfig.Tags,
 		Description: "经济观察网，经济观察报，电子报纸,电子杂志,财经媒体,观察家,eeo",
-		ImageUrl:    "http://www.eeo.com.cn/favicon.ico",
+		ImageUrl:    "https://www.eeo.com.cn/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		var rssItems []dao.RSSItem
@@ -38,7 +38,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

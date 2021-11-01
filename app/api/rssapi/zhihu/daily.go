@@ -68,7 +68,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData)
+		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 		g.Redis().DoVar("SET", "ZHIHU_DAILY", rssStr)
 		g.Redis().DoVar("EXPIRE", "ZHIHU_DAILY", 60*60*1)
 		_ = req.Response.WriteXmlExit(rssStr)

@@ -43,7 +43,10 @@ func (ctl *Controller) GetNews(req *ghttp.Request) {
 			title := dataDocs.Find("a", "class", "item-title").Text()
 			link := dataDocs.Find("a", "class", "item-title").Attrs()["href"]
 			content := dataDocs.Find("p", "class", "item-desc").Find("a").Text()
-			time := dataDocs.Find("span", "class", "time").Attrs()["data-time"]
+			var time string
+			if timeDoc := dataDocs.Find("span", "class", "time"); timeDoc.Error == nil {
+				time = timeDoc.Attrs()["data-time"]
+			}
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
@@ -55,7 +58,7 @@ func (ctl *Controller) GetNews(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
 	_ = req.Response.WriteXmlExit(rssStr)

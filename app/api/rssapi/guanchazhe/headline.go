@@ -58,7 +58,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 		rssData.Items = rssItemList
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

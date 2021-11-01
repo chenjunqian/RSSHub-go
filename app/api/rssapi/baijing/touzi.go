@@ -27,7 +27,7 @@ func (ctl *Controller) GetTouzi(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BAIJING_TOUZI", rssStr)
 	g.Redis().DoVar("EXPIRE", "BAIJING_TOUZI", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

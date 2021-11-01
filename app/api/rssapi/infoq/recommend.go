@@ -45,7 +45,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "INFOQ_RECOMMEND", rssStr)
 	g.Redis().DoVar("EXPIRE", "INFOQ_RECOMMEND", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

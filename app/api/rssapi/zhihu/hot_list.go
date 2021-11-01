@@ -62,7 +62,7 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData)
+		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 		g.Redis().DoVar("SET", redisKey, rssStr)
 		g.Redis().DoVar("EXPIRE", redisKey, 60*60*1)
 		_ = req.Response.WriteXmlExit(rssStr)

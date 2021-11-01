@@ -1,7 +1,6 @@
 package ifeng
 
 import (
-	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
 	"regexp"
 	"rsshub/app/dao"
@@ -94,7 +93,7 @@ func moneyCommonParser(htmlStr, typeStr string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: fmt.Sprintf("<img src='%s'><br>%s", imageLink, content),
+			Description: lib.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

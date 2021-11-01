@@ -21,7 +21,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Link:        "http://www.mittrchina.com/newsflash",
 		Description: "MIT科技评论快讯",
 		Tag:         []string{"科技"},
-		ImageUrl:    "http://www.mittrchina.com/logo.ico",
+		ImageUrl:    "https://www.mittrchina.com/logo.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Post(apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
@@ -45,7 +45,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "MIT_CHINA_FLASH", rssStr)
 	g.Redis().DoVar("EXPIRE", "MIT_CHINA_FLASH", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

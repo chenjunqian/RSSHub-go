@@ -26,7 +26,7 @@ user = "rsshub"
 pass = "qazxsw"
 name = "rsshubdb"
 type = "mysql"
-debug = "false"
+debug = "true"
 dryrun = 0
 weight = "100"
 charset = "utf8"
@@ -35,26 +35,16 @@ maxOpen = "100"
 maxLifetime = "30s"
 
 [database.logger]
-Path = "/tmp/log/rsshub/sql"
-Level = "all"
+Path   = "/tmp/log/rsshub/sql"
+Level  = "all"
 Stdout = true
 
 [gfcli]
 [[gfcli.gen.dao]]
-link = "mysql:rsshub:qazxsw@tcp(127.0.0.1:3306)/rsshubdb"
-group = ""
+link   = "mysql:rsshub:qazxsw@tcp(127.0.0.1:3306)/rsshubdb"
+group  = ""
 prefix = ""
 tables = ""
-[gfcli.build]
-name = "rsshub"
-arch = "amd64"
-system = "linux"
-mod = "none"
-cgo = 0
-pack = "config"
-version = "v1.0.0"
-output = "./bin"
-extra = ""
 
 [elasticsearch]
 host = "http://127.0.0.1"

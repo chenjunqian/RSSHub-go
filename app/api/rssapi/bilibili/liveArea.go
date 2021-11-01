@@ -87,6 +87,6 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	_ = req.Response.WriteXmlExit(rssStr)
 }

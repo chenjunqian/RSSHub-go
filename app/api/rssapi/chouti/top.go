@@ -37,7 +37,10 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 			} else {
 				link = dataDocs.Find("a", "class", "link-title").Attrs()["href"]
 			}
-			imageLink := dataDocs.Find("img", "class", "image-scale").Attrs()["src"]
+			var imageLink string
+			if imageLinkDoc := dataDocs.Find("img", "class", "image-scale"); imageLinkDoc.Error == nil {
+				imageLink = imageLinkDoc.Attrs()["src"]
+			}
 			time := dataDocs.Find("span", "class", "time-update").Attrs()["data-time"]
 			author := dataDocs.Find("span", "class", "author-name").Text()
 			rssItem := dao.RSSItem{
@@ -51,7 +54,7 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
 	_ = req.Response.WriteXmlExit(rssStr)

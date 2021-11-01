@@ -27,7 +27,7 @@ func (ctl *Controller) GetDataReport(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BAIJING_DATA_REPORT", rssStr)
 	g.Redis().DoVar("EXPIRE", "BAIJING_DATA_REPORT", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

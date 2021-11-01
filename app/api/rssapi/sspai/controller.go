@@ -37,7 +37,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		imageLink = "https://cdn.sspai.com/" + article.GetString("banner")
 		author = article.GetString("author.nickname")
 		time = article.GetString("created_time")
-		link = "https://sspai.com/post" + article.GetString("id")
+		link = "https://sspai.com/post/" + article.GetString("id")
 
 		rssItem := dao.RSSItem{
 			Title:       title,

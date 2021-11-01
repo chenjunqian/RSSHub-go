@@ -26,14 +26,14 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Link:        "http://blog.sciencenet.cn/",
 		Tag:         []string{"科技"},
 		Description: "科学网博客-构建全球华人科学博客圈",
-		ImageUrl:    "http://blog.sciencenet.cn/favicon.ico",
+		ImageUrl:    "https://blog.sciencenet.cn/favicon.ico",
 	}
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := commonParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

@@ -27,7 +27,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 		rssData.Items = commonParser(resp.ReadAllString())
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*6)
 	_ = req.Response.WriteXmlExit(rssStr)

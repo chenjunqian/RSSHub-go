@@ -8,7 +8,7 @@ import (
 
 func init() {
 	s := g.Server()
-	s.Group("/", func(group *ghttp.RouterGroup) {
+	s.Group("/rss", func(group *ghttp.RouterGroup) {
 		group.Group("/zhihu", routers.ZhihubRouter)
 		group.Group("/bilibili", routers.BilibiliRouter)
 		group.Group("/bing", routers.BingRouter)
@@ -53,6 +53,5 @@ func init() {
 		group.Group("/ccg", routers.CCGRouter)
 		group.Group("/woshipm", routers.WoshipmRouter)
 		group.Group("/sspai", routers.SSPaiRouter)
-		group.Group("/api", routers.WebRouter)
 	})
 }

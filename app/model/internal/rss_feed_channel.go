@@ -11,4 +11,5 @@ type RssFeedChannel struct {
 	ChannelDesc string `orm:"channel_desc" json:"channelDesc"` //
 	ImageUrl    string `orm:"image_url"    json:"imageUrl"`    //
 	Link        string `orm:"link"         json:"link"`        //
+	RsshubLink  string `orm:"rsshub_link"  json:"rsshubLink"`  //
 }

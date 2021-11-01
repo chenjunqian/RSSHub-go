@@ -1,12 +1,13 @@
 package bishijie
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 	"strings"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetShenDu(req *ghttp.Request) {
@@ -31,9 +32,13 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		for _, articleDoc := range articleDocsList {
 			var link string
 			var imageLink string
-			title := articleDoc.Find("h4", "class", "articles-title").Text()
-			title = strings.ReplaceAll(title, "\n", "")
-			title = strings.ReplaceAll(title, " ", "")
+			articleTitleDoc := articleDoc.Find("h4", "class", "articles-title")
+			var title string
+			if articleTitleDoc.Error == nil {
+				title = articleDoc.Find("h4", "class", "articles-title").Text()
+				title = strings.ReplaceAll(title, "\n", "")
+				title = strings.ReplaceAll(title, " ", "")
+			}
 			articleImgDoc := articleDoc.Find("div", "class", "articles-img")
 			if articleImgDoc.Error == nil {
 				link = "https://www.bishijie.com" + articleImgDoc.Find("a").Attrs()["href"]
@@ -49,7 +54,7 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BISHIJIE_SHENDU", rssStr)
 	g.Redis().DoVar("EXPIRE", "BISHIJIE_SHENDU", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

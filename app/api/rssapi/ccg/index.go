@@ -1,11 +1,12 @@
 package ccg
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 	"strings"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
@@ -26,7 +27,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Link:        apiUrl,
 		Tag:         linkConfig.Tags,
 		Description: "以全球的视野为中国建言，以中国智慧为全球贡献。",
-		ImageUrl:    "http://www.ccg.org.cn/wp-content/uploads/2020/06/ccg.ico",
+		ImageUrl:    "https://www.ccg.org.cn/wp-content/uploads/2020/06/ccg.ico",
 	}
 
 	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
@@ -34,7 +35,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

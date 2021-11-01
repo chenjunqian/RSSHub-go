@@ -27,7 +27,7 @@ func (ctl *Controller) GetMobilePhone(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BAIJING_MOBILE_PHONE", rssStr)
 	g.Redis().DoVar("EXPIRE", "BAIJING_MOBILE_PHONE", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

@@ -43,7 +43,7 @@ func (ctl *Controller) GetWeekly(req *ghttp.Request) {
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BAIJING_WEEKLY", rssStr)
 	g.Redis().DoVar("EXPIRE", "BAIJING_WEEKLY", 60*60*8)
 	_ = req.Response.WriteXmlExit(rssStr)

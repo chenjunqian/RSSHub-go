@@ -3,14 +3,15 @@ package lib
 import (
 	"github.com/gogf/gf/os/glog"
 	"rsshub/app/dao"
-	"rsshub/app/service"
+	feedService "rsshub/app/service/feed"
 
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/gorilla/feeds"
 )
 
-func GenerateRSS(data dao.RSSFeed) string {
+func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
+
 	feed := &feeds.Feed{
 		Title:       data.Title,
 		Link:        &feeds.Link{Href: data.Link},
@@ -46,7 +47,7 @@ func GenerateRSS(data dao.RSSFeed) string {
 	feedToStore := feed
 	if result, err := feed.ToRss(); err == nil {
 		go func() {
-			err := service.AddFeedChannelAndItem(feedToStore, data.Tag)
+			err := feedService.AddFeedChannelAndItem(feedToStore, data.Tag, rsshubLink)
 			if err != nil {
 				glog.Line().Println(err)
 			}
@@ -62,14 +63,16 @@ func GenerateDescription(imageLink, content string) (description string) {
 	var imageHtml string
 	var contentHtml string
 	var htmlString string
-	if imageLink != "" {
+	if imageLink != "" && content != "" {
 		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
-		//contentHtml = "<div style='position: absolute;bottom: 8px;left: 8px;font-size: 20px;' >" + content + "</div>"
-		contentHtml = "<div style='font-size: 20px; margin-top: 8px' >" + content + "</div>"
+		contentHtml = "<div style='margin-top: 8px' >" + content + "</div>"
 		htmlString = "<meta name='referrer' content='no-referrer' /><div style='position: relative;text-align: left;'>" + imageHtml + contentHtml + "</div>"
+	} else if imageLink != "" && content == "" {
+		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
+		htmlString = "<div style='position: relative;text-align: left;'>" + imageHtml + "</div>"
 	} else {
 		contentHtml = "<div >" + content + "</div>"
-		htmlString = "<div style='position: relative;text-align: left;font-size: 18px;'>" + contentHtml + "</div>"
+		htmlString = "<div style='position: relative;text-align: left;'>" + contentHtml + "</div>"
 	}
 	description = htmlString
 	return

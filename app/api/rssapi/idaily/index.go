@@ -17,7 +17,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		}
 	}
 
-	apiUrl := "http://idaily-cdn.idailycdn.com/api/list/v3/iphone/zh-hans?page=1&ver=iphone"
+	apiUrl := "https://idaily-cdn.idailycdn.com/api/list/v3/iphone/zh-hans?page=1&ver=iphone"
 	rssData := dao.RSSFeed{
 		Title:       "iDaily · 每日环球视野",
 		Link:        apiUrl,
@@ -46,7 +46,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData)
+	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "IDAILY_INDEX", rssStr)
 	g.Redis().DoVar("EXPIRE", "IDAILY_INDEX", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)
