@@ -52,7 +52,7 @@ func initES() {
 	}
 
 	// Ping the Elasticsearch server to get e.g. the version number
-	info, code, err := esClient.Ping("http://127.0.0.1:9200").Do(esContext)
+	info, code, err := esClient.Ping(url).Do(esContext)
 	if err != nil {
 		// Handle error
 		panic(err)
@@ -60,7 +60,7 @@ func initES() {
 	g.Log().Infof("Elasticsearch returned with code %d and version %s", code, info.Version.Number)
 
 	// Getting the ES version number is quite common, so there's a shortcut
-	esVersion, err := esClient.ElasticsearchVersion("http://127.0.0.1:9200")
+	esVersion, err := esClient.ElasticsearchVersion(url)
 	if err != nil {
 		// Handle error
 		panic(err)
