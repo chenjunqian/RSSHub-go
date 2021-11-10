@@ -6,6 +6,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"rsshub/app/cronJob"
 	_ "rsshub/packed"
+	"time"
 
 	"github.com/gogf/gf/frame/g"
 )
@@ -22,6 +23,7 @@ func init() {
 	s := g.Server()
 	//GF相关配置 Web Server配置
 	g.Log().Stack(true)
+	g.Client().SetTimeout(time.Second * 3)
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
 	setCookiesToRedis()

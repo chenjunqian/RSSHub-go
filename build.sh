@@ -1,2 +1,2 @@
 gf pack config packed/packed.go
-gf build
+gf build -trimpath
