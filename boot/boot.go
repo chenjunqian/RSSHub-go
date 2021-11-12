@@ -3,8 +3,8 @@ package boot
 import (
 	"context"
 	"github.com/gogf/gf/os/genv"
+	"github.com/gogf/gf/os/grpool"
 	"github.com/olivere/elastic/v7"
-	"rsshub/app/cronJob"
 	_ "rsshub/packed"
 	"time"
 
@@ -13,6 +13,7 @@ import (
 
 var esClient *elastic.Client
 var esContext context.Context
+var gsGRPool *grpool.Pool
 
 func init() {
 	configEvn := genv.Get("GF_GCFG_FILE", "")
@@ -27,8 +28,8 @@ func init() {
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
 	setCookiesToRedis()
+	initGRPool()
 	initES()
-	cronJob.RegisterJob()
 }
 
 func setCookiesToRedis() {
@@ -70,10 +71,18 @@ func initES() {
 	g.Log().Infof("Elasticsearch version %s", esVersion)
 }
 
+func initGRPool() {
+	gsGRPool = grpool.New(2)
+}
+
 func GetESClient() *elastic.Client {
 	return esClient
 }
 
 func GetESContext() context.Context {
 	return esContext
+}
+
+func GetPool() *grpool.Pool {
+	return gsGRPool
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"rsshub/app/cronJob"
 	_ "rsshub/boot"
 	_ "rsshub/router"
 
@@ -8,5 +9,6 @@ import (
 )
 
 func main() {
+	cronJob.RegisterJob()
 	g.Server().Run()
 }

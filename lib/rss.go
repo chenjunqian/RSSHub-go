@@ -4,6 +4,7 @@ import (
 	"github.com/gogf/gf/os/glog"
 	"rsshub/app/dao"
 	feedService "rsshub/app/service/feed"
+	"rsshub/boot"
 
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
@@ -46,12 +47,12 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 
 	feedToStore := feed
 	if result, err := feed.ToRss(); err == nil {
-		go func() {
+		_ = boot.GetPool().Add(func() {
 			err := feedService.AddFeedChannelAndItem(feedToStore, data.Tag, rsshubLink)
 			if err != nil {
 				glog.Line().Println(err)
 			}
-		}()
+		})
 
 		return result
 	} else {
