@@ -2,14 +2,14 @@ package cronJob
 
 import (
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gcron"
-	"github.com/gogf/gf/os/glog"
-	"rsshub/boot"
+	"rsshub/app/component"
 	"strings"
 )
 
 func RegisterJob() {
-	_, _ = gcron.AddSingleton("0 0 * * * *", feedRefreshCronJob)
+	_, _ = gcron.AddSingleton("0 */10 * * * *", feedRefreshCronJob)
 }
 
 func feedRefreshCronJob() {
@@ -20,20 +20,11 @@ func feedRefreshCronJob() {
 				continue
 			}
 
-			tempRout := router
-			_ = boot.GetPool().Add(func() {
-				apiUrl := "http://localhost" + tempRout.Address + tempRout.Route
-				if _, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err != nil {
-					glog.Line().Println("Feed refresh cron job error : ", err)
-				}
-			})
+			var (
+				tempRout ghttp.RouterItem
+			)
+			tempRout = router
+			component.SendCallRSSApiTask(tempRout.Address, tempRout.Route)
 		}
 	}
-}
-
-func getHeaders() map[string]string {
-	headers := make(map[string]string)
-	headers["accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-	headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36 Edg/84.0.522.63"
-	return headers
 }

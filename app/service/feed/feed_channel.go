@@ -8,8 +8,8 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gorilla/feeds"
 	"github.com/olivere/elastic/v7"
+	"rsshub/app/component"
 	"rsshub/app/model"
-	"rsshub/boot"
 	"strconv"
 )
 
@@ -67,7 +67,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string, rsshubLink string
 		return err
 	})
 
-	bulkRequest := boot.GetESClient().Bulk()
+	bulkRequest := component.GetESClient().Bulk()
 	for _, feedItem := range feedItemModeList {
 		esFeedItem := model.RssFeedItemESData{
 			Id:              feedItem.Id,
@@ -85,7 +85,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string, rsshubLink string
 		indexReq := elastic.NewBulkIndexRequest().Index("rss_item").Id(feedItem.Id).Doc(esFeedItem)
 		bulkRequest.Add(indexReq)
 	}
-	resp, err := bulkRequest.Do(boot.GetESContext())
+	resp, err := bulkRequest.Do(component.GetESContext())
 	if err != nil || resp.Errors {
 		respStr := gjson.New(resp)
 		g.Log().Errorf("bulk index request failed\nError message : %s \nResponse : %s", err, respStr)

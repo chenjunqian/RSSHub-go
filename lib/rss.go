@@ -1,14 +1,12 @@
 package lib
 
 import (
-	"github.com/gogf/gf/os/glog"
-	"rsshub/app/dao"
-	feedService "rsshub/app/service/feed"
-	"rsshub/boot"
-
+	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/gorilla/feeds"
+	"rsshub/app/component"
+	"rsshub/app/dao"
 )
 
 func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
@@ -47,12 +45,12 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 
 	feedToStore := feed
 	if result, err := feed.ToRss(); err == nil {
-		_ = boot.GetPool().Add(func() {
-			err := feedService.AddFeedChannelAndItem(feedToStore, data.Tag, rsshubLink)
-			if err != nil {
-				glog.Line().Println(err)
-			}
-		})
+		var (
+			feedString, tags string
+		)
+		feedString = gjson.New(feedToStore).MustToJsonString()
+		tags = gjson.New(data.Tag).MustToJsonString()
+		component.SendStoreFeedTask(feedString, tags, rsshubLink)
 
 		return result
 	} else {

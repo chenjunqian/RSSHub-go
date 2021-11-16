@@ -3,6 +3,7 @@
 Address = ":8081"
 ServerAgent = "rsshub"
 LogPath = "/tmp/log/rsshub/server"
+DumpRouterMap = false
 
 # Logger.
 [logger]
