@@ -13,10 +13,15 @@ var machineryWorker *machinery.Worker
 
 func InitMachinery() {
 	g.Log().Info("init machinery ")
+
+	host := g.Cfg().GetString("machinery.redis.host")
+	port := g.Cfg().GetString("machinery.redis.port")
+	password := g.Cfg().GetString("machinery.redis.pass")
+
 	var cnf = &machineryConfig.Config{
-		Broker:        "redis://123456@localhost:6379/1",
+		Broker:        "redis://" + password + "@" + host + ":" + port + "/1",
 		DefaultQueue:  "machinery_tasks",
-		ResultBackend: "redis://123456@localhost:6379/2",
+		ResultBackend: "redis://" + password + "@" + host + ":" + port + "/2",
 	}
 	var serverError error
 	machineryServer, serverError = machinery.NewServer(cnf)

@@ -52,3 +52,9 @@ host = "http://127.0.0.1"
 port = "9200"
 user = "elastic"
 pass = "qazxsw"
+
+[machinery]
+[machinery.redis]
+host = "127.0.0.1"
+port = "6379"
+pass = "123456"
