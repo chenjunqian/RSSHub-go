@@ -2,7 +2,6 @@ package cronJob
 
 import (
 	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gcron"
 	"rsshub/app/component"
 	"strings"
@@ -20,11 +19,7 @@ func feedRefreshCronJob() {
 				continue
 			}
 
-			var (
-				tempRout ghttp.RouterItem
-			)
-			tempRout = router
-			component.SendCallRSSApiTask(tempRout.Address, tempRout.Route)
+			component.SendCallRSSApiTask(router.Address, router.Route)
 		}
 	}
 }
