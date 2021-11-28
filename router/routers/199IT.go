@@ -7,8 +7,7 @@ import (
 
 func IT199Router(group *ghttp.RouterGroup) {
 	group.Group("/", func(group *ghttp.RouterGroup) {
-		it199Controller := new(_199IT.Controller)
-		group.GET("/index", it199Controller.Get199ITIndex)
-		group.GET("/category/report", it199Controller.Get199ITCategoryReport)
+		group.GET("/index", _199IT.IT1999Controller.Get199ITIndex)
+		group.GET("/category/report", _199IT.IT1999Controller.Get199ITCategoryReport)
 	})
 }

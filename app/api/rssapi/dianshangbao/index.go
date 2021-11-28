@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) GetIndex(req *ghttp.Request) {
+func (ctl *controller) GetIndex(req *ghttp.Request) {
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
@@ -45,10 +45,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			contentDoc := dataDocs.Find("div", "class", "new-list-con-r")
 			if contentDoc.Error == nil && contentDoc.Find("a").Error == nil {
 				link = contentDoc.Find("a").Attrs()["href"]
-				content = contentDoc.Find("a").HTML()
 			} else {
 				continue
 			}
+
+			content = parseNewsDetail(link)
 
 			rssItem := dao.RSSItem{
 				Title:       title,
@@ -63,4 +64,27 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)
+}
+
+func parseNewsDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "article-content-container")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request dianshangbao news article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
 }

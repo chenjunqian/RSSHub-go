@@ -31,7 +31,7 @@ func InitMachinery() {
 
 	go func() {
 		var err error
-		machineryWorker = machineryServer.NewWorker("rsshub_work", 3)
+		machineryWorker = machineryServer.NewWorker("rsshub_work", 0)
 		err = machineryWorker.Launch()
 		if err != nil {
 			g.Log().Error("init machinery worker failed : ", err)

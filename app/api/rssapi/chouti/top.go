@@ -8,7 +8,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetTop(req *ghttp.Request) {
+func (ctl *controller) GetTop(req *ghttp.Request) {
 	cacheKey := "CHOUTI_TOP"
 	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
 		if value.String() != "" {
@@ -29,24 +29,32 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 		dataDocsList := respDocs.FindAll("div", "class", "link-area")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataDocs := range dataDocsList {
-			title := dataDocs.Find("a", "class", "link-title").Text()
+			var (
+				title     string
+				link      string
+				imageLink string
+				time      string
+				author    string
+				content   string
+			)
+			title = dataDocs.Find("a", "class", "link-title").Text()
 			linkFrom := dataDocs.Find("div", "class", "link-from")
-			var link string
+
 			if linkFrom.Error != nil || linkFrom.Text() == "" {
 				link = apiUrl + dataDocs.Find("a", "class", "link-title").Attrs()["href"]
 			} else {
 				link = dataDocs.Find("a", "class", "link-title").Attrs()["href"]
 			}
-			var imageLink string
+
 			if imageLinkDoc := dataDocs.Find("img", "class", "image-scale"); imageLinkDoc.Error == nil {
 				imageLink = imageLinkDoc.Attrs()["src"]
 			}
-			time := dataDocs.Find("span", "class", "time-update").Attrs()["data-time"]
-			author := dataDocs.Find("span", "class", "author-name").Text()
+			time = dataDocs.Find("span", "class", "time-update").Attrs()["data-time"]
+			author = dataDocs.Find("span", "class", "author-name").Text()
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: lib.GenerateDescription(imageLink, ""),
+				Description: lib.GenerateDescription(imageLink, content),
 				Author:      author,
 				Created:     time,
 			}

@@ -5,8 +5,10 @@ import (
 	"github.com/gogf/gf/frame/g"
 )
 
-type Controller struct {
+type controller struct {
 }
+
+var Controller = &controller{}
 
 func getHeaders() map[string]string {
 	headers := make(map[string]string)

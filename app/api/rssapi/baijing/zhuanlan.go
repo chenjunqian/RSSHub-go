@@ -7,7 +7,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
+func (ctl *controller) GetZhuanlan(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "BAIJING_ZHUANLAN"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())

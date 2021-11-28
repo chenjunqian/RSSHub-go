@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) Get36krUserNews(req *ghttp.Request) {
+func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 	userId := req.GetString("id")
 
 	if value, err := g.Redis().DoVar("GET", "36KR_USER_"+userId); err == nil {

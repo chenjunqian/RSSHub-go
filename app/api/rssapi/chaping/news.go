@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) GetNews(req *ghttp.Request) {
+func (ctl *controller) GetNews(req *ghttp.Request) {
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]

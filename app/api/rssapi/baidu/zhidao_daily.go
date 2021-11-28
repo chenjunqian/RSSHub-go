@@ -9,7 +9,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetZhiDaoDaily(req *ghttp.Request) {
+func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "BAIDU_ZHIDAO_DAILY"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())
@@ -30,22 +30,24 @@ func (ctl *Controller) GetZhiDaoDaily(req *ghttp.Request) {
 		itemList := docs.FindAll("li", "class", "clearfix")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, item := range itemList {
-			title := item.Find("img").Attrs()["title"]
-			imageLink := item.Find("img").Attrs()["src"]
-			contentDiv := item.Find("div", "class", "summer")
-			var content string
-			var link string
+			var (
+				title      string
+				contentDiv soup.Root
+				content    string
+				link       string
+			)
+			title = item.Find("img").Attrs()["title"]
+			contentDiv = item.Find("div", "class", "summer")
 			if contentDiv.Error != nil {
 				continue
 			}
-
-			content = contentDiv.Find("a").FullText()
 			link = contentDiv.Find("a").Attrs()["href"]
 			link = "https://zhidao.baidu.com/" + link
+			content = parseDetail(link)
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: lib.GenerateDescription(imageLink, content),
+				Description: lib.GenerateDescription("", content),
 			}
 			rssItems = append(rssItems, rssItem)
 		}
@@ -56,4 +58,27 @@ func (ctl *Controller) GetZhiDaoDaily(req *ghttp.Request) {
 	g.Redis().DoVar("SET", "BAIDU_ZHIDAO_DAILY", rssStr)
 	g.Redis().DoVar("EXPIRE", "BAIDU_ZHIDAO_DAILY", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)
+}
+
+func parseDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString, _ = gcharset.Convert("UTF-8", "gbk", resp.ReadAllString())
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "detail")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request baidu article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
 }

@@ -7,7 +7,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetMobilePhone(req *ghttp.Request) {
+func (ctl *controller) GetMobilePhone(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "BAIJING_MOBILE_PHONE"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())

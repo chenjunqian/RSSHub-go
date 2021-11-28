@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) Get36krNewsFlashes(req *ghttp.Request) {
+func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
 
 	if value, err := g.Redis().DoVar("GET", "36KR_NEWS_FLASHES"); err == nil {
 		if value.String() != "" {

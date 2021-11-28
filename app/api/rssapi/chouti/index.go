@@ -2,6 +2,7 @@ package chouti
 
 import (
 	"fmt"
+	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -10,7 +11,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) GetIndex(req *ghttp.Request) {
+func (ctl *controller) GetIndex(req *ghttp.Request) {
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
@@ -29,7 +30,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	} else {
 		apiUrl = fmt.Sprintf("https://m.chouti.com/api/m/zone/%s?afterScore=0", linkConfig.LinkType)
 	}
-	rssData := dao.RSSFeed{
+	var rssData = dao.RSSFeed{
 		Title:       "抽屉新热榜" + linkConfig.Title,
 		Link:        "https://m.chouti.com",
 		Tag:         linkConfig.Tags,
@@ -41,15 +42,24 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		dataJsonList := respJson.GetJsons("data")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataJson := range dataJsonList {
-			title := dataJson.GetString("title")
-			imageLink := dataJson.GetString("img_url")
-			time := dataJson.GetString("createTime")
-			author := dataJson.GetString("submitted_user.nick")
-			link := dataJson.GetString("originalUrl")
+			var (
+				title     string
+				imageLink string
+				time      string
+				author    string
+				link      string
+				content   string
+			)
+			title = dataJson.GetString("title")
+			imageLink = dataJson.GetString("img_url")
+			time = dataJson.GetString("createTime")
+			author = dataJson.GetString("submitted_user.nick")
+			link = dataJson.GetString("originalUrl")
+			content = parseIndexDetail(link)
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: lib.GenerateDescription(imageLink, ""),
+				Description: lib.GenerateDescription(imageLink, content),
 				Author:      author,
 				Created:     time,
 			}
@@ -61,4 +71,27 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
 	_ = req.Response.WriteXmlExit(rssStr)
+}
+
+func parseIndexDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "id", "container")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request chouti index article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
 }

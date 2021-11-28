@@ -1,7 +1,9 @@
 package dianshangbao
 
-type Controller struct {
+type controller struct {
 }
+
+var Controller = &controller{}
 
 type NewsRouteConfig struct {
 	ChannelId string

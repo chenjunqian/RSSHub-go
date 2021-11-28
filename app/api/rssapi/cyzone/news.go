@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) GetNews(req *ghttp.Request) {
+func (ctl *controller) GetNews(req *ghttp.Request) {
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
@@ -39,11 +39,20 @@ func (ctl *Controller) GetNews(req *ghttp.Request) {
 		dataDocsList := respDocs.FindAll("div", "class", "article-item")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataDocs := range dataDocsList {
-			imageLink := dataDocs.Find("a", "class", "pic-a").Find("img").Attrs()["src"]
-			title := dataDocs.Find("a", "class", "item-title").Text()
-			link := dataDocs.Find("a", "class", "item-title").Attrs()["href"]
-			content := dataDocs.Find("p", "class", "item-desc").Find("a").Text()
-			var time string
+			var (
+				title     string
+				imageLink string
+				link      string
+				content   string
+				time      string
+			)
+			imageLink = dataDocs.Find("a", "class", "pic-a").Find("img").Attrs()["src"]
+			title = dataDocs.Find("a", "class", "item-title").Text()
+			link = dataDocs.Find("a", "class", "item-title").Attrs()["href"]
+			if strings.HasPrefix(link, "//") {
+				link = "https:" + link
+			}
+			content = parseNewsDetail(link)
 			if timeDoc := dataDocs.Find("span", "class", "time"); timeDoc.Error == nil {
 				time = timeDoc.Attrs()["data-time"]
 			}
@@ -62,4 +71,27 @@ func (ctl *Controller) GetNews(req *ghttp.Request) {
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
 	_ = req.Response.WriteXmlExit(rssStr)
+}
+
+func parseNewsDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "show-wrap")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request cyzone news article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
 }

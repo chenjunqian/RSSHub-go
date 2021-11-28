@@ -7,12 +7,11 @@ import (
 
 func CGTNRouter(group *ghttp.RouterGroup) {
 	group.Group("/", func(group *ghttp.RouterGroup) {
-		cgtnController := new(cgtn.Controller)
-		group.GET("/most/all", cgtnController.GetMostRead)
-		group.GET("/most/day", cgtnController.GetMostRead)
-		group.GET("/most/week", cgtnController.GetMostRead)
-		group.GET("/most/month", cgtnController.GetMostRead)
-		group.GET("/most/year", cgtnController.GetMostRead)
-		group.GET("/top", cgtnController.GetTop)
+		group.GET("/most/all", cgtn.Controller.GetMostRead)
+		group.GET("/most/day", cgtn.Controller.GetMostRead)
+		group.GET("/most/week", cgtn.Controller.GetMostRead)
+		group.GET("/most/month", cgtn.Controller.GetMostRead)
+		group.GET("/most/year", cgtn.Controller.GetMostRead)
+		group.GET("/top", cgtn.Controller.GetTop)
 	})
 }

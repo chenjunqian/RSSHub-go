@@ -8,7 +8,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetWeekly(req *ghttp.Request) {
+func (ctl *controller) GetWeekly(req *ghttp.Request) {
 
 	if value, err := g.Redis().DoVar("GET", "BAIJING_WEEKLY"); err == nil {
 		if value.String() != "" {

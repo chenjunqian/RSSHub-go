@@ -1,7 +1,9 @@
 package chaping
 
-type Controller struct {
+type controller struct {
 }
+
+var Controller = &controller{}
 
 type NewsRouteConfig struct {
 	Caty  string

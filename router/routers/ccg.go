@@ -7,8 +7,7 @@ import (
 
 func CCGRouter(group *ghttp.RouterGroup) {
 	group.Group("/index", func(group *ghttp.RouterGroup) {
-		ccgCtl := new(ccg.Controller)
-		group.GET("/news", ccgCtl.GetIndex)
-		group.GET("/media", ccgCtl.GetIndex)
+		group.GET("/news", ccg.Controller.GetIndex)
+		group.GET("/media", ccg.Controller.GetIndex)
 	})
 }

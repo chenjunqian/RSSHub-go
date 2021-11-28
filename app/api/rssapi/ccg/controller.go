@@ -2,12 +2,16 @@ package ccg
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
 
-type Controller struct {
+type controller struct {
 }
+
+var Controller = &controller{}
 
 type LinkRouteConfig struct {
 	ChannelId string
@@ -31,12 +35,14 @@ func indexParser(respString string) (items []dao.RSSItem) {
 		articleList = articleUl.FindAll("li")
 	}
 	for _, article := range articleList {
-		var imageLink string
-		var title string
-		var link string
-		var author string
-		var content string
-		var time string
+		var (
+			imageLink string
+			title     string
+			link      string
+			author    string
+			content   string
+			time      string
+		)
 
 		if titleH5 := article.Find("h5"); titleH5.Error == nil {
 			title = titleH5.Text()
@@ -52,9 +58,7 @@ func indexParser(respString string) (items []dao.RSSItem) {
 			link = linkHtml.Attrs()["href"]
 		}
 
-		if contentHtml := article.Find("p"); contentHtml.Error == nil {
-			content = contentHtml.Text()
-		}
+		content = parseIndexDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -65,6 +69,29 @@ func indexParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseIndexDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "pinpai-page")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request 199IT article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

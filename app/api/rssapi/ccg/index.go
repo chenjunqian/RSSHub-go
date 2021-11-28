@@ -9,18 +9,18 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 )
 
-func (ctl *Controller) GetIndex(req *ghttp.Request) {
+func (ctl *controller) GetIndex(req *ghttp.Request) {
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getInfoLinks()[linkType]
 
 	cacheKey := "CCG_INDEX_" + linkConfig.ChannelId
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
-		}
-	}
+	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	//	if value.String() != "" {
+	//		_ = req.Response.WriteXmlExit(value.String())
+	//	}
+	//}
 	apiUrl := "http://www.ccg.org.cn/" + linkConfig.ChannelId
 	rssData := dao.RSSFeed{
 		Title:       "全球化智库 - " + linkConfig.Title,

@@ -30,7 +30,7 @@ func init() {
 		group.Group("/chouti", routers.ChouTiRouter)
 		group.Group("/cyzone", routers.CYZoneRouter)
 		group.Group("/dianshangbao", routers.DSBRouter)
-		group.Group("/dongqiudi", routers.DongQiuDiRouter)
+		//group.Group("/dongqiudi", routers.DongQiuDiRouter)
 		group.Group("/dx2025", routers.DX2025Router)
 		group.Group("/duozhi", routers.DuoZhiRouter)
 		group.Group("/ifeng", routers.IFengRouter)

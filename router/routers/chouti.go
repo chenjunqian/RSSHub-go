@@ -7,13 +7,12 @@ import (
 
 func ChouTiRouter(group *ghttp.RouterGroup) {
 	group.Group("/", func(group *ghttp.RouterGroup) {
-		chouTiCtl := new(chouti.Controller)
-		group.GET("/hot", chouTiCtl.GetIndex)
-		group.GET("/news", chouTiCtl.GetIndex)
-		group.GET("/scoff", chouTiCtl.GetIndex)
-		group.GET("/pic", chouTiCtl.GetIndex)
-		group.GET("/ask", chouTiCtl.GetIndex)
-		group.GET("/tec", chouTiCtl.GetIndex)
-		group.GET("/top", chouTiCtl.GetTop)
+		group.GET("/hot", chouti.Controller.GetIndex)
+		group.GET("/news", chouti.Controller.GetIndex)
+		group.GET("/scoff", chouti.Controller.GetIndex)
+		group.GET("/pic", chouti.Controller.GetIndex)
+		group.GET("/ask", chouti.Controller.GetIndex)
+		group.GET("/tec", chouti.Controller.GetIndex)
+		group.GET("/top", chouti.Controller.GetTop)
 	})
 }

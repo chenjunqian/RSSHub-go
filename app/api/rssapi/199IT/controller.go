@@ -2,12 +2,16 @@ package _199IT
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
 
-type Controller struct {
+type controller struct {
 }
+
+var IT1999Controller = &controller{}
 
 func getHeaders() map[string]string {
 	headers := make(map[string]string)
@@ -21,11 +25,20 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 	articleList := doc.FindAll("article")
 	rssItems := make([]dao.RSSItem, 0)
 	for _, article := range articleList {
-		title := article.Find("h2", "class", "entry-title").Find("a").Attrs()["title"]
-		thumbnail := article.Find("img", "class", "attachment-post-thumbnail").Attrs()["src"]
-		description := lib.GenerateDescription(thumbnail, "")
-		time := article.Find("time", "class", "entry-date").Attrs()["datetime"]
-		link := article.Find("h2", "class", "entry-title").Find("a").Attrs()["href"]
+		var (
+			title       string
+			thumbnail   string
+			description string
+			time        string
+			link        string
+			detailData  string
+		)
+		title = article.Find("h2", "class", "entry-title").Find("a").Attrs()["title"]
+		thumbnail = article.Find("img", "class", "attachment-post-thumbnail").Attrs()["src"]
+		time = article.Find("time", "class", "entry-date").Attrs()["datetime"]
+		link = article.Find("h2", "class", "entry-title").Find("a").Attrs()["href"]
+		detailData = parseDetail(link)
+		description = lib.GenerateDescription(thumbnail, detailData)
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,
@@ -36,4 +49,25 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 	}
 
 	return rssItems
+}
+
+func parseDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+		)
+		docs = soup.HTMLParse(resp.ReadAllString())
+		articleElem = docs.Find("article")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request 199IT article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
 }

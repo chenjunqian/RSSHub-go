@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func (ctl *Controller) GetMostRead(req *ghttp.Request) {
+func (ctl *controller) GetMostRead(req *ghttp.Request) {
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 
@@ -33,13 +33,21 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 		items := itemWrapper.FindAll("div", "class", "most-read-item-box")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, item := range items {
-			rssItem := dao.RSSItem{}
-			title := item.Find("a").Text()
-			time := item.Find("a").Attrs()["data-time"]
-			link := item.Find("a").Attrs()["href"]
-			cgContent := item.Find("div", "class", "cg-content").Text()
-			mainContent := getMainContent(link)
-			description := fmt.Sprintf("%s<br>%s", cgContent, mainContent)
+			var (
+				title       string
+				time        string
+				link        string
+				cgContent   string
+				mainContent string
+				description string
+			)
+			var rssItem = dao.RSSItem{}
+			title = item.Find("a").Text()
+			time = item.Find("a").Attrs()["data-time"]
+			link = item.Find("a").Attrs()["href"]
+			cgContent = item.Find("div", "class", "cg-content").Text()
+			mainContent = getMainContent(link)
+			description = fmt.Sprintf("%s<br>%s", cgContent, mainContent)
 			description = lib.GenerateDescription("", description)
 			rssItem.Title = title
 			rssItem.Link = link

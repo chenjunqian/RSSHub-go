@@ -7,7 +7,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetGanHuo(req *ghttp.Request) {
+func (ctl *controller) GetGanHuo(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "BAIJING_GANHUO"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())

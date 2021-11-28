@@ -2,13 +2,17 @@ package _36kr
 
 import (
 	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
 
-type Controller struct {
+type controller struct {
 }
+
+var KR36Controller = &controller{}
 
 type NewsRouteConfig struct {
 	Link  string
@@ -39,9 +43,14 @@ func parseNews(htmlStr string) []dao.RSSItem {
 			Link:    "https://36kr.com/p/" + informationJson.GetString("itemId"),
 			Created: informationJson.GetString("templateMaterial.publishTime"),
 		}
-		summary := informationJson.GetString("templateMaterial.summary")
-		author := informationJson.GetString("templateMaterial.authorName")
-		imgLink := informationJson.GetString("templateMaterial.widgetImage")
+		var (
+			summary string
+			author  string
+			imgLink string
+		)
+		summary = parseDetail(rssItem.Link)
+		author = informationJson.GetString("templateMaterial.authorName")
+		imgLink = informationJson.GetString("templateMaterial.widgetImage")
 		rssItem.Description = lib.GenerateDescription(imgLink, summary)
 		rssItem.Author = author
 
@@ -49,6 +58,35 @@ func parseNews(htmlStr string) []dao.RSSItem {
 	}
 
 	return rssItems
+}
+
+func parseDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			reg             *regexp.Regexp
+			contentStrArray []string
+			contentStr      string
+		)
+		reg = regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
+		contentStrArray = reg.FindStringSubmatch(resp.ReadAllString())
+		if len(contentStrArray) <= 1 {
+			g.Log().Errorf("Parse 36kr news detail failed, detail json data is no match rule, detail link is %s", detailLink)
+			return
+		}
+		contentStr = contentStrArray[1]
+		contentData := gjson.New(contentStr)
+
+		detailData = contentData.GetString("articleDetail.articleDetailData.data.widgetContent")
+
+	} else {
+		g.Log().Errorf("Request 36kr news detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
 }
 
 func getNewsLinks() map[string]NewsRouteConfig {

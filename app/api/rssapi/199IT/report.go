@@ -8,7 +8,7 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 )
 
-func (ctl *Controller) Get199ITCategoryReport(req *ghttp.Request) {
+func (ctl *controller) Get199ITCategoryReport(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "199IT_CATEGORY_REPORT"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())

@@ -8,7 +8,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetTop(req *ghttp.Request) {
+func (ctl *controller) GetTop(req *ghttp.Request) {
 
 	if value, err := g.Redis().DoVar("GET", "CGTN_TOP"); err == nil {
 		if value.String() != "" {
@@ -28,12 +28,18 @@ func (ctl *Controller) GetTop(req *ghttp.Request) {
 		topItems := docs.FindAll("div", "class", "top-news-item")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, item := range topItems {
+			var (
+				title       string
+				time        string
+				link        string
+				description string
+			)
 			rssItem := dao.RSSItem{}
 			contentHtml := item.Find("div", "class", "top-news-item-content")
-			title := contentHtml.Find("a").Text()
-			time := contentHtml.Find("a").Attrs()["data-time"]
-			link := contentHtml.Find("a").Attrs()["href"]
-			description := getMainContent(link)
+			title = contentHtml.Find("a").Text()
+			time = contentHtml.Find("a").Attrs()["data-time"]
+			link = contentHtml.Find("a").Attrs()["href"]
+			description = getMainContent(link)
 
 			rssItem.Title = title
 			rssItem.Link = link

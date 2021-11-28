@@ -1,7 +1,9 @@
 package chouti
 
-type Controller struct {
+type controller struct {
 }
+
+var Controller = &controller{}
 
 type NewsRouteConfig struct {
 	LinkType string

@@ -7,7 +7,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) Get199ITIndex(req *ghttp.Request) {
+func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "199IT_INDEX"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())

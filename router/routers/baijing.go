@@ -7,16 +7,15 @@ import (
 
 func BaijingRouter(group *ghttp.RouterGroup) {
 	group.Group("/", func(group *ghttp.RouterGroup) {
-		baijingCtl := new(baijing.Controller)
-		group.GET("/daily", baijingCtl.GetNews)
-		group.GET("/weekly", baijingCtl.GetWeekly)
-		group.GET("/ganhuo", baijingCtl.GetGanHuo)
-		group.GET("/zhuanlan", baijingCtl.GetZhuanlan)
-		group.GET("/shouyou", baijingCtl.GetShouyou)
-		group.GET("/touzi", baijingCtl.GetTouzi)
-		group.GET("/datareport", baijingCtl.GetDataReport)
-		group.GET("/mobile", baijingCtl.GetMobilePhone)
-		group.GET("/ebusiness", baijingCtl.GetEBusiness)
-		group.GET("/activity", baijingCtl.GetActivity)
+		group.GET("/daily", baijing.BJController.GetNews)
+		group.GET("/weekly", baijing.BJController.GetWeekly)
+		group.GET("/ganhuo", baijing.BJController.GetGanHuo)
+		group.GET("/zhuanlan", baijing.BJController.GetZhuanlan)
+		group.GET("/shouyou", baijing.BJController.GetShouyou)
+		group.GET("/touzi", baijing.BJController.GetTouzi)
+		group.GET("/datareport", baijing.BJController.GetDataReport)
+		group.GET("/mobile", baijing.BJController.GetMobilePhone)
+		group.GET("/ebusiness", baijing.BJController.GetEBusiness)
+		group.GET("/activity", baijing.BJController.GetActivity)
 	})
 }

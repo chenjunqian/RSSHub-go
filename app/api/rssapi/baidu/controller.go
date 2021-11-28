@@ -1,7 +1,9 @@
 package baidu
 
-type Controller struct {
+type controller struct {
 }
+
+var BaiDuController = &controller{}
 
 func getHeaders() map[string]string {
 	headers := make(map[string]string)

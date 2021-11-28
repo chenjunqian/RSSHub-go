@@ -7,12 +7,11 @@ import (
 
 func ChaPingRouter(group *ghttp.RouterGroup) {
 	group.Group("/", func(group *ghttp.RouterGroup) {
-		chapingCtl := new(chaping.Controller)
-		group.GET("/news/game", chapingCtl.GetNews)
-		group.GET("/news/techNews", chapingCtl.GetNews)
-		group.GET("/news/techFun", chapingCtl.GetNews)
-		group.GET("/news/debugTime", chapingCtl.GetNews)
-		group.GET("/news/internetFun", chapingCtl.GetNews)
-		group.GET("/news/car", chapingCtl.GetNews)
+		group.GET("/news/game", chaping.Controller.GetNews)
+		group.GET("/news/techNews", chaping.Controller.GetNews)
+		group.GET("/news/techFun", chaping.Controller.GetNews)
+		group.GET("/news/debugTime", chaping.Controller.GetNews)
+		group.GET("/news/internetFun", chaping.Controller.GetNews)
+		group.GET("/news/car", chaping.Controller.GetNews)
 	})
 }

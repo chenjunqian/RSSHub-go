@@ -7,7 +7,7 @@ import (
 	"rsshub/lib"
 )
 
-func (ctl *Controller) GetShouyou(req *ghttp.Request) {
+func (ctl *controller) GetShouyou(req *ghttp.Request) {
 	if value, err := g.Redis().DoVar("GET", "BAIJING_SHOUYOU"); err == nil {
 		if value.String() != "" {
 			_ = req.Response.WriteXmlExit(value.String())

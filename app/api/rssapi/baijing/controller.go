@@ -2,13 +2,17 @@ package baijing
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 	"strings"
 )
 
-type Controller struct {
+type controller struct {
 }
+
+var BJController = &controller{}
 
 func getHeaders() map[string]string {
 	headers := make(map[string]string)
@@ -21,17 +25,20 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 	docs := soup.HTMLParse(htmlStr)
 	articleDocList := docs.FindAll("div", "class", "articleSingle")
 	for _, articleDoc := range articleDocList {
+		var (
+			title     string
+			imageLink string
+			link      string
+			content   string
+		)
 		imgDoc := articleDoc.Find("img", "class", "attachment-thumbnail")
-		title := imgDoc.Attrs()["title"]
-		imageLink := "https://www.baijingapp.com" + imgDoc.Attrs()["src"]
-		link := articleDoc.Find("a", "class", "article").Attrs()["href"]
+		title = imgDoc.Attrs()["title"]
+		imageLink = "https://www.baijingapp.com" + imgDoc.Attrs()["src"]
+		link = articleDoc.Find("a", "class", "article").Attrs()["href"]
 		if !strings.Contains(link, "http") {
 			link = "https://www.baijingapp.com" + link
 		}
-		var content string
-		if articleDoc.Find("div", "class", "articleSingle-content").Error == nil {
-			content = articleDoc.Find("div", "class", "articleSingle-content").Find("p").Text()
-		}
+		content = parseCommonDetail(link)
 		description := lib.GenerateDescription(imageLink, content)
 
 		rssItem := dao.RSSItem{
@@ -42,6 +49,29 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 			Created:     "",
 		}
 		rssItems = append(rssItems, rssItem)
+	}
+
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "aw-question-detail")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request baijing common article detail failed, link  %s \nerror : %s", detailLink, err)
 	}
 
 	return
