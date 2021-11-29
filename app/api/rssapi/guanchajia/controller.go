@@ -2,6 +2,8 @@ package guanchajia
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
@@ -37,7 +39,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		title = article.Find("div").Find("span").Find("a").Text()
 		imageLink = article.Find("img").Attrs()["src"]
 		link = article.Find("div").Find("span").Find("a").Attrs()["href"]
-		content = article.Find("p").Text()
+		content = parseCommonDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -50,6 +52,30 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 	}
 	return
 }
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "xd-b-left")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request guanchajia article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
+}
+
 func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"shangyechanye": {

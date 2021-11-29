@@ -2,6 +2,8 @@ package duozhi
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 	"strings"
@@ -30,12 +32,14 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		dataDocsList = dataDocsList[:20]
 	}
 	for _, dataDocs := range dataDocsList {
-		var imageLink string
-		var title string
-		var link string
-		var content string
-		var author string
-		var time string
+		var (
+			imageLink string
+			title     string
+			link      string
+			content   string
+			author    string
+			time      string
+		)
 
 		postImageWrap := dataDocs.Find("a", "class", "post-img")
 		if postImageWrap.Error == nil {
@@ -47,10 +51,9 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 				imageLink = imageStyleStrs[1]
 			}
 		}
-		contentWrap := dataDocs.Find("p", "class", "post-desc")
-		if contentWrap.Error == nil {
-			content = contentWrap.Text()
-		}
+
+		content = parseCommonDetail(link)
+
 		authorWrap := dataDocs.Find("span", "class", "post-attr")
 		if authorWrap.Error == nil {
 			author = authorWrap.Text()
@@ -65,6 +68,29 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "c2")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request duozhi article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

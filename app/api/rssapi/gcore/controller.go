@@ -2,7 +2,8 @@ package gcore
 
 import (
 	"github.com/anaskhan96/soup"
-	"regexp"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
@@ -28,7 +29,6 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 	articleList := docs.FindAll("div", "class", "col-xl-3")
 
 	for _, article := range articleList {
-		var imageLink string
 		var title string
 		var link string
 		var author string
@@ -41,24 +41,43 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 			author = userInfoEle.Find("h3").Text()
 		}
 
-		imageStyle := article.Find("div", "class", "original_imgArea").Attrs()["style"]
-		reg := regexp.MustCompile(`background-image:url\((.*?)\)`)
-		contentArray := reg.FindStringSubmatch(imageStyle)
-		if len(contentArray) > 1 {
-			imageLink = contentArray[1]
-		}
+		content = parseCommonDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: lib.GenerateDescription(imageLink, content),
+			Description: lib.GenerateDescription("", content),
 			Created:     time,
 		}
 		items = append(items, rssItem)
 	}
 	return
 }
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "newsPage_main")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request gcore article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
+}
+
 func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"news": {

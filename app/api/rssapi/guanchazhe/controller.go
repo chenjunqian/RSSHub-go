@@ -2,6 +2,8 @@ package guanchazhe
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
@@ -75,7 +77,7 @@ func indexParser(htmlStr string) (items []dao.RSSItem) {
 		imageLink = newsItem.Find("div", "class", "author-intro").Find("img").Attrs()["src"]
 		author = newsItem.Find("div", "class", "author-intro").Find("img").Attrs()["alt"]
 		link = baseUrl + newsItem.Find("h4", "class", "module-title").Find("a").Attrs()["href"]
-		content = newsItem.Find("p", "class", "module-artile").Text()
+		content = parseCommonDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -109,7 +111,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 				imageLink = aTag.Find("img").Attrs()["src"]
 			}
 		}
-		content = article.Find("p", "class", "module-artile").Text()
+		content = parseCommonDetail(link)
 		time = article.Find("span").Text()
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -120,6 +122,29 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "all-txt")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request guanchazhe article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

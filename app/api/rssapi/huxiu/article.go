@@ -48,7 +48,7 @@ func (ctl *Controller) GetArticle(req *ghttp.Request) {
 			author = dataJson.GetString("user_info.username")
 			link = "https://www.huxiu.com/article/" + dataJson.GetString("aid")
 			imageLink, _ = gurl.Decode(dataJson.GetString("pic_path"))
-			content = dataJson.GetString("summary")
+			content = parseCommonDetail(link)
 
 			rssItem := dao.RSSItem{
 				Title:       title,

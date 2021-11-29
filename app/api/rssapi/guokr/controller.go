@@ -2,8 +2,11 @@ package guokr
 
 import (
 	"fmt"
+	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/encoding/gurl"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
 	"rsshub/lib"
@@ -43,7 +46,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		link = fmt.Sprintf("https://www.guokr.com/article/%s/", dataJson.GetString("id"))
 		author = dataJson.GetString("author.nickname")
 		imageLink = dataJson.GetString("small_image")
-		content = dataJson.GetString("summary")
+		content = parseCommonDetail(link)
 		time = dataJson.GetString("date_published")
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -54,6 +57,29 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "styled__ArticleContent-sc-1ctyfcr-4")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request guokr article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 
@@ -86,7 +112,7 @@ func commonHtmlParser(htmlStr, linkType string) (items []dao.RSSItem) {
 		author = dataJson.GetString("author.nickname")
 		imageLink = dataJson.GetString("small_image")
 		imageLink, _ = gurl.Decode(imageLink)
-		content = dataJson.GetString("summary")
+		content = parseCommonDetail(link)
 		time = dataJson.GetString("date_published")
 		rssItem := dao.RSSItem{
 			Title:       title,

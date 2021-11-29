@@ -48,7 +48,7 @@ func (ctl *Controller) GetCollection(req *ghttp.Request) {
 			time = dataJson.GetString("update_time")
 			link = fmt.Sprintf("https://www.huxiu.com/collection/%s.html", dataJson.GetString("id"))
 			imageLink, _ = gurl.Decode(dataJson.GetString("head_img"))
-			content = dataJson.GetString("summary")
+			content = parseCommonDetail(link)
 
 			rssItem := dao.RSSItem{
 				Title:       title,

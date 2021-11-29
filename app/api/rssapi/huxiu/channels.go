@@ -53,7 +53,7 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 			time = dataJson.GetString("dateline")
 			link = fmt.Sprintf("https://www.huxiu.com/article/%s.html", dataJson.GetString("aid"))
 			imageLink, _ = gurl.Decode(dataJson.GetString("pic_path"))
-			content = dataJson.GetString("summary")
+			content = parseCommonDetail(link)
 			author = dataJson.GetString("user_info.username")
 
 			rssItem := dao.RSSItem{

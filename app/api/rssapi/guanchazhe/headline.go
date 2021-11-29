@@ -43,7 +43,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 					imageLink = aTag.Find("img").Attrs()["src"]
 				}
 			}
-			content = articleDoc.Find("p", "class", "module-artile").Text()
+			content = parseCommonDetail(link)
 			time = articleDoc.Find("span").Text()
 
 			rssItem := dao.RSSItem{

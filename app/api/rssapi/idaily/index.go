@@ -30,12 +30,20 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		dataJsonArray := respJson.Array()
 		rssItems := make([]dao.RSSItem, 0)
 		for index := range dataJsonArray {
-			dataJson := respJson.GetJson(strconv.Itoa(index))
-			link := dataJson.GetString("link_share")
-			time := dataJson.GetString("pubdate_timestamp")
-			content := dataJson.GetString("content")
-			title := dataJson.GetString("ui_sets.caption_subtitle")
-			coverImageLink := dataJson.GetString("cover_landscape")
+			var (
+				title          string
+				link           string
+				time           string
+				content        string
+				coverImageLink string
+				dataJson       *gjson.Json
+			)
+			dataJson = respJson.GetJson(strconv.Itoa(index))
+			link = dataJson.GetString("link_share")
+			time = dataJson.GetString("pubdate_timestamp")
+			title = dataJson.GetString("ui_sets.caption_subtitle")
+			coverImageLink = dataJson.GetString("cover_landscape")
+			content = dataJson.GetString("content")
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,

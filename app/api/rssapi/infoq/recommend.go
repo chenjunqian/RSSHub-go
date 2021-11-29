@@ -28,15 +28,14 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		itemList := docs.FindAll("div", "class", "item-main")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, item := range itemList {
-			imageLink := item.Find("img").Attrs()["src"]
 			title := item.Find("a", "class", "com-article-title").Text()
 			link := item.Find("a", "class", "com-article-title").Attrs()["href"]
 			author := item.Find("a", "class", "com-author-name").Text()
-			summary := item.Find("p", "class", "summary").Text()
+			summary := parseRecommendDetail(link)
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: lib.GenerateDescription(imageLink, summary),
+				Description: lib.GenerateDescription("", summary),
 				Author:      author,
 			}
 			rssItems = append(rssItems, rssItem)

@@ -2,6 +2,8 @@ package fulinian
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
@@ -42,6 +44,8 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		}
 		time = article.Find("time").Text()
 
+		content = parseCommonDetail(link)
+
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,
@@ -53,6 +57,30 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 	}
 	return
 }
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("article", "class", "article-content")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request fulinian article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
+	return
+}
+
 func getInfoLinks() map[string]LinkRouteConfig {
 	Links := map[string]LinkRouteConfig{
 		"index": {

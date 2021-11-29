@@ -1,7 +1,10 @@
 package jinse
 
 import (
+	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/lib"
 )
@@ -35,11 +38,11 @@ func catalogueParser(jsonString string) (items []dao.RSSItem) {
 		var time string
 
 		title = article.GetString("title")
-		content = article.GetString("extra.summary")
 		imageLink = article.GetString("extra.thumbnail_pic")
 		author = article.GetString("extra.author")
 		time = article.GetString("extra.published_at")
 		link = article.GetString("extra.topic_url")
+		content = parseCatalogueDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -50,6 +53,29 @@ func catalogueParser(jsonString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCatalogueDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "js-article")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request jinse Catalogue article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 
@@ -66,10 +92,10 @@ func livesParser(jsonString string) (items []dao.RSSItem) {
 		var time string
 
 		title = article.GetString("content")
-		content = article.GetString("content")
 		imageLink = article.GetString("images.0.url")
 		time = article.GetString("created_at")
 		link = article.GetString("link")
+		content = parseLiveDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -80,6 +106,29 @@ func livesParser(jsonString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseLiveDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("section", "class", "at-body")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request jinse Catalogue article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 
@@ -96,11 +145,11 @@ func timelineParser(jsonString string) (items []dao.RSSItem) {
 		var time string
 
 		title = article.GetString("title")
-		content = article.GetString("extra.summary")
 		imageLink = article.GetString("extra.thumbnail_pic")
 		time = article.GetString("extra.published_at")
 		link = article.GetString("extra.topic_url")
 		author = article.GetString("extra.author")
+		content = parseTimelineDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -111,6 +160,29 @@ func timelineParser(jsonString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseTimelineDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "js-article")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request jinse Catalogue article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 
