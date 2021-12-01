@@ -6,7 +6,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strconv"
 )
 
@@ -60,7 +60,7 @@ func (ctl *Controller) GetWeeklyRecommend(req *ghttp.Request) {
 		}
 
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BILIBILI_WEEKLY", rssStr)
 	g.Redis().DoVar("EXPIRE", "BILIBILI_WEEKLY", 60*60*3)
 	_ = req.Response.WriteXmlExit(rssStr)

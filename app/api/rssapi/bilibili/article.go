@@ -3,7 +3,7 @@ package bilibili
 import (
 	"fmt"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
@@ -31,7 +31,7 @@ func (ctl *Controller) GetUserArticle(req *ghttp.Request) {
 		for _, articleJson := range articleJsons {
 			rssItem := dao.RSSItem{}
 			rssItem.Title = articleJson.GetString("title")
-			rssItem.Description = lib.GenerateDescription(articleJson.GetString("image_urls.0"), articleJson.GetString("summary"))
+			rssItem.Description = feed.GenerateDescription(articleJson.GetString("image_urls.0"), articleJson.GetString("summary"))
 			timeStamp := articleJson.GetInt64("publish_time")
 			rssItem.Created = time.Unix(timeStamp, 0).String()
 			rssItem.Link = "https://www.bilibili.com/read/cv" + articleJson.GetString("id")
@@ -39,7 +39,7 @@ func (ctl *Controller) GetUserArticle(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

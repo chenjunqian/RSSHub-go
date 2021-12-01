@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strconv"
 )
 
@@ -47,14 +47,14 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: lib.GenerateDescription(coverImageLink, content),
+				Description: feed.GenerateDescription(coverImageLink, content),
 				Created:     time,
 			}
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "IDAILY_INDEX", rssStr)
 	g.Redis().DoVar("EXPIRE", "IDAILY_INDEX", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

@@ -4,11 +4,11 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strings"
 )
 
-func (ctl *Controller) GetIndex(req *ghttp.Request) {
+func (ctl *controller) GetIndex(req *ghttp.Request) {
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
@@ -31,7 +31,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

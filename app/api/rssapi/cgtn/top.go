@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *controller) GetTop(req *ghttp.Request) {
@@ -49,7 +49,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "36KR_NEWS_FLASHES", rssStr)
 	g.Redis().DoVar("EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
 	_ = req.Response.WriteXmlExit(rssStr)

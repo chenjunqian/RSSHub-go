@@ -2,7 +2,7 @@ package bishijie
 
 import (
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
@@ -48,13 +48,13 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: lib.GenerateDescription(imageLink, content),
+				Description: feed.GenerateDescription(imageLink, content),
 			}
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BISHIJIE_SHENDU", rssStr)
 	g.Redis().DoVar("EXPIRE", "BISHIJIE_SHENDU", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

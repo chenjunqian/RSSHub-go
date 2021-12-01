@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetFlash(req *ghttp.Request) {
@@ -34,7 +34,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        "http://www.mittrchina.com/newsflash",
-				Description: lib.GenerateDescription("", content),
+				Description: feed.GenerateDescription("", content),
 				Author:      "MIT 中国",
 				Created:     time,
 			}
@@ -45,7 +45,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "MIT_CHINA_FLASH", rssStr)
 	g.Redis().DoVar("EXPIRE", "MIT_CHINA_FLASH", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

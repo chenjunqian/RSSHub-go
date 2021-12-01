@@ -2,12 +2,11 @@ package bilibili
 
 import (
 	"fmt"
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
@@ -42,12 +41,12 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 			rssItem.Author = dataJson.GetString("author")
 			intro := dataJson.GetString("intro")
 			cover := dataJson.GetString("cover")
-			rssItem.Description = lib.GenerateDescription(cover, intro)
+			rssItem.Description = feed.GenerateDescription(cover, intro)
 			items = append(items, rssItem)
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"regexp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 type Controller struct {
@@ -52,7 +52,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,
-			Description: lib.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)
@@ -93,7 +93,7 @@ func moneyCommonParser(htmlStr, typeStr string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: lib.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

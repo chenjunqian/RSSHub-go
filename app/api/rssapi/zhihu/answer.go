@@ -3,7 +3,7 @@ package zhihu
 import (
 	"fmt"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
@@ -70,7 +70,7 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

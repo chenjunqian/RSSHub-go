@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strings"
 )
 
@@ -39,7 +39,7 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 			link = "https://www.baijingapp.com" + link
 		}
 		content = parseCommonDetail(link)
-		description := lib.GenerateDescription(imageLink, content)
+		description := feed.GenerateDescription(imageLink, content)
 
 		rssItem := dao.RSSItem{
 			Title:       title,

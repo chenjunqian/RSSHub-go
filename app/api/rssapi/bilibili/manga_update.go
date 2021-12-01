@@ -3,7 +3,7 @@ package bilibili
 import (
 	"fmt"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/gogf/gf/encoding/gjson"
@@ -59,6 +59,6 @@ func (ctl *Controller) GetMangaUpdate(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	_ = req.Response.WriteXmlExit(rssStr)
 }

@@ -2,13 +2,12 @@ package zhihu
 
 import (
 	"fmt"
-	"regexp"
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"regexp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetDaily(req *ghttp.Request) {
@@ -68,7 +67,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		g.Redis().DoVar("SET", "ZHIHU_DAILY", rssStr)
 		g.Redis().DoVar("EXPIRE", "ZHIHU_DAILY", 60*60*1)
 		_ = req.Response.WriteXmlExit(rssStr)

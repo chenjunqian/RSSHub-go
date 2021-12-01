@@ -1,11 +1,10 @@
 package _199IT
 
 import (
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *controller) Get199ITCategoryReport(req *ghttp.Request) {
@@ -28,7 +27,7 @@ func (ctl *controller) Get199ITCategoryReport(req *ghttp.Request) {
 		rssItems := parseArticle(resp.ReadAllString())
 		rssData.Items = rssItems
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "199IT_CATEGORY_REPORT", rssStr)
 	g.Redis().DoVar("EXPIRE", "199IT_CATEGORY_REPORT", 60*10)
 	_ = req.Response.WriteXmlExit(rssStr)

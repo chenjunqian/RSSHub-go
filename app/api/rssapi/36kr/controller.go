@@ -6,7 +6,7 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 type controller struct {
@@ -51,7 +51,7 @@ func parseNews(htmlStr string) []dao.RSSItem {
 		summary = parseDetail(rssItem.Link)
 		author = informationJson.GetString("templateMaterial.authorName")
 		imgLink = informationJson.GetString("templateMaterial.widgetImage")
-		rssItem.Description = lib.GenerateDescription(imgLink, summary)
+		rssItem.Description = feed.GenerateDescription(imgLink, summary)
 		rssItem.Author = author
 
 		rssItems = append(rssItems, rssItem)

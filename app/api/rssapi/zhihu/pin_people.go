@@ -2,12 +2,11 @@ package zhihu
 
 import (
 	"fmt"
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetZhihuPinPeople(req *ghttp.Request) {
@@ -25,7 +24,7 @@ func (ctl *Controller) GetZhihuPinPeople(req *ghttp.Request) {
 		rssData.Link = fmt.Sprintf("https://www.zhihu.com/people/%s/pins", peopleId)
 		rssData.Items = getPinRSSItems(respString)
 		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

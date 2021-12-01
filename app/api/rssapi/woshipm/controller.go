@@ -3,7 +3,7 @@ package woshipm
 import (
 	"github.com/gogf/gf/encoding/gjson"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 type Controller struct {
@@ -43,7 +43,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: lib.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

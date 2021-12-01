@@ -2,12 +2,11 @@ package bilibili
 
 import (
 	"fmt"
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
@@ -42,7 +41,7 @@ func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
 		for _, item := range itemJsons {
 			rssItem := dao.RSSItem{}
 			rssItem.Title = item.GetString("title")
-			rssItem.Description = lib.GenerateDescription(item.GetString("cover_url"), item.GetString("mark"))
+			rssItem.Description = feed.GenerateDescription(item.GetString("cover_url"), item.GetString("mark"))
 			rssItem.Created = item.GetString("ctime")
 			if item.GetString("announce_link") != "" {
 				rssItem.Link = item.GetString("announce_link")
@@ -54,6 +53,6 @@ func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
 
 		rssData.Items = items
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	_ = req.Response.WriteXmlExit(rssStr)
 }

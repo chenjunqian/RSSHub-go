@@ -6,7 +6,7 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strings"
 )
 
@@ -37,7 +37,7 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 			for _, itemJson := range itemListJson {
 				widgetContent := itemJson.GetString("templateMaterial.widgetContent")
 				widgetImage := itemJson.GetString("templateMaterial.widgetImage")
-				description := lib.GenerateDescription(widgetImage, widgetContent)
+				description := feed.GenerateDescription(widgetImage, widgetContent)
 				rssItem := dao.RSSItem{
 					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
 					Created:     itemJson.GetString("templateMaterial.publishTime"),
@@ -55,7 +55,7 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 		}
 
 	}
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "36KR_USER_"+userId, rssStr)
 	g.Redis().DoVar("EXPIRE", "36KR_USER_"+userId, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

@@ -3,11 +3,13 @@ package juesheng
 import (
 	"github.com/anaskhan96/soup"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
-type Controller struct {
+type controller struct {
 }
+
+var Controller = &controller{}
 
 type LinkRouteConfig struct {
 	ChannelUrl string
@@ -43,7 +45,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: lib.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

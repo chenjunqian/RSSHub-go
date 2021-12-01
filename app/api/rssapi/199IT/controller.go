@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 type controller struct {
@@ -38,7 +38,7 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 		time = article.Find("time", "class", "entry-date").Attrs()["datetime"]
 		link = article.Find("h2", "class", "entry-title").Find("a").Attrs()["href"]
 		detailData = parseDetail(link)
-		description = lib.GenerateDescription(thumbnail, detailData)
+		description = feed.GenerateDescription(thumbnail, detailData)
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,

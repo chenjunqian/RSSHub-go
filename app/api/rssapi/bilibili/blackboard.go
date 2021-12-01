@@ -2,13 +2,12 @@ package bilibili
 
 import (
 	"fmt"
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/container/garray"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
@@ -43,6 +42,6 @@ func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
 		rssData.Items = items
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	_ = req.Response.WriteXmlExit(rssStr)
 }

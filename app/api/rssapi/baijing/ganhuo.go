@@ -4,7 +4,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *controller) GetGanHuo(req *ghttp.Request) {
@@ -27,7 +27,7 @@ func (ctl *controller) GetGanHuo(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BAIJING_GANHUO", rssStr)
 	g.Redis().DoVar("EXPIRE", "BAIJING_GANHUO", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

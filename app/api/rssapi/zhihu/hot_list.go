@@ -3,7 +3,7 @@ package zhihu
 import (
 	"fmt"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
@@ -62,7 +62,7 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 		}
 
 		rssData.Items = items
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		g.Redis().DoVar("SET", redisKey, rssStr)
 		g.Redis().DoVar("EXPIRE", redisKey, 60*60*1)
 		_ = req.Response.WriteXmlExit(rssStr)

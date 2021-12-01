@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 type Controller struct {
@@ -47,7 +47,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: lib.GenerateDescription("", content),
+			Description: feed.GenerateDescription("", content),
 			Created:     time,
 		}
 		items = append(items, rssItem)

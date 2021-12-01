@@ -2,13 +2,12 @@ package bilibili
 
 import (
 	"fmt"
-	"regexp"
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"regexp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetBangumi(req *ghttp.Request) {
@@ -61,7 +60,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 		rssData.Description = contentData.GetString("mediaInfo.evaluate")
 		rssData.Items = items
 		rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		_ = req.Response.WriteXmlExit(rssStr)
 	}
 }

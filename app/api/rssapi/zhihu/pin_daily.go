@@ -1,11 +1,10 @@
 package zhihu
 
 import (
-	"rsshub/app/dao"
-	"rsshub/lib"
-
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
@@ -24,7 +23,7 @@ func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
 		rssData.Description = "汇集每天的社会大事、行业资讯，让你用最简单的方式获得想法里的新闻"
 		rssData.Items = getPinRSSItems(resp.ReadAllString())
 		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
-		rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 		g.Redis().DoVar("SET", redisKey, rssStr)
 		g.Redis().DoVar("EXPIRE", redisKey, 60*60*6)
 		_ = req.Response.WriteXmlExit(rssStr)

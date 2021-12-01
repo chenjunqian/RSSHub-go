@@ -7,7 +7,7 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetArticle(req *ghttp.Request) {
@@ -54,7 +54,7 @@ func (ctl *Controller) GetArticle(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Author:      author,
-				Description: lib.GenerateDescription(imageLink, content),
+				Description: feed.GenerateDescription(imageLink, content),
 				Created:     time,
 			}
 			rssItems = append(rssItems, rssItem)
@@ -62,7 +62,7 @@ func (ctl *Controller) GetArticle(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", cacheKey, rssStr)
 	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)

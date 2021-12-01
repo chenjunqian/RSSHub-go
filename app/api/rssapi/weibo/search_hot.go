@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
@@ -35,13 +35,13 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 			rssItem := dao.RSSItem{}
 			rssItem.Title = dataJson.GetString("desc")
 			rssItem.Link = "https://m.weibo.cn/search?containerid=100103type%3D1%26q%3D" + dataJson.GetString("desc")
-			rssItem.Description = lib.GenerateDescription("", dataJson.GetString("desc"))
+			rssItem.Description = feed.GenerateDescription("", dataJson.GetString("desc"))
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "WEIBO_HOT", rssStr)
 	g.Redis().DoVar("EXPIRE", "WEIBO_HOT", 60*10)
 	_ = req.Response.WriteXmlExit(rssStr)

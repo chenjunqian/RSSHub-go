@@ -4,7 +4,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 )
 
 func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
@@ -28,7 +28,7 @@ func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "199IT_INDEX", rssStr)
 	g.Redis().DoVar("EXPIRE", "199IT_INDEX", 60*10)
 	_ = req.Response.WriteXmlExit(rssStr)

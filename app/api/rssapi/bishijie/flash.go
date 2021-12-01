@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
-	"rsshub/lib"
+	"rsshub/app/service/feed"
 	"strings"
 )
 
@@ -46,7 +46,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 				imageDiv := newsSubDiv.Find("img")
 				if imageDiv.Error == nil {
 					imageLink = imageDiv.Attrs()["src"]
-					description = lib.GenerateDescription(imageLink, content)
+					description = feed.GenerateDescription(imageLink, content)
 				} else {
 					description = content
 				}
@@ -61,7 +61,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 
-	rssStr := lib.GenerateRSS(rssData, req.Router.Uri)
+	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "BISHIJIE_FLASH", rssStr)
 	g.Redis().DoVar("EXPIRE", "BISHIJIE_FLASH", 60*60*4)
 	_ = req.Response.WriteXmlExit(rssStr)
