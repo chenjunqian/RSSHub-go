@@ -29,6 +29,7 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 			Link:        &feeds.Link{Href: item.Link},
 			Description: item.Description,
 			Author:      &feeds.Author{Name: item.Author},
+			Enclosure:   &feeds.Enclosure{Url: item.Thumbnail},
 		}
 		if item.Created != "" {
 			if gtime.NewFromStr(item.Created) != nil {

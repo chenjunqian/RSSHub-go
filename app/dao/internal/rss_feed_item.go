@@ -34,6 +34,7 @@ type rssFeedItemColumns struct {
 	Date        string //
 	Author      string //
 	InputDate   string //
+	Thumbnail   string //
 }
 
 var (
@@ -51,6 +52,7 @@ var (
 			Date:        "date",
 			Author:      "author",
 			InputDate:   "input_date",
+			Thumbnail:   "thumbnail",
 		},
 	}
 )

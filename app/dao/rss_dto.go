@@ -17,4 +17,5 @@ type RSSItem struct {
 	Description string
 	Author      string
 	Created     string
+	Thumbnail   string
 }

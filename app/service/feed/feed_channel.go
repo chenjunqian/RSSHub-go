@@ -35,6 +35,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string, rsshubLink string
 			Date:        gtime.New(item.Created.String()),
 			Author:      item.Author.Name,
 			InputDate:   gtime.Now(),
+			Thumbnail:   item.Enclosure.Url,
 		}
 		uniString := feedItem.Link + feedItem.Title
 		feedItemID := strconv.FormatUint(ghash.RSHash64([]byte(uniString)), 32)

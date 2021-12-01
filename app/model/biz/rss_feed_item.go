@@ -8,6 +8,7 @@ type RssFeedItemData struct {
 	Title           string
 	ChannelDesc     string
 	Link            string
+	Thumbnail       string
 	Date            *gtime.Time
 	Author          string
 	InputDate       *gtime.Time

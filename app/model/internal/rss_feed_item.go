@@ -18,4 +18,5 @@ type RssFeedItem struct {
 	Date        *gtime.Time `orm:"date"         json:"date"`        //
 	Author      string      `orm:"author"       json:"author"`      //
 	InputDate   *gtime.Time `orm:"input_date"   json:"inputDate"`   //
+	Thumbnail   string      `orm:"thumbnail"    json:"thumbnail"`   //
 }
