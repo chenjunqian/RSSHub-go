@@ -42,6 +42,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			rssItem.Description = description
 			rssItem.Link = link
 			rssItem.Author = author
+			rssItem.Thumbnail = imageLink
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems

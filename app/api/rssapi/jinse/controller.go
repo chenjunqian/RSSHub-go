@@ -50,6 +50,7 @@ func catalogueParser(jsonString string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}
@@ -103,6 +104,7 @@ func livesParser(jsonString string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}
@@ -157,6 +159,7 @@ func timelineParser(jsonString string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}

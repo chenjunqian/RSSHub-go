@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"regexp"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -34,13 +35,19 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		var author string
 		var content string
 		var time string
+		var imageLink string
 
 		title = article.Find("h3", "class", "am_card_title").Text()
 		link = "https://www.gcores.com" + article.Find("a", "class", "am_card_content").Attrs()["href"]
 		if userInfoEle := article.Find("div", "class", "avatar_text"); userInfoEle.Error == nil {
 			author = userInfoEle.Find("h3").Text()
 		}
-
+		imageStyle := article.Find("div", "class", "original_imgArea").Attrs()["style"]
+		reg := regexp.MustCompile(`background-image:url\((.*?)\)`)
+		contentArray := reg.FindStringSubmatch(imageStyle)
+		if len(contentArray) > 1 {
+			imageLink = contentArray[1]
+		}
 		content = parseCommonDetail(link)
 
 		rssItem := dao.RSSItem{
@@ -49,6 +56,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription("", content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}

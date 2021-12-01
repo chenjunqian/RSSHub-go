@@ -42,6 +42,7 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
 					Created:     itemJson.GetString("templateMaterial.publishTime"),
 					Description: description,
+					Thumbnail:   widgetImage,
 				}
 				router := itemJson.GetString("route")
 				if strings.Split(router, "?")[0] == "detail_video" {

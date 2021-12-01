@@ -35,8 +35,10 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 				contentDiv soup.Root
 				content    string
 				link       string
+				imageLink  string
 			)
 			title = item.Find("img").Attrs()["title"]
+			imageLink = item.Find("img").Attrs()["src"]
 			contentDiv = item.Find("div", "class", "summer")
 			if contentDiv.Error != nil {
 				continue
@@ -48,6 +50,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Description: feed.GenerateDescription("", content),
+				Thumbnail:   imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

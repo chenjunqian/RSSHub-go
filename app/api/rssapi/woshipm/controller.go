@@ -45,6 +45,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}

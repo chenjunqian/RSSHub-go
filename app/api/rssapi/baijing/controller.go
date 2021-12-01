@@ -47,6 +47,7 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 			Description: description,
 			Author:      "",
 			Created:     "",
+			Thumbnail:   imageLink,
 		}
 		rssItems = append(rssItems, rssItem)
 	}

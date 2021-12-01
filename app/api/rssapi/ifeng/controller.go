@@ -54,6 +54,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 			Link:        link,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}
@@ -95,6 +96,7 @@ func moneyCommonParser(htmlStr, typeStr string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}

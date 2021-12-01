@@ -52,6 +52,7 @@ func indexParser(htmlStr string) (items []dao.RSSItem) {
 				Author:      author,
 				Description: feed.GenerateDescription(imageLink, content),
 				Created:     time,
+				Thumbnail:   imageLink,
 			}
 			items = append(items, rssItem)
 		}
@@ -119,6 +120,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 			Author:      author,
 			Description: feed.GenerateDescription(imageLink, content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}

@@ -49,6 +49,7 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 				Description: feed.GenerateDescription(imageLink, ""),
 				Author:      author,
 				Created:     time,
+				Thumbnail:   imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

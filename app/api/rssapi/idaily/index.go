@@ -49,6 +49,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 				Link:        link,
 				Description: feed.GenerateDescription(coverImageLink, content),
 				Created:     time,
+				Thumbnail:   coverImageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

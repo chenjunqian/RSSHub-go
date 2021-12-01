@@ -62,6 +62,7 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 				Author:      author,
 				Description: feed.GenerateDescription(imageLink, content),
 				Created:     time,
+				Thumbnail:   imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

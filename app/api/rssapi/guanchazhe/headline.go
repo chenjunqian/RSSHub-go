@@ -52,6 +52,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 				Author:      author,
 				Description: feed.GenerateDescription(imageLink, content),
 				Created:     time,
+				Thumbnail:   imageLink,
 			}
 			rssItemList = append(rssItemList, rssItem)
 		}

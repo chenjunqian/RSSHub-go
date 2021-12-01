@@ -44,6 +44,7 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 			Link:        link,
 			Description: description,
 			Created:     time,
+			Thumbnail:   thumbnail,
 		}
 		rssItems = append(rssItems, rssItem)
 	}
