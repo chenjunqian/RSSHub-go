@@ -1,4 +1,4 @@
-package lib
+package feed
 
 import (
 	"github.com/gogf/gf/encoding/gjson"
