@@ -20,7 +20,7 @@ func InitMachinery() {
 
 	var cnf = &machineryConfig.Config{
 		Broker:        "redis://" + password + "@" + host + ":" + port + "/1",
-		DefaultQueue:  "machinery_tasks",
+		DefaultQueue:  "rsshub_tasks",
 		ResultBackend: "redis://" + password + "@" + host + ":" + port + "/2",
 	}
 	var serverError error
@@ -31,7 +31,7 @@ func InitMachinery() {
 
 	go func() {
 		var err error
-		machineryWorker = machineryServer.NewWorker("rsshub_work", 0)
+		machineryWorker = machineryServer.NewWorker("rsshub_work", 2)
 		err = machineryWorker.Launch()
 		if err != nil {
 			g.Log().Error("init machinery worker failed : ", err)

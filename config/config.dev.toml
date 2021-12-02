@@ -2,12 +2,12 @@
 [server]
 Address = ":8081"
 ServerAgent = "rsshub"
-LogPath = "/tmp/log/rsshub/server"
+LogPath = "/var/log/rsshub/server"
 DumpRouterMap = false
 
 # Logger.
 [logger]
-Path = "/tmp/log/rsshub"
+Path = "/var/log/rsshub"
 Level = "all"
 Stdout = true
 writerColorEnable = true
