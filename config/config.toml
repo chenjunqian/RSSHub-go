@@ -1,12 +1,13 @@
 # HTTP Server
 [server]
-Address = ":8081"
+Address = ":8082"
 ServerAgent = "rsshub"
-LogPath = "/tmp/log/rsshub/server"
+LogPath = "/var/log/rsshub/server"
+DumpRouterMap = false
 
 # Logger.
 [logger]
-Path = "/tmp/log/rsshub"
+Path = "/var/log/rsshub"
 Level = "all"
 Stdout = true
 writerColorEnable = true
@@ -54,10 +55,16 @@ cgo = 0
 pack = "config"
 version = "v1.0.0"
 output = "./bin"
-extra = ""
+extra = "-trimpath"
 
 [elasticsearch]
 host = "http://127.0.0.1"
 port = "9200"
 user = "elastic"
 pass = "qazxsw"
+
+[machinery]
+[machinery.redis]
+host = "127.0.0.1"
+port = "6379"
+pass = "123456"
