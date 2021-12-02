@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -24,7 +25,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Referer"] = dailyUrl
 
-	if resp, err := g.Client().SetHeaderMap(headers).Get(dailyUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(dailyUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("stories")
 
@@ -41,7 +42,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 			}
 			storyId := jsonResp.GetString(fmt.Sprintf("stories.%d.id", index))
 			storyUrl := fmt.Sprintf("https://news-at.zhihu.com/api/7/news/%s", storyId)
-			if itemResp, err := g.Client().SetHeaderMap(headers).Get(storyUrl); err == nil {
+			if itemResp, err := component.GetHttpClient().SetHeaderMap(headers).Get(storyUrl); err == nil {
 				jsonItemResp := gjson.New(itemResp.ReadAllString())
 				content := jsonItemResp.GetString("body")
 				reg := regexp.MustCompile(`<div class="meta">([\s\S]*?)<\/div>`)

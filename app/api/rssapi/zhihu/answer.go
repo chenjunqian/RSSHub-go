@@ -2,12 +2,12 @@ package zhihu
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
 
@@ -17,7 +17,7 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Referer"] = fmt.Sprintf("https://www.zhihu.com/people/%s/answers", peopleId)
 
-	if resp, err := g.Client().SetHeaderMap(headers).Get(answerGetUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(answerGetUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("data")
 
@@ -25,7 +25,7 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 		peopleName := jsonResp.GetString("data.0.author.name")
 		if peopleName == "知乎用户" {
 			activitiesUrl := fmt.Sprintf("https://www.zhihu.com/api/v4/members/%s/activities?limit=1", peopleId)
-			if activitiesResp, err := g.Client().SetHeaderMap(headers).Get(activitiesUrl); err == nil {
+			if activitiesResp, err := component.GetHttpClient().SetHeaderMap(headers).Get(activitiesUrl); err == nil {
 				activitiesJsonResp := gjson.New(activitiesResp.ReadAllString())
 				peopleName = activitiesJsonResp.GetString("data.0.actor.name")
 			}
@@ -46,7 +46,7 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 			// 获取回答内容
 			var description string
 			answerDetailUrl := fmt.Sprintf("https://api.zhihu.com/appview/api/v4/answers/%s?include=content&is_appview=true", questionAnswerId)
-			if answerResp, err := g.Client().SetHeaderMap(headers).Get(answerDetailUrl); err == nil {
+			if answerResp, err := component.GetHttpClient().SetHeaderMap(headers).Get(answerDetailUrl); err == nil {
 				answerJsonResp := gjson.New(answerResp.ReadAllString())
 				description = answerJsonResp.GetString("content")
 				isError := answerJsonResp.GetString("error")

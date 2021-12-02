@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -66,7 +67,7 @@ func parseDetail(detailLink string) (detailData string) {
 		resp *ghttp.ClientResponse
 		err  error
 	)
-	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
 		var (
 			reg             *regexp.Regexp
 			contentStrArray []string

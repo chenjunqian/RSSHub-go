@@ -3,8 +3,8 @@ package zhihu
 import (
 	"fmt"
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -15,7 +15,7 @@ func (ctl *Controller) GetCollections(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Referer"] = fmt.Sprintf("https://www.zhihu.com/people/%s/activities", colletionId)
 	cookieMap := getCookieMap()
-	if resp, err := g.Client().SetHeaderMap(headers).SetCookieMap(cookieMap).Get(collectionGetUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).SetCookieMap(cookieMap).Get(collectionGetUrl); err == nil {
 		doc := soup.HTMLParse(resp.ReadAllString())
 
 		rssData := dao.RSSFeed{}

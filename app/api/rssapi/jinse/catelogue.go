@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -28,7 +29,7 @@ func (ctl *Controller) GetCatalogue(req *ghttp.Request) {
 		Description: "金色财经是集行业新闻、资讯、行情、数据等一站式区块链产业服务平台，我们追求及时、全面、专业、准确的资讯与数据，致力于为区块链创业者以及数字货币投资者提供最好的产品和服务。",
 		ImageUrl:    "https://www.jinse.com/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := catalogueParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

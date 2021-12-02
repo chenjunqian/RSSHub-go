@@ -3,6 +3,7 @@ package _199IT
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -23,7 +24,7 @@ func (ctl *controller) Get199ITCategoryReport(req *ghttp.Request) {
 		ImageUrl:    "https://www.199it.com/favicon.ico",
 		Description: "互联网数据资讯网-研究报告-199IT",
 	}
-	if resp, err := g.Client().SetHeaderMap(headers).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
 		rssItems := parseArticle(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

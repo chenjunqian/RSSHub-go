@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -21,7 +22,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 	dailyUrl := "https://news-at.zhihu.com/api/4/news/latest"
 	headers := getHeaders()
 	headers["Referer"] = dailyUrl
-	if resp, err := g.Client().SetHeaderMap(headers).Get(dailyUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(dailyUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("stories")
 
@@ -52,7 +53,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 				feedItem.Description = value.String()
 			} else {
 				storyUrl := fmt.Sprintf("https://news-at.zhihu.com/api/4/news/%s", storyId)
-				storyItemResp, err := g.Client().SetHeaderMap(headers).Get(storyUrl)
+				storyItemResp, err := component.GetHttpClient().SetHeaderMap(headers).Get(storyUrl)
 				if err == nil {
 					storyItemJsonResp := gjson.New(storyItemResp.ReadAllString())
 					feedItem.Description = storyItemJsonResp.GetString("body")

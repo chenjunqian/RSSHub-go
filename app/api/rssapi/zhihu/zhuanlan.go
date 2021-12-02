@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -15,12 +15,12 @@ func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
 	zhuanlanUrl := fmt.Sprintf("https://www.zhihu.com/api/v4/columns/%s/items", zhuanlanId)
 	headers := getHeaders()
 	headers["Referer"] = fmt.Sprintf("https://zhuanlan.zhihu.com/%s", zhuanlanId)
-	if resp, err := g.Client().SetHeaderMap(headers).Get(zhuanlanUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(zhuanlanUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("data")
 
 		infoUrl := fmt.Sprintf("https://zhuanlan.zhihu.com/%s", zhuanlanId)
-		infoResp, _ := g.Client().SetHeaderMap(headers).Get(infoUrl)
+		infoResp, _ := component.GetHttpClient().SetHeaderMap(headers).Get(infoUrl)
 		doc := soup.HTMLParse(infoResp.ReadAllString())
 
 		feedTitle := doc.Find("div", "class", "css-zyehvu").Text()

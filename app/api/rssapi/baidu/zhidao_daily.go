@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/encoding/gcharset"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -24,7 +25,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 		Tag:         []string{"知识", "百科", "问答"},
 		ImageUrl:    "www.baidu.com/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		respString, _ := gcharset.Convert("UTF-8", "gbk", resp.ReadAllString())
 		docs := soup.HTMLParse(respString)
 		itemList := docs.FindAll("li", "class", "clearfix")
@@ -68,7 +69,7 @@ func parseDetail(detailLink string) (detailData string) {
 		resp *ghttp.ClientResponse
 		err  error
 	)
-	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
 		var (
 			docs        soup.Root
 			articleElem soup.Root

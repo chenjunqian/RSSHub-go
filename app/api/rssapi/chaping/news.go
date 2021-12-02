@@ -4,6 +4,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -30,7 +31,7 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		Description: "新媒体「差评」站在科技领域，以专业的角度和诙谐的语言，为订阅者呈现高质量的图文和视频内容",
 		ImageUrl:    "https://chaping.cn/public/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(currentUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(currentUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		dataJsonList := respJson.GetJsons("data")
 		rssItems := make([]dao.RSSItem, 0)

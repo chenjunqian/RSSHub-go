@@ -3,6 +3,7 @@ package pintu
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -33,7 +34,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	} else {
 		contentType = "classId"
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Post(apiUrl, g.Map{
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(apiUrl, g.Map{
 		"fnName":     "getArticleList",
 		"type":       contentType,
 		"id":         linkConfig.ChannelId,

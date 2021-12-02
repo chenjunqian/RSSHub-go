@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -25,7 +26,7 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	rssData.Link = "https://cn.bing.com/"
 	rssData.Tag = []string{"壁纸", "图片"}
 	rssData.ImageUrl = "https://cn.bing.com/sa/simg/favicon-2x.ico"
-	if statusResp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if statusResp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respJson := gjson.New(statusResp.ReadAllString())
 		imageListJson := respJson.GetJsons("images")
 		rssItems := make([]dao.RSSItem, 0)

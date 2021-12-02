@@ -2,12 +2,12 @@ package bilibili
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strconv"
 
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
 
@@ -28,7 +28,7 @@ func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/Room/get_info?room_id=%s&from=room", roomId)
 	header := getHeaders()
 	header["Referer"] = "https://live.bilibili.com/" + roomId
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		dataJson := respJson.GetJson("data")
 

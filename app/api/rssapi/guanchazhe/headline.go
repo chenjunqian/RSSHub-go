@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -24,7 +25,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 		Description: "观察者网，致力于荟萃中外思想者精华，鼓励青年学人探索，建中西文化交流平台，为崛起中的精英提供决策参考。",
 		ImageUrl:    "https://i.guancha.cn/images/favorite.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		docs := soup.HTMLParse(resp.ReadAllString())
 		articleDocList := docs.Find("ul", "class", "headline-list").FindAll("li")
 		rssItemList := make([]dao.RSSItem, 0)

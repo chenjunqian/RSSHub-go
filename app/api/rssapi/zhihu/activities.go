@@ -2,12 +2,12 @@ package zhihu
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/text/gstr"
 )
@@ -17,7 +17,7 @@ func (ctl *Controller) GetActivities(req *ghttp.Request) {
 	url := fmt.Sprintf("https://www.zhihu.com/api/v4/members/%s/activities?limit=7", id)
 	headers := getHeaders()
 	headers["Referer"] = fmt.Sprintf("https://www.zhihu.com/people/%s/activities", id)
-	if resp, err := g.Client().SetHeaderMap(headers).Get(url); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(url); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("data")
 

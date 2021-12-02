@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -28,7 +29,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "科学网博客-构建全球华人科学博客圈",
 		ImageUrl:    "https://blog.sciencenet.cn/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := commonParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

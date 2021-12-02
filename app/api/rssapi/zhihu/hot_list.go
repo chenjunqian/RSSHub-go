@@ -2,6 +2,7 @@ package zhihu
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
@@ -20,7 +21,7 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 	}
 	hotListUrl := "https://www.zhihu.com/api/v3/explore/guest/feeds?limit=40"
 	headers := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(headers).Get(hotListUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(hotListUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("data")
 

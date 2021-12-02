@@ -3,6 +3,7 @@ package zhihu
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -16,7 +17,7 @@ func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
 	}
 	hotListUrl := "https://api.zhihu.com/pins/special/972884951192113152/moments?order_by=newest&reverse_order=0&limit=20"
 	headers := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(headers).Get(hotListUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(hotListUrl); err == nil {
 		rssData := dao.RSSFeed{}
 		rssData.Title = "知乎想法-24小时新闻汇总"
 		rssData.Link = "https://www.zhihu.com/pin/special/972884951192113152"

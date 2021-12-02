@@ -3,6 +3,7 @@ package guanchazhe
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -28,7 +29,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "经济观察网，经济观察报，电子报纸,电子杂志,财经媒体,观察家,eeo",
 		ImageUrl:    "https://www.eeo.com.cn/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		var rssItems []dao.RSSItem
 		if linkConfig.LinkType == "index" {
 			rssItems = indexParser(resp.ReadAllString())

@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -25,7 +26,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "后续 · 有记忆的新闻，持续追踪热点新闻",
 		ImageUrl:    "https://assets-1256259474.cos.ap-shanghai.myqcloud.com/static/img/icon-180.jpg",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		dataJsonArray := respJson.GetJsons("indexRecords.results")
 		rssItems := make([]dao.RSSItem, 0)

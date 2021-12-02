@@ -3,6 +3,7 @@ package medsci
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -28,7 +29,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "MedSci(梅斯医学)致力于医疗质量的改善，从事临床研究服务、数据管理、医学统计、临床培训、继续教育等支持，促进临床医生职业发展和医疗智慧化。",
 		ImageUrl:    "https://cache1.medsci.cn/images/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := commonParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

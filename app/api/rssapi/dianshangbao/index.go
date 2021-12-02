@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -29,7 +30,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "电商报行业观察栏目，重点针对电子商务行业、互联网行业、it行业重大新闻24小时跟踪报道，揭示电子商务、互联网等行业的发展趋势和分析报告。",
 		ImageUrl:    "https://www.dsb.cn/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		respDocs := soup.HTMLParse(resp.ReadAllString())
 		dataDocsList := respDocs.FindAll("li", "class", "clearfix")
 		rssItems := make([]dao.RSSItem, 0)
@@ -72,7 +73,7 @@ func parseNewsDetail(detailLink string) (detailData string) {
 		resp *ghttp.ClientResponse
 		err  error
 	)
-	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
 		var (
 			docs        soup.Root
 			articleElem soup.Root

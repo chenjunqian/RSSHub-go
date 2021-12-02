@@ -4,6 +4,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -27,7 +28,7 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 		Description: "实时热点，每10分钟更新一次",
 		ImageUrl:    "https://h5.sinaimg.cn/m/weibo-lite/icon-default-192.png",
 	}
-	if resp, err := g.Client().SetHeaderMap(headers).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		dataJsonList := respJson.GetJsons("data.cards.0.card_group")
 		rssItems := make([]dao.RSSItem, 0)

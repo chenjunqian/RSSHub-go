@@ -3,8 +3,8 @@ package zhihu
 import (
 	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -15,7 +15,7 @@ func (ctl *Controller) GetZhihuPinPeople(req *ghttp.Request) {
 
 	url := fmt.Sprintf("https://api.zhihu.com/pins/%s/moments?limit=10&offset=0", peopleId)
 	headers := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(headers).Get(url); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(url); err == nil {
 		respString := resp.ReadAllString()
 		jsonResp := gjson.New(respString)
 		peopleName := jsonResp.GetString("data.0.target.author.name")

@@ -2,16 +2,16 @@ package task
 
 import (
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/glog"
 	"github.com/gorilla/feeds"
+	"rsshub/app/component"
 	feedService "rsshub/app/service/feed"
 )
 
 func CallRSSApi(address, route string) (err error) {
 
 	apiUrl := "http://localhost" + address + route
-	if _, err = g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err != nil {
+	if _, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err != nil {
 		glog.Line().Println("Feed refresh cron job error : ", err)
 	}
 

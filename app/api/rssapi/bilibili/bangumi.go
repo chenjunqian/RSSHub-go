@@ -3,9 +3,9 @@ package bilibili
 import (
 	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -14,7 +14,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 	mediaId := req.GetString("id")
 	apiUrl := "https://www.bilibili.com/bangumi/media/md" + mediaId
 	header := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respStr := resp.ReadAllString()
 		reg := regexp.MustCompile(`window\.__INITIAL_STATE__=([\s\S]+);\(function\(\)`)
 		contentStrs := reg.FindStringSubmatch(respStr)
@@ -28,7 +28,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 		rssData := dao.RSSFeed{}
 		items := make([]dao.RSSItem, 0)
 		seasonUrl := "https://api.bilibili.com/pgc/web/season/section?season_id=" + seasonId
-		if seasonResp, err := g.Client().SetHeaderMap(header).Get(seasonUrl); err == nil {
+		if seasonResp, err := component.GetHttpClient().SetHeaderMap(header).Get(seasonUrl); err == nil {
 			seasonJsonResp := gjson.New(seasonResp.ReadAllString())
 			seasonData := seasonJsonResp.GetJson("result")
 

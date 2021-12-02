@@ -3,8 +3,8 @@ package bilibili
 import (
 	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -21,7 +21,7 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 	apiMenuUrl := "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=" + userId
 	header := getHeaders()
 	header["Referer"] = "https://space.bilibili.com/" + userId
-	if menuResp, err := g.Client().SetHeaderMap(header).SetCookieMap(getCookieMap()).Get(apiMenuUrl); err == nil {
+	if menuResp, err := component.GetHttpClient().SetHeaderMap(header).SetCookieMap(getCookieMap()).Get(apiMenuUrl); err == nil {
 		menuJsonResp := gjson.New(menuResp.ReadAllString())
 		dataJson := menuJsonResp.GetJson("data")
 		rssData.Description = dataJson.GetString("intro")
@@ -29,7 +29,7 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 	}
 
 	apiUrl := fmt.Sprintf("https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=%s&pn=1&ps=100", userId)
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		dataJsons := jsonResp.GetJsons("data.data")
 

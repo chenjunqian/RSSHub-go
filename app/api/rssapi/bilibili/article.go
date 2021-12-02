@@ -2,12 +2,12 @@ package bilibili
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
 
@@ -18,7 +18,7 @@ func (ctl *Controller) GetUserArticle(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.bilibili.com/x/space/article?mid=%s&pn=1&ps=10&sort=publish_time&jsonp=jsonp", userId)
 	header := getHeaders()
 	header["Referer"] = "https://space.bilibili.com/" + userId
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		articleJsons := jsonResp.GetJsons("data.articles")
 

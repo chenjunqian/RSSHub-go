@@ -3,6 +3,7 @@ package whalegogo
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -22,7 +23,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "我们是一帮在传统汽车门户、汽车杂志战斗过数年的老司机，关于车与理想生活的种种，我们有很多思考，现在用一个全新的网站和 APP，将车型快讯、试驾体验、行业深度、生活方式等原创内容，用简洁的设计与排版呈现在你的面前。",
 		ImageUrl:    "https://api.whalegogo.com/favicon.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := indexParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

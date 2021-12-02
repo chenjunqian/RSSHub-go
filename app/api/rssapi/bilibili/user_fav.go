@@ -3,8 +3,8 @@ package bilibili
 import (
 	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -16,7 +16,7 @@ func (ctl *Controller) GetUserFav(req *ghttp.Request) {
 	header := getHeaders()
 	header["Referer"] = fmt.Sprintf("https://space.bilibili.com/%s/#/favlist", id)
 	rssData := dao.RSSFeed{}
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		dataJson := gjson.New(resp.ReadAllString())
 		rssData.Title = username + " 的 bilibili 收藏夹"
 		rssData.Link = fmt.Sprintf("https://space.bilibili.com/%s/#/favlist", id)

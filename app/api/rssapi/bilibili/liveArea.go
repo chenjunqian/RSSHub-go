@@ -2,12 +2,12 @@ package bilibili
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 )
 
@@ -35,7 +35,7 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 	apiUrl := "https://api.live.bilibili.com/room/v1/Area/getList"
 	header := getHeaders()
 	header["Referer"] = "https://link.bilibili.com/p/center/index"
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		dataJsonList := jsonResp.GetJsons("data")
 
@@ -69,7 +69,7 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 
 		rssItems := make([]dao.RSSItem, 0)
 		areaApiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/area/getRoomList?area_id=%s&sort_type=%s&page_size=30&page_no=1", areaId, order)
-		if areaResp, err := g.Client().SetHeaderMap(header).Get(areaApiUrl); err == nil {
+		if areaResp, err := component.GetHttpClient().SetHeaderMap(header).Get(areaApiUrl); err == nil {
 			areaJsonResp := gjson.New(areaResp.ReadAllString())
 			dataJsonList := areaJsonResp.GetJsons("data")
 

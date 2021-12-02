@@ -4,6 +4,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -23,7 +24,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Tag:         []string{"科技"},
 		ImageUrl:    "https://www.mittrchina.com/logo.ico",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Post(apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		itemJsonList := respJson.GetJsons("data.items")
 		rssItems := make([]dao.RSSItem, 0)

@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -23,7 +24,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Tag:      []string{"英文", "海外"},
 		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		docs := soup.HTMLParse(resp.ReadAllString())
 		topItems := docs.FindAll("div", "class", "top-news-item")
 		rssItems := make([]dao.RSSItem, 0)

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gogf/gf/container/garray"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -20,7 +20,7 @@ func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
 	rssData.Link = "https://www.bilibili.com/blackboard/topic_list.html#/"
 	rssData.Description = "bilibili 话题列表"
 	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		dataJsonList := jsonResp.GetJsons("data.list")
 		items := make([]dao.RSSItem, 0)

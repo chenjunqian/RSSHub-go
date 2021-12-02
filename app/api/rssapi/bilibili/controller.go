@@ -2,6 +2,7 @@ package bilibili
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/service"
 
 	"github.com/gogf/gf/encoding/gjson"
@@ -35,7 +36,7 @@ func getUsernameFromUserId(id string) string {
 
 	apiUrl := fmt.Sprintf("https://api.bilibili.com/x/space/acc/info?mid=%s&jsonp=jsonp", id)
 	headers := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(headers).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
 		username = jsonResp.GetString("data.name")
 		g.Redis().DoVar("SET", redisKey)
@@ -57,7 +58,7 @@ func getLiveIDFromShortID(id string) string {
 
 	apiUrl := "https://api.live.bilibili.com/room/v1/Room/room_init?id=" + id
 	header := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		liveID = respJson.GetString("data.room_id")
 		g.Redis().DoVar("SET", redisKey, liveID)
@@ -79,7 +80,7 @@ func getUsernameFromLiveID(id string) string {
 
 	apiUrl := "https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid=" + id
 	header := getHeaders()
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		username = respJson.GetString("data.info.uname")
 		g.Redis().DoVar("SET", redisKey, username)

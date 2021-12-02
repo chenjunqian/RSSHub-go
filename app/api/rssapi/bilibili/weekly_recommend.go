@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strconv"
@@ -26,14 +27,14 @@ func (ctl *Controller) GetWeeklyRecommend(req *ghttp.Request) {
 	rssData.Title = "B站每周必看"
 	rssData.Link = "https://www.bilibili.com/h5/weekly-recommend"
 	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-	if statusResp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if statusResp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		statusDataJson := gjson.New(statusResp.ReadAllString())
 		weeklyNumber := statusDataJson.GetString("data.0.number")
 		weeklyName := statusDataJson.GetString("data.0.name")
 
 		latestApiUrl := "https://app.bilibili.com/x/v2/show/popular/selected?type=weekly_selected&number=" + weeklyNumber
 		header["Referer"] = fmt.Sprintf("https://www.bilibili.com/h5/weekly-recommend?num=%s&navhide=1", weeklyName)
-		if latestResp, err := g.Client().SetHeaderMap(header).Get(latestApiUrl); err == nil {
+		if latestResp, err := component.GetHttpClient().SetHeaderMap(header).Get(latestApiUrl); err == nil {
 			latestRespJson := gjson.New(latestResp.ReadAllString())
 			dataJsonList := latestRespJson.GetJsons("data.list")
 

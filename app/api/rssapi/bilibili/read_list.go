@@ -3,8 +3,8 @@ package bilibili
 import (
 	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -16,7 +16,7 @@ func (ctl *Controller) GetReadList(req *ghttp.Request) {
 	header := getHeaders()
 	header["Referer"] = "https://www.bilibili.com/read/readlist/rl" + id
 	rssData := dao.RSSFeed{}
-	if resp, err := g.Client().SetHeaderMap(header).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
 		respData := gjson.New(resp.ReadAllString())
 		dataJson := respData.GetJson("data")
 		rssData.Title = "bilibili 专栏文集 - " + dataJson.GetString("list.name")

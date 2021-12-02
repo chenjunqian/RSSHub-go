@@ -1,14 +1,12 @@
 package boot
 
 import (
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/genv"
 	"rsshub/app/component"
 	"rsshub/app/cronJob"
 	"rsshub/app/task"
 	_ "rsshub/packed"
-	"time"
-
-	"github.com/gogf/gf/frame/g"
 )
 
 func init() {
@@ -20,7 +18,6 @@ func init() {
 	s := g.Server()
 	//GF相关配置 Web Server配置
 	g.Log().Stack(true)
-	g.Client().SetTimeout(time.Second * 3)
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
 	setCookiesToRedis()

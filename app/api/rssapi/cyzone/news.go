@@ -80,7 +80,7 @@ func parseNewsDetail(detailLink string) (detailData string) {
 		resp *ghttp.ClientResponse
 		err  error
 	)
-	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
 		var (
 			docs        soup.Root
 			articleElem soup.Root

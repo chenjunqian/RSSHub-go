@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -23,7 +24,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		Tag:         []string{"汽车"},
 		ImageUrl:    "https://static001.infoq.cn/static/infoq/template/img/logo-fasdkjfasdf.png",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		docs := soup.HTMLParse(resp.ReadAllString())
 		itemList := docs.FindAll("div", "class", "item-main")
 		rssItems := make([]dao.RSSItem, 0)

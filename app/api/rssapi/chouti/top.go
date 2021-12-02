@@ -4,6 +4,7 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -24,7 +25,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		respDocs := soup.HTMLParse(resp.ReadAllString())
 		dataDocsList := respDocs.FindAll("div", "class", "link-area")
 		rssItems := make([]dao.RSSItem, 0)

@@ -2,6 +2,7 @@ package bilibili
 
 import (
 	"fmt"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
@@ -23,7 +24,7 @@ func (ctl *Controller) GetMangaUpdate(req *ghttp.Request) {
 	header["Referer"] = link
 
 	rssData := dao.RSSFeed{}
-	if resp, err := g.Client().SetHeaderMap(header).Post(apiUrl, g.Map{"comic_id": id}); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(header).Post(apiUrl, g.Map{"comic_id": id}); err == nil {
 		respData := gjson.New(resp.ReadAllString())
 		dataJson := respData.GetJson("data")
 		authorName := dataJson.GetStrings("author_name")
