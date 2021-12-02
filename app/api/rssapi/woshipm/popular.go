@@ -3,6 +3,7 @@ package woshipm
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -24,7 +25,7 @@ func (ctl *Controller) GetPopular(req *ghttp.Request) {
 		ImageUrl:    "https://image.woshipm.com/favicon.ico",
 	}
 
-	if resp, err := g.Client().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := commonParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

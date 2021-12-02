@@ -7,12 +7,11 @@ import (
 
 func JueShengRouter(group *ghttp.RouterGroup) {
 	group.Group("/index", func(group *ghttp.RouterGroup) {
-		jueshengCtl := new(juesheng.Controller)
-		group.GET("/news", jueshengCtl.GetIndex)
-		group.GET("/12k", jueshengCtl.GetIndex)
-		group.GET("/e-edu", jueshengCtl.GetIndex)
-		group.GET("/zhijiao", jueshengCtl.GetIndex)
-		group.GET("/xingqu", jueshengCtl.GetIndex)
-		group.GET("/xueqian", jueshengCtl.GetIndex)
+		group.GET("/news", juesheng.Controller.GetIndex)
+		group.GET("/12k", juesheng.Controller.GetIndex)
+		group.GET("/e-edu", juesheng.Controller.GetIndex)
+		group.GET("/zhijiao", juesheng.Controller.GetIndex)
+		group.GET("/xingqu", juesheng.Controller.GetIndex)
+		group.GET("/xueqian", juesheng.Controller.GetIndex)
 	})
 }

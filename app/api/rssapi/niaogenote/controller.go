@@ -2,6 +2,8 @@ package niaogenote
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
@@ -46,9 +48,7 @@ func catParser(respString string) (items []dao.RSSItem) {
 			link = baseUrl + imageATag.Attrs()["href"]
 		}
 
-		if contentATag := article.Find("a", "class", "articleContentInner"); contentATag.Error == nil {
-			content = contentATag.Text()
-		}
+		content = parseCatDetail(link)
 
 		if timeTag := article.Find("span", "class", "writeTime"); timeTag.Error == nil {
 			time = timeTag.Text()
@@ -68,6 +68,29 @@ func catParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCatDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "contentLeft")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request niaogebiji article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

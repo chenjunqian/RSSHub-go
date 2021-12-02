@@ -1,7 +1,11 @@
 package woshipm
 
 import (
+	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
+	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -36,8 +40,8 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		imageLink = article.GetString("image")
 		link = article.GetString("permalink")
 		time = article.GetString("date")
-		content = article.GetString("snipper")
 		author = article.GetString("author.name")
+		content = parseCommonDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -49,6 +53,32 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "article--wrapper")
+		if articleElem.Pointer == nil {
+			return respString
+		}
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request woshipm index article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

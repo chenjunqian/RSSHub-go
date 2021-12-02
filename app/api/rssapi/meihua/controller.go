@@ -2,6 +2,8 @@ package meihua
 
 import (
 	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
@@ -26,6 +28,9 @@ func commonParser(respString string) (items []dao.RSSItem) {
 	respDoc := soup.HTMLParse(respString)
 	articleList := respDoc.FindAll("div", "class", "article-item")
 	baseUrl := "https://www.meihua.info"
+	if len(articleList) > 10 {
+		articleList = articleList[:10]
+	}
 	for _, article := range articleList {
 		var imageLink string
 		var title string
@@ -46,7 +51,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 
 		link = baseUrl + coverDiv.Find("a").Attrs()["href"]
 
-		content = article.Find("div", "class", "intro").Text()
+		content = parseCommonDetail(link)
 		spanList := article.FindAll("span", "class", "text-tag")
 		for _, spanDoc := range spanList {
 			if aTag := spanDoc.Find("a"); aTag.Error == nil {
@@ -61,12 +66,35 @@ func commonParser(respString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription("", content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("section", "id", "article-content-html")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request meihua article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

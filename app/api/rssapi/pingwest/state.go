@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+	"strings"
 )
 
 func (ctl *Controller) GetState(req *ghttp.Request) {
@@ -54,9 +55,7 @@ func stateParser(respString string) (items []dao.RSSItem) {
 		time = gtime.Now().Format("Y-m-d") + " " + article.Find("section", "class", "time").Find("span").Text()
 		title = article.Find("p", "class", "title").Find("a").Text()
 		link = article.Find("p", "class", "title").Find("a").Attrs()["href"]
-		if contentDoc := article.Find("p", "class", "description"); contentDoc.Error == nil {
-			content = contentDoc.Find("a").Text()
-		}
+		content = parseStateDetail(link)
 
 		if imageDoc := article.Find("section", "class", "news-img"); imageDoc.Error == nil {
 			imageLink = imageDoc.Find("img").Attrs()["src"]
@@ -72,5 +71,34 @@ func stateParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseStateDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if strings.HasPrefix(detailLink, "//") {
+		detailLink = "https:" + detailLink
+	}
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("section", "class", "wire-detail-box")
+		if articleElem.Pointer == nil {
+			articleElem = docs.Find("section", "class", "main")
+		}
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request pingwest article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }

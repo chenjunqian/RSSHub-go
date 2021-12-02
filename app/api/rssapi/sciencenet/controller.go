@@ -3,6 +3,8 @@ package sciencenet
 import (
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gcharset"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 )
@@ -50,6 +52,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		tdDocList := article.FindAll("td")
 		lastTdDoc := tdDocList[len(tdDocList)-1]
 		time = lastTdDoc.Text()
+		content = parseCommonDetail(link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -61,6 +64,30 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseCommonDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		respString, _ = gcharset.Convert("UTF-8", "gbk", respString)
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "bm_c")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request sciencenet index article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 

@@ -2,7 +2,10 @@ package pintu
 
 import (
 	"fmt"
+	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strconv"
@@ -54,6 +57,29 @@ func indexParser(respString string) (items []dao.RSSItem) {
 		}
 		items = append(items, rssItem)
 	}
+	return
+}
+
+func parseIndexDetail(detailLink string) (detailData string) {
+	var (
+		resp *ghttp.ClientResponse
+		err  error
+	)
+	if resp, err = g.Client().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		var (
+			docs        soup.Root
+			articleElem soup.Root
+			respString  string
+		)
+		respString = resp.ReadAllString()
+		docs = soup.HTMLParse(respString)
+		articleElem = docs.Find("div", "class", "contentLeft")
+		detailData = articleElem.HTML()
+
+	} else {
+		g.Log().Errorf("Request pintu index article detail failed, link  %s \nerror : %s", detailLink, err)
+	}
+
 	return
 }
 
