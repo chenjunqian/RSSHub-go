@@ -20,6 +20,10 @@ curl -X PUT "localhost:9200/rss_item?pretty" -u "elastic:qazxsw" -H 'Content-Typ
                 "analyzer": "ik_smart",
                 "search_analyzer": "ik_smart"
             },
+            "thumbnail": {
+                "type": "text",
+                "index": false,
+            },
             "link": {
                 "type": "text",
                 "index": false,
