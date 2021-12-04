@@ -75,6 +75,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string, rsshubLink string
 			ChannelId:       feedItem.ChannelId,
 			Title:           feedItem.Title,
 			ChannelDesc:     feedItem.ChannelDesc,
+			Thumbnail:       feedItem.Thumbnail,
 			Link:            feedItem.Link,
 			Date:            feedItem.Date,
 			Author:          feedItem.Author,
