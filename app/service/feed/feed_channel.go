@@ -67,6 +67,9 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string, rsshubLink string
 
 		return err
 	})
+	if err != nil {
+		g.Log().Error("insert rss feed data failed : ", err)
+	}
 
 	bulkRequest := component.GetESClient().Bulk()
 	for _, feedItem := range feedItemModeList {
