@@ -1,12 +1,13 @@
 package boot
 
 import (
+	_ "rsshub/packed"
+
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/genv"
 	"rsshub/app/component"
 	"rsshub/app/cronJob"
 	"rsshub/app/task"
-	_ "rsshub/packed"
 )
 
 func init() {
