@@ -1,2 +1,2 @@
-gf pack config packed/packed.go
+gf pack config packed/packed.go -y
 gf build

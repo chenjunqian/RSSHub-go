@@ -21,6 +21,7 @@ func init() {
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
 	setCookiesToRedis()
+	component.InitDatabase()
 	component.InitES()
 	component.InitMachinery()
 	cronJob.RegisterJob()

@@ -58,7 +58,7 @@ func AddFeedChannelAndItem(feed *feeds.Feed, tagList []string, rsshubLink string
 		tagModeList = append(tagModeList, tagModel)
 	}
 
-	err := g.DB().Transaction(func(tx *gdb.TX) error {
+	err := component.GetDatabase().Transaction(func(tx *gdb.TX) error {
 		var err error
 
 		_, _ = tx.Save("rss_feed_channel", feedChannelModel)
