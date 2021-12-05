@@ -9,7 +9,7 @@ import (
 func GetHttpClient() (client *ghttp.Client) {
 
 	client = g.Client()
-	client.SetTimeout(time.Second * 10)
+	client.SetTimeout(time.Second * 60)
 
 	return
 }
