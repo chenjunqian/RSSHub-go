@@ -45,14 +45,11 @@ func SendCallRSSApiTask(address, route string) {
 	}
 
 	var (
-		asyncResult *result.AsyncResult
-		err         error
+		err error
 	)
-	asyncResult, err = machineryServer.SendTask(signature)
+	_, err = machineryServer.SendTask(signature)
 	if err != nil {
 		g.Log().Error("failed to send task ", err)
-	} else if asyncResult.GetState().IsSuccess() {
-		g.Log().Info("send task success with signature : ", signature)
 	}
 }
 
