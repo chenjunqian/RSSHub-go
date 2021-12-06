@@ -8,7 +8,11 @@ import (
 )
 
 func RegisterJob() {
-	_, _ = gcron.AddSingleton("0 0 * * * *", feedRefreshCronJob)
+	var isProducer bool
+	isProducer = g.Cfg().GetBool("guoshao.producer")
+	if isProducer {
+		_, _ = gcron.AddSingleton("0 */10 * * * *", feedRefreshCronJob)
+	}
 }
 
 func feedRefreshCronJob() {

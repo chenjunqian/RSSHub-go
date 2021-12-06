@@ -1,13 +1,14 @@
 package boot
 
 import (
+	"github.com/RichardKnop/machinery/v1"
+	"rsshub/app/task"
 	_ "rsshub/packed"
 
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/genv"
 	"rsshub/app/component"
 	"rsshub/app/cronJob"
-	"rsshub/app/task"
 )
 
 func init() {
@@ -24,9 +25,26 @@ func init() {
 	setCookiesToRedis()
 	component.InitDatabase()
 	component.InitES()
-	component.InitMachinery()
+	initMachinery()
 	cronJob.RegisterJob()
+}
 
+func setCookiesToRedis() {
+	cookiesMap := g.Cfg().GetMap("cookies")
+
+	for key := range cookiesMap {
+		g.Redis().DoVar("SET", key, cookiesMap[key])
+	}
+}
+
+func initMachinery() {
+	component.InitMachinery()
+
+	var isConsumer bool
+	isConsumer = g.Cfg().GetBool("guoshao.consumer")
+	if !isConsumer {
+		return
+	}
 	var err error
 	err = component.GetMachineryServer().RegisterTask("CallRSSApi", task.CallRSSApi)
 	if err != nil {
@@ -37,12 +55,14 @@ func init() {
 		g.Log().Error("machinery register task StoreFeed failed : ", err)
 	}
 	g.Log().Info("machinery register task : ", component.GetMachineryServer().GetRegisteredTaskNames())
-}
 
-func setCookiesToRedis() {
-	cookiesMap := g.Cfg().GetMap("cookies")
-
-	for key := range cookiesMap {
-		g.Redis().DoVar("SET", key, cookiesMap[key])
-	}
+	go func() {
+		var err error
+		var machineryWorker *machinery.Worker
+		machineryWorker = component.GetMachineryServer().NewWorker("rsshub_work", 0)
+		err = machineryWorker.Launch()
+		if err != nil {
+			g.Log().Error("init machinery worker failed : ", err)
+		}
+	}()
 }

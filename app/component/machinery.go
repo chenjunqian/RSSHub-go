@@ -9,7 +9,6 @@ import (
 )
 
 var machineryServer *machinery.Server
-var machineryWorker *machinery.Worker
 
 func InitMachinery() {
 	g.Log().Info("init machinery ")
@@ -28,15 +27,6 @@ func InitMachinery() {
 	if serverError != nil {
 		g.Log().Error("init machinery server failed : ", serverError)
 	}
-
-	go func() {
-		var err error
-		machineryWorker = machineryServer.NewWorker("rsshub_work", 0)
-		err = machineryWorker.Launch()
-		if err != nil {
-			g.Log().Error("init machinery worker failed : ", err)
-		}
-	}()
 }
 
 func SendCallRSSApiTask(address, route string) {

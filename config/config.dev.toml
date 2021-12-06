@@ -5,6 +5,10 @@ ServerAgent = "rsshub"
 LogPath = "/tmp/log/rsshub/server"
 DumpRouterMap = false
 
+[guoshao]
+producer = true
+consumer = false
+
 # Logger.
 [logger]
 Path = "/tmp/log/rsshub"

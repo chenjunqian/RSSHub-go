@@ -2,12 +2,16 @@
 [server]
 Address = ":8082"
 ServerAgent = "rsshub"
-LogPath = "/var/log/rsshub/server"
+LogPath = "/tmp/log/rsshub/server"
 DumpRouterMap = false
+
+[guoshao]
+producer = true
+consumer = true
 
 # Logger.
 [logger]
-Path = "/var/log/rsshub"
+Path = "/tmp/log/rsshub"
 Level = "all"
 Stdout = true
 writerColorEnable = true
