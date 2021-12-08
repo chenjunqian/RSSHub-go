@@ -84,6 +84,29 @@ func SendStoreFeedTask(feed, tag, rsshubLink string) {
 	}
 }
 
+func IsAllMachineryTaskDone() (isDone bool) {
+	var (
+		err               error
+		taskSignatureList []*tasks.Signature
+	)
+
+	taskSignatureList, err = machineryServer.GetBroker().GetPendingTasks(machineryServer.GetConfig().DefaultQueue)
+
+	if err != nil {
+		g.Log().Error(err)
+		isDone = true
+		return
+	}
+
+	if len(taskSignatureList) == 0 {
+		isDone = true
+	} else {
+		isDone = false
+	}
+
+	return
+}
+
 func GetMachineryServer() *machinery.Server {
 	return machineryServer
 }

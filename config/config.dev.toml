@@ -6,8 +6,10 @@ LogPath = "/tmp/log/rsshub/server"
 DumpRouterMap = false
 
 [guoshao]
+autoRefreshFeed = true
+asyncRefreshFeed = false
 producer = true
-consumer = false
+consumer = true
 
 # Logger.
 [logger]
