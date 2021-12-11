@@ -23,6 +23,12 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Referer"] = dailyUrl
 	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(dailyUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("stories")
 
@@ -61,6 +67,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 					feedItem.Description = reg.ReplaceAllString(feedItem.Description, `<strong>${1}</strong>`)
 					reg = regexp.MustCompile(`<\/?h2.*?>`)
 					feedItem.Description = reg.ReplaceAllString(feedItem.Description, "")
+					_ = storyItemResp.Close()
 				}
 			}
 

@@ -24,6 +24,12 @@ func (ctl *controller) GetActivity(req *ghttp.Request) {
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := commonHtmlParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

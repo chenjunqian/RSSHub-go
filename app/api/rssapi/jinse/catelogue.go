@@ -30,6 +30,12 @@ func (ctl *Controller) GetCatalogue(req *ghttp.Request) {
 		ImageUrl:    "https://www.jinse.com/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := catalogueParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

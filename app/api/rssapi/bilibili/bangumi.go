@@ -3,6 +3,7 @@ package bilibili
 import (
 	"fmt"
 	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/component"
@@ -15,6 +16,12 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 	apiUrl := "https://www.bilibili.com/bangumi/media/md" + mediaId
 	header := getHeaders()
 	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respStr := resp.ReadAllString()
 		reg := regexp.MustCompile(`window\.__INITIAL_STATE__=([\s\S]+);\(function\(\)`)
 		contentStrs := reg.FindStringSubmatch(respStr)

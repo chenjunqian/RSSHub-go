@@ -26,6 +26,12 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		docs := soup.HTMLParse(resp.ReadAllString())
 		newsContainer := docs.Find("ul", "class", "newscontainer")
 		dataListDocs := newsContainer.FindAll("li")

@@ -27,6 +27,12 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		docs := soup.HTMLParse(resp.ReadAllString())
 		articleDocsList := docs.FindAll("div", "class", "articles-card")
 		rssItems := make([]dao.RSSItem, 0)

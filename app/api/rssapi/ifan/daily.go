@@ -25,6 +25,12 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		ImageUrl:    "https://images.ifanr.cn/wp-content/themes/ifanr-5.0-pc/static/images/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respJson := gjson.New(resp.ReadAllString())
 		itemJsonList := respJson.GetJsons("objects")
 		rssItems := make([]dao.RSSItem, 0)

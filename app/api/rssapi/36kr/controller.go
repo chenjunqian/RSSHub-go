@@ -84,6 +84,12 @@ func parseDetail(detailLink string) (detailData string) {
 
 		detailData = contentData.GetString("articleDetail.articleDetailData.data.widgetContent")
 
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 	} else {
 		g.Log().Errorf("Request 36kr news detail failed, link  %s \nerror : %s", detailLink, err)
 	}

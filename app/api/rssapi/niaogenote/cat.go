@@ -30,6 +30,12 @@ func (ctl *Controller) GetCat(req *ghttp.Request) {
 		ImageUrl:    "https://www.niaogebiji.com/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := catParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

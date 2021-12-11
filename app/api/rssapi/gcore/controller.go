@@ -75,6 +75,12 @@ func parseCommonDetail(detailLink string) (detailData string) {
 			articleElem soup.Root
 			respString  string
 		)
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respString = resp.ReadAllString()
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "newsPage_main")

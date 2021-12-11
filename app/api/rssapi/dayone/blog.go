@@ -26,6 +26,12 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 		ImageUrl: "https://dayoneapp.com/favicon-32x32.png?v=9277df7ae7503b6e383587ae0e7210ee",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		docs := soup.HTMLParse(resp.ReadAllString())
 		blogItemWrapper := docs.Find("div", "class", "container--inner")
 		blogItemList := blogItemWrapper.FindAll("div")
@@ -62,6 +68,12 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 
 func getFullDescription(url string) (content string) {
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(url); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		docs := soup.HTMLParse(resp.ReadAllString())
 		content = docs.Find("main").HTML()
 	}

@@ -32,6 +32,12 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 	}
 
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := indexParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

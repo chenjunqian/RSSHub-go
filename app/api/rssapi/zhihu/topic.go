@@ -27,6 +27,12 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 	headers["Authorization"] = "oauth c3cef7c66a1843f8b3a9e6a1e3160e20"
 	headers["Referer"] = link
 	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(topicGetUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetJsons("data")
 

@@ -30,6 +30,12 @@ func (ctl *controller) Get36krNews(req *ghttp.Request) {
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
 		rssItems := parseNews(resp.ReadAllString())
 		rssData.Items = rssItems
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "36KR_NEWS_"+linkConfig.Link, rssStr)

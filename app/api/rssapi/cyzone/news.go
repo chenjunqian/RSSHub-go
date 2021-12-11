@@ -36,6 +36,12 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		ImageUrl:    "https://www.cyzone.cn/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respDocs := soup.HTMLParse(resp.ReadAllString())
 		dataDocsList := respDocs.FindAll("div", "class", "article-item")
 		rssItems := make([]dao.RSSItem, 0)
@@ -86,6 +92,12 @@ func parseNewsDetail(detailLink string) (detailData string) {
 			articleElem soup.Root
 			respString  string
 		)
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respString = resp.ReadAllString()
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "show-wrap")

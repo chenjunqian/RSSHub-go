@@ -26,6 +26,12 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respDocs := soup.HTMLParse(resp.ReadAllString())
 		dataDocsList := respDocs.FindAll("div", "class", "link-area")
 		rssItems := make([]dao.RSSItem, 0)

@@ -2,6 +2,7 @@ package bilibili
 
 import (
 	"fmt"
+	"github.com/gogf/gf/frame/g"
 	"rsshub/app/component"
 	"rsshub/app/service/feed"
 	"strings"
@@ -27,6 +28,12 @@ func (ctl *Controller) GetAppVersion(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("%s/x/v2/version?mobi_app=%s", rootUrl, id)
 	headers := getHeaders()
 	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetJsons("data")
 

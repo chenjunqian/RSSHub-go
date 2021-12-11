@@ -69,6 +69,12 @@ func parseCatalogueDetail(detailLink string) (detailData string) {
 			articleElem soup.Root
 			respString  string
 		)
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respString = resp.ReadAllString()
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "js-article")
@@ -123,6 +129,12 @@ func parseLiveDetail(detailLink string) (detailData string) {
 			articleElem soup.Root
 			respString  string
 		)
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respString = resp.ReadAllString()
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("section", "class", "at-body")
@@ -178,6 +190,12 @@ func parseTimelineDetail(detailLink string) (detailData string) {
 			articleElem soup.Root
 			respString  string
 		)
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respString = resp.ReadAllString()
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "js-article")

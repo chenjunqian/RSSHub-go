@@ -78,6 +78,12 @@ func parseCatDetail(detailLink string) (detailData string) {
 		err  error
 	)
 	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		var (
 			docs        soup.Root
 			articleElem soup.Root

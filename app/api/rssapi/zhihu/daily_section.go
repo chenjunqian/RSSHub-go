@@ -26,6 +26,12 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 	headers["Referer"] = dailyUrl
 
 	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(dailyUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
 		respDataList := jsonResp.GetArray("stories")
 
@@ -50,6 +56,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 				reg = regexp.MustCompile(`<\/?h2.*?>`)
 				content = reg.ReplaceAllString(content, "")
 				feedItem.Description = content
+				_ = itemResp.Close()
 			}
 			items = append(items, feedItem)
 		}

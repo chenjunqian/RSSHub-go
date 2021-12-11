@@ -2,7 +2,7 @@ package cronJob
 
 import (
 	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"strings"
 	"time"
@@ -52,32 +52,43 @@ func nonAsyncRefreshFeed() {
 	go func() {
 		var freshStartTime = time.Now()
 		var refreshHoldTime = time.Minute * 40
+		// wait for GoFrame router init
+		time.Sleep(time.Second * 5)
 		for {
+			freshStartTime = time.Now()
+			doNonAsyncRefreshFeed()
 			if time.Now().Sub(freshStartTime) < refreshHoldTime {
 				time.Sleep(time.Minute * 60)
 			}
-			freshStartTime = time.Now()
-			doNonAsyncRefreshFeed()
 		}
 	}()
 }
 
 func doNonAsyncRefreshFeed() {
-	routerArray := g.Server().GetRouterArray()
+	var (
+		routerArray  []ghttp.RouterItem
+		routerLength int
+	)
+	routerArray = g.Server().GetRouterArray()
 	if len(routerArray) > 0 {
-		for _, router := range routerArray {
+		routerLength = len(routerArray)
+		for index, router := range routerArray {
 			if strings.Contains(router.Route, ":") || strings.Contains(router.Route, "rss/api/") {
 				continue
 			}
 			var (
 				apiUrl string
 				err    error
+				resp   *ghttp.ClientResponse
 			)
 			apiUrl = "http://localhost" + router.Address + router.Route
-			if _, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err != nil {
-				glog.Line().Println("Feed refresh cron job error : ", err)
+			if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err != nil {
+				g.Log().Error("Feed refresh cron job error : ", err)
 			}
-
+			if resp != nil {
+				_ = resp.Close()
+			}
+			g.Log().Infof("Processed %d/%d feed refresh\n", index, routerLength)
 		}
 	}
 }

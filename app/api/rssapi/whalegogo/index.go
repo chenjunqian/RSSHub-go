@@ -24,6 +24,12 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		ImageUrl:    "https://api.whalegogo.com/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := indexParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

@@ -25,6 +25,12 @@ func (ctl *Controller) GetMangaUpdate(req *ghttp.Request) {
 
 	rssData := dao.RSSFeed{}
 	if resp, err := component.GetHttpClient().SetHeaderMap(header).Post(apiUrl, g.Map{"comic_id": id}); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respData := gjson.New(resp.ReadAllString())
 		dataJson := respData.GetJson("data")
 		authorName := dataJson.GetStrings("author_name")

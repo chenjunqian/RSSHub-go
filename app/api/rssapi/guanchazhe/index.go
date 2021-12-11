@@ -30,6 +30,12 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		ImageUrl:    "https://www.eeo.com.cn/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		var rssItems []dao.RSSItem
 		if linkConfig.LinkType == "index" {
 			rssItems = indexParser(resp.ReadAllString())

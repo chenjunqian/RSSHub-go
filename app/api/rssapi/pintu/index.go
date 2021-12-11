@@ -41,6 +41,12 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		"pageNumber": 0,
 		"duration":   "quarter",
 	}); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := indexParser(resp.ReadAllString())
 		rssData.Items = rssItems
 	}

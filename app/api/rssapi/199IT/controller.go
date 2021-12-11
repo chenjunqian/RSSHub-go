@@ -67,6 +67,12 @@ func parseDetail(detailLink string) (detailData string) {
 		articleElem = docs.Find("article")
 		detailData = articleElem.HTML()
 
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 	} else {
 		g.Log().Errorf("Request 199IT article detail failed, link  %s \nerror : %s", detailLink, err)
 	}

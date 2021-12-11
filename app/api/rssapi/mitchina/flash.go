@@ -25,6 +25,12 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		ImageUrl:    "https://www.mittrchina.com/logo.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		respJson := gjson.New(resp.ReadAllString())
 		itemJsonList := respJson.GetJsons("data.items")
 		rssItems := make([]dao.RSSItem, 0)

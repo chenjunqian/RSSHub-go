@@ -25,6 +25,12 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		ImageUrl:    "https://static001.infoq.cn/static/infoq/template/img/logo-fasdkjfasdf.png",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		docs := soup.HTMLParse(resp.ReadAllString())
 		itemList := docs.FindAll("div", "class", "item-main")
 		rssItems := make([]dao.RSSItem, 0)

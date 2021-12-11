@@ -26,6 +26,12 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		reg := regexp.MustCompile(`"authorDetailData":(.*?),"channel":`)
 		contentStr := reg.FindStringSubmatch(resp.ReadAllString())
 		if len(contentStr) >= 1 {

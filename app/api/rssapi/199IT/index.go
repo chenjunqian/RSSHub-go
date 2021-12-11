@@ -27,6 +27,12 @@ func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
 		rssItems := parseArticle(resp.ReadAllString())
 		rssData.Items = rssItems
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)

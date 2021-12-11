@@ -27,6 +27,12 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	rssData.Tag = []string{"壁纸", "图片"}
 	rssData.ImageUrl = "https://cn.bing.com/sa/simg/favicon-2x.ico"
 	if statusResp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(statusResp)
 		respJson := gjson.New(statusResp.ReadAllString())
 		imageListJson := respJson.GetJsons("images")
 		rssItems := make([]dao.RSSItem, 0)

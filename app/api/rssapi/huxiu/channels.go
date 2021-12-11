@@ -34,6 +34,12 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}
 	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+		defer func(resp *ghttp.ClientResponse) {
+			err := resp.Close()
+			if err != nil {
+				g.Log().Error(err)
+			}
+		}(resp)
 		rssItems := make([]dao.RSSItem, 0)
 		reg := regexp.MustCompile(`window.__INITIAL_STATE__=(.*?);\(function\(\)`)
 		contentStrs := reg.FindStringSubmatch(resp.ReadAllString())
