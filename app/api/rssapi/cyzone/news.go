@@ -1,13 +1,14 @@
 package cyzone
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) GetNews(req *ghttp.Request) {
@@ -35,14 +36,8 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		Description: "创业,资本,股权融资,风险投资,VC,IPO,PE,私募,私募股权,上市,融资,天使投资,创业故事,创业项目,投资机构,互联网创业,创业平台",
 		ImageUrl:    "https://www.cyzone.cn/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respDocs := soup.HTMLParse(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("div", "class", "article-item")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataDocs := range dataDocsList {
@@ -83,28 +78,21 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 
 func parseNewsDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respString = resp.ReadAllString()
+		respString = resp
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "show-wrap")
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request cyzone news article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request cyzone news article detail failed, link  %s \n", detailLink)
 	}
 
 	return

@@ -2,11 +2,12 @@ package bilibili
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetTopic(req *ghttp.Request) {
@@ -15,8 +16,8 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 	header := getHeaders()
 	header["Referer"] = fmt.Sprintf("https://www.bilibili.com/tag/%s/feed", topicName)
 	rssData := dao.RSSFeed{}
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		respJson := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		respJson := gjson.New(resp)
 		cardJsonList := respJson.GetJsons("data.cards")
 
 		rssData.Title = topicName + "的全部话题"

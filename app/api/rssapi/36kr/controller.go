@@ -1,13 +1,13 @@
 package _36kr
 
 import (
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
 )
 
 type controller struct {
@@ -64,17 +64,16 @@ func parseNews(htmlStr string) []dao.RSSItem {
 
 func parseDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			reg             *regexp.Regexp
 			contentStrArray []string
 			contentStr      string
 		)
 		reg = regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
-		contentStrArray = reg.FindStringSubmatch(resp.ReadAllString())
+		contentStrArray = reg.FindStringSubmatch(resp)
 		if len(contentStrArray) <= 1 {
 			g.Log().Errorf("Parse 36kr news detail failed, detail json data is no match rule, detail link is %s", detailLink)
 			return
@@ -83,15 +82,8 @@ func parseDetail(detailLink string) (detailData string) {
 		contentData := gjson.New(contentStr)
 
 		detailData = contentData.GetString("articleDetail.articleDetailData.data.widgetContent")
-
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
 	} else {
-		g.Log().Errorf("Request 36kr news detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request 36kr news detail failed, link  %s \n", detailLink)
 	}
 
 	return

@@ -2,12 +2,13 @@ package meihua
 
 import (
 	"fmt"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
@@ -29,8 +30,8 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "梅花网平台内全部文章内容,梅花网营销行业文章，为营销人提供新鲜、丰富、专业的营销内容、品牌动向、行业趋势。也可自行发布文章，收藏感兴趣的文章。",
 		ImageUrl:    "https://www.meihua.info/static/images/icon/meihua.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		rssItems := commonParser(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != ""{
+		rssItems := commonParser(resp)
 		rssData.Items = rssItems
 	}
 

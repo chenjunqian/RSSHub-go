@@ -2,12 +2,13 @@ package houxu
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
@@ -26,14 +27,9 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "后续 · 有记忆的新闻，持续追踪热点新闻",
 		ImageUrl:    "https://assets-1256259474.cos.ap-shanghai.myqcloud.com/static/img/icon-180.jpg",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respJson := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != ""{
+
+		respJson := gjson.New(resp)
 		dataJsonArray := respJson.GetJsons("indexRecords.results")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataJson := range dataJsonArray {

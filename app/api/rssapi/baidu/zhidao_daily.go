@@ -1,13 +1,14 @@
 package baidu
 
 import (
+	"rsshub/app/component"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
+
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gcharset"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/app/component"
-	"rsshub/app/dao"
-	"rsshub/app/service/feed"
 )
 
 func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
@@ -25,14 +26,8 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 		Tag:         []string{"知识", "百科", "问答"},
 		ImageUrl:    "www.baidu.com/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respString, _ := gcharset.Convert("UTF-8", "gbk", resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		respString, _ := gcharset.Convert("UTF-8", "gbk", resp)
 		docs := soup.HTMLParse(respString)
 		itemList := docs.FindAll("li", "class", "clearfix")
 		rssItems := make([]dao.RSSItem, 0)
@@ -72,28 +67,21 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 
 func parseDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respString, _ = gcharset.Convert("UTF-8", "gbk", resp.ReadAllString())
+		respString, _ = gcharset.Convert("UTF-8", "gbk", resp)
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "detail")
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request baidu article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request baidu article detail failed, link  %s \n", detailLink)
 	}
 
 	return

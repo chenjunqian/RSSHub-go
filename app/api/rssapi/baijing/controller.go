@@ -1,13 +1,13 @@
 package baijing
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
 )
 
 type controller struct {
@@ -58,22 +58,21 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 
 func parseCommonDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		respString = resp.ReadAllString()
+		respString = resp
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "aw-question-detail")
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request baijing common article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request baijing common article detail failed, link  %s \n", detailLink)
 	}
 
 	return

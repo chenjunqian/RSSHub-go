@@ -1,12 +1,13 @@
 package guokr
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetScienceSubject(req *ghttp.Request) {
@@ -29,14 +30,9 @@ func (ctl *Controller) GetScienceSubject(req *ghttp.Request) {
 		Description: "果壳网是一个泛科技主题网站，提供负责任、有智趣、贴近生活的内容，你可以在这里阅读、分享、交流、提问。果壳网致力于让科技兴趣成为人们文化生活和娱乐生活的重要元素。",
 		ImageUrl:    "https://www.guokr.com/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		rssItems := commonParser(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != ""{
+
+		rssItems := commonParser(resp)
 		rssData.Items = rssItems
 	}
 

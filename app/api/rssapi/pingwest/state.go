@@ -1,15 +1,16 @@
 package pingwest
 
 import (
+	"rsshub/app/component"
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
+	"strings"
+
 	"github.com/anaskhan96/soup"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gtime"
-	"rsshub/app/component"
-	"rsshub/app/dao"
-	"rsshub/app/service/feed"
-	"strings"
 )
 
 func (ctl *Controller) GetState(req *ghttp.Request) {
@@ -29,14 +30,9 @@ func (ctl *Controller) GetState(req *ghttp.Request) {
 		ImageUrl:    "https://cdn.pingwest.com/static/pingwest-logo-cn.jpg",
 	}
 
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		rssItems := stateParser(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != ""{
+
+		rssItems := stateParser(resp)
 		rssData.Items = rssItems
 	}
 
@@ -110,7 +106,7 @@ func parseStateDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request pingwest article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request pingwest article detail failed, link  %s \n", detailLink)
 	}
 
 	return

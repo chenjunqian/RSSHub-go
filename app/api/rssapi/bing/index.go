@@ -2,12 +2,13 @@ package bing
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
@@ -20,20 +21,13 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 
 	baseUrl := "http://www.bing.com"
 	apiUrl := baseUrl + "/HPImageArchive.aspx?format=js&idx=0&n=1"
-	header := getHeaders()
 	rssData := dao.RSSFeed{}
 	rssData.Title = "Bing每日壁纸"
 	rssData.Link = "https://cn.bing.com/"
 	rssData.Tag = []string{"壁纸", "图片"}
 	rssData.ImageUrl = "https://cn.bing.com/sa/simg/favicon-2x.ico"
-	if statusResp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(statusResp)
-		respJson := gjson.New(statusResp.ReadAllString())
+	if statusResp := component.GetContent(apiUrl); statusResp != "" {
+		respJson := gjson.New(statusResp)
 		imageListJson := respJson.GetJsons("images")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, imageJson := range imageListJson {

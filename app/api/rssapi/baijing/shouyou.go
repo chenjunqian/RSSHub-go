@@ -1,11 +1,12 @@
 package baijing
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) GetShouyou(req *ghttp.Request) {
@@ -23,14 +24,8 @@ func (ctl *controller) GetShouyou(req *ghttp.Request) {
 		Tag:         []string{"手游"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		rssItems := commonHtmlParser(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		rssItems := commonHtmlParser(resp)
 		rssData.Items = rssItems
 	}
 

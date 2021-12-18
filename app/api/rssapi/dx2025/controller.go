@@ -1,12 +1,12 @@
 package dx2025
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
 )
 
 type Controller struct {
@@ -66,22 +66,21 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 
 func parseCommonDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		respString = resp.ReadAllString()
+		respString = resp
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "post-wrapper-hentry")
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request dx2025 article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request dx2025 article detail failed, link  %s \n", detailLink)
 	}
 
 	return

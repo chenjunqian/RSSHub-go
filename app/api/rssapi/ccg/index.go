@@ -17,11 +17,11 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 	linkConfig := getInfoLinks()[linkType]
 
 	cacheKey := "CCG_INDEX_" + linkConfig.ChannelId
-	//if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	//	if value.String() != "" {
-	//		_ = req.Response.WriteXmlExit(value.String())
-	//	}
-	//}
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 	apiUrl := "http://www.ccg.org.cn/" + linkConfig.ChannelId
 	rssData := dao.RSSFeed{
 		Title:       "全球化智库 - " + linkConfig.Title,
@@ -31,14 +31,8 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		ImageUrl:    "https://www.ccg.org.cn/wp-content/uploads/2020/06/ccg.ico",
 	}
 
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		rssItems := indexParser(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		rssItems := indexParser(resp)
 		rssData.Items = rssItems
 	}
 

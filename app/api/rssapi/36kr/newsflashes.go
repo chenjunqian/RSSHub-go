@@ -1,15 +1,16 @@
 package _36kr
 
 import (
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/encoding/gurl"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
@@ -26,16 +27,10 @@ func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
 		Link:     apiUrl,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
+	if resp := component.GetContent(apiUrl); resp != "" {
 
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
 		reg := regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
-		contentStr := reg.FindStringSubmatch(resp.ReadAllString())
+		contentStr := reg.FindStringSubmatch(resp)
 		if len(contentStr) >= 1 {
 			contentStr := contentStr[1]
 			contentData := gjson.New(contentStr)

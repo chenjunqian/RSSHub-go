@@ -1,12 +1,13 @@
 package chouti
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) GetTop(req *ghttp.Request) {
@@ -25,14 +26,8 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respDocs := soup.HTMLParse(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("div", "class", "link-area")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataDocs := range dataDocsList {

@@ -2,12 +2,13 @@ package bilibili
 
 import (
 	"fmt"
-	"github.com/gogf/gf/container/garray"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/container/garray"
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
@@ -20,8 +21,8 @@ func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
 	rssData.Link = "https://www.bilibili.com/blackboard/topic_list.html#/"
 	rssData.Description = "bilibili 话题列表"
 	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		jsonResp := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		jsonResp := gjson.New(resp)
 		dataJsonList := jsonResp.GetJsons("data.list")
 		items := make([]dao.RSSItem, 0)
 		nameList := garray.New()

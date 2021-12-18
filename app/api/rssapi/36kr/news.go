@@ -1,12 +1,13 @@
 package _36kr
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) Get36krNews(req *ghttp.Request) {
@@ -27,15 +28,9 @@ func (ctl *controller) Get36krNews(req *ghttp.Request) {
 		Tag:      linkConfig.Tags,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		rssItems := parseNews(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		rssItems := parseNews(resp)
 		rssData.Items = rssItems
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
 	g.Redis().DoVar("SET", "36KR_NEWS_"+linkConfig.Link, rssStr)

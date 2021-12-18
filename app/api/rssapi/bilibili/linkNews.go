@@ -2,11 +2,12 @@ package bilibili
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
@@ -29,8 +30,8 @@ func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.vc.bilibili.com/news/v1/notice/list?platform=pc&product=%s&category=all&page_no=1&page_size=20", product)
 	header := getHeaders()
 	header["Referer"] = "https://link.bilibili.com/p/eden/news"
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		jsonResp := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		jsonResp := gjson.New(resp)
 		rssData.Title = fmt.Sprintf("bilibili %s公告", productTitle)
 		rssData.Link = fmt.Sprintf("https://link.bilibili.com/p/eden/news#/?tab=%s&tag=all&page_no=1", product)
 		rssData.Description = rssData.Title

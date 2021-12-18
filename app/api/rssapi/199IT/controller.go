@@ -1,25 +1,18 @@
 package _199IT
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
 )
 
 type controller struct {
 }
 
 var IT1999Controller = &controller{}
-
-func getHeaders() map[string]string {
-	headers := make(map[string]string)
-	headers["accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-	headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36 Edg/84.0.522.63"
-	return headers
-}
 
 func parseArticle(htmlStr string) []dao.RSSItem {
 	doc := soup.HTMLParse(htmlStr)
@@ -55,26 +48,18 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 
 func parseDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 		)
-		docs = soup.HTMLParse(resp.ReadAllString())
+		docs = soup.HTMLParse(resp)
 		articleElem = docs.Find("article")
 		detailData = articleElem.HTML()
-
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
 	} else {
-		g.Log().Errorf("Request 199IT article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request 199IT article detail failed, link  %s \n", detailLink)
 	}
 
 	return

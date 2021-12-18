@@ -1,13 +1,14 @@
 package dianshangbao
 
 import (
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) GetIndex(req *ghttp.Request) {
@@ -30,14 +31,8 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "电商报行业观察栏目，重点针对电子商务行业、互联网行业、it行业重大新闻24小时跟踪报道，揭示电子商务、互联网等行业的发展趋势和分析报告。",
 		ImageUrl:    "https://www.dsb.cn/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respDocs := soup.HTMLParse(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("li", "class", "clearfix")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataDocs := range dataDocsList {
@@ -76,28 +71,21 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 
 func parseNewsDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respString = resp.ReadAllString()
+		respString = resp
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "article-content-container")
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request dianshangbao news article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request dianshangbao news article detail failed, link  %s \n", detailLink)
 	}
 
 	return

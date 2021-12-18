@@ -2,11 +2,12 @@ package bilibili
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
@@ -29,8 +30,8 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 	}
 
 	apiUrl := fmt.Sprintf("https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=%s&pn=1&ps=100", userId)
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		jsonResp := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		jsonResp := gjson.New(resp)
 		dataJsons := jsonResp.GetJsons("data.data")
 
 		items := make([]dao.RSSItem, 0)

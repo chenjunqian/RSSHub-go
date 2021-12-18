@@ -26,14 +26,8 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		Description: "币世界网-比特币等数字货币交易所导航、投资理财、快讯、深度、币圈、市场行情第一站。",
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		docs := soup.HTMLParse(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		docs := soup.HTMLParse(resp)
 		articleDocsList := docs.FindAll("div", "class", "articles-card")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, articleDoc := range articleDocsList {

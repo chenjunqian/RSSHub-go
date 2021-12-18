@@ -18,8 +18,8 @@ func (ctl *Controller) GetUserArticle(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.bilibili.com/x/space/article?mid=%s&pn=1&ps=10&sort=publish_time&jsonp=jsonp", userId)
 	header := getHeaders()
 	header["Referer"] = "https://space.bilibili.com/" + userId
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		jsonResp := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		jsonResp := gjson.New(resp)
 		articleJsons := jsonResp.GetJsons("data.articles")
 
 		rssData := dao.RSSFeed{}

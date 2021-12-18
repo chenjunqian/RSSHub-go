@@ -28,8 +28,8 @@ func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/Room/get_info?room_id=%s&from=room", roomId)
 	header := getHeaders()
 	header["Referer"] = "https://live.bilibili.com/" + roomId
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		respJson := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		respJson := gjson.New(resp)
 		dataJson := respJson.GetJson("data")
 
 		rssItem := dao.RSSItem{}

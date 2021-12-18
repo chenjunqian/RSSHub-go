@@ -2,12 +2,12 @@ package bilibili
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetUserVideo(req *ghttp.Request) {
@@ -17,14 +17,8 @@ func (ctl *Controller) GetUserVideo(req *ghttp.Request) {
 	header := getHeaders()
 	header["Referer"] = fmt.Sprintf("https://space.bilibili.com/%s/", id)
 	rssData := dao.RSSFeed{}
-	if resp, err := component.GetHttpClient().SetHeaderMap(header).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		dataJson := gjson.New(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		dataJson := gjson.New(resp)
 		rssData.Title = username + " 的 bilibili 空间"
 		rssData.Link = "https://space.bilibili.com/" + id
 		rssData.Description = rssData.Title

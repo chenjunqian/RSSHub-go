@@ -2,12 +2,13 @@ package dx2025
 
 import (
 	"fmt"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
@@ -45,14 +46,8 @@ func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
 		Tag:         []string{"其他"},
 		ImageUrl:    "https://www.dx2025.com/wp-content/uploads/2020/04/cropped-east_west_think_tank_800x800-32x32.png",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		rssData.Items = commonParser(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		rssData.Items = commonParser(resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)

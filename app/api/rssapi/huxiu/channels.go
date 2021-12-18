@@ -2,15 +2,16 @@ package huxiu
 
 import (
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/encoding/gurl"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *Controller) GetChannels(req *ghttp.Request) {
@@ -33,16 +34,11 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 		Description: "聚合优质的创新信息与人群，捕获精选|深度|犀利的商业科技资讯。在虎嗅，不错过互联网的每个重要时刻。",
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Get(apiUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
+	if resp := component.GetContent(apiUrl); resp != ""{
+
 		rssItems := make([]dao.RSSItem, 0)
 		reg := regexp.MustCompile(`window.__INITIAL_STATE__=(.*?);\(function\(\)`)
-		contentStrs := reg.FindStringSubmatch(resp.ReadAllString())
+		contentStrs := reg.FindStringSubmatch(resp)
 		if len(contentStrs) <= 1 {
 			return
 		}

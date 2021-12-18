@@ -2,16 +2,16 @@ package guokr
 
 import (
 	"fmt"
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strconv"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/encoding/gurl"
+	"github.com/gogf/gf/frame/g"
 )
 
 type Controller struct {
@@ -64,28 +64,22 @@ func commonParser(respString string) (items []dao.RSSItem) {
 
 func parseCommonDetail(detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
-		err  error
+		resp string
 	)
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+    if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
-		respString = resp.ReadAllString()
+
+		respString = resp
 		docs = soup.HTMLParse(respString)
 		articleElem = docs.Find("div", "class", "styled__ArticleContent-sc-1ctyfcr-4")
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request guokr article detail failed, link  %s \nerror : %s", detailLink, err)
+		g.Log().Errorf("Request guokr article detail failed, link  %s \n", detailLink)
 	}
 
 	return

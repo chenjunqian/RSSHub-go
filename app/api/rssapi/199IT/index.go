@@ -1,11 +1,12 @@
 package _199IT
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
@@ -16,7 +17,6 @@ func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 	}
 
 	apiUrl := "http://www.199it.com/newly"
-	headers := getHeaders()
 	rssData := dao.RSSFeed{
 		Title:       "199it",
 		Link:        apiUrl,
@@ -24,15 +24,9 @@ func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 		Tag:         []string{"互联网", "IT", "科技"},
 		Description: "互联网数据资讯网-199IT",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
-		rssItems := parseArticle(resp.ReadAllString())
+	if resp := component.GetContent(apiUrl); resp != "" {
+		rssItems := parseArticle(resp)
 		rssData.Items = rssItems
-		defer func(resp *ghttp.ClientResponse) {
-			err := resp.Close()
-			if err != nil {
-				g.Log().Error(err)
-			}
-		}(resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
