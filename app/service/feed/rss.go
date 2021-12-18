@@ -1,13 +1,14 @@
 package feed
 
 import (
+	"rsshub/app/component"
+	"rsshub/app/dao"
+
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/gorilla/feeds"
-	"rsshub/app/component"
-	"rsshub/app/dao"
 )
 
 func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
