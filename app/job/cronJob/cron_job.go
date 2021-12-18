@@ -1,14 +1,20 @@
 package cronJob
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"strings"
 	"time"
+
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func RegisterJob() {
+	
+	if !g.Cfg().GetBool("guoshao.autoRefreshFeed") {
+		return
+	}
+	
 	if g.Cfg().GetBool("guoshao.asyncRefreshFeed") {
 		if g.Cfg().GetBool("guoshao.producer") {
 			asyncRefreshFeed()
