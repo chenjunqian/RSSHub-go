@@ -16,11 +16,11 @@ func (ctl *controller) GetRecommand(req *ghttp.Request) {
 		apiUrl   string
 	)
 	cacheKey = "JUEJIN_RECOMMAND_HOT"
-	// if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
-	// 	if value.String() != "" {
-	// 		_ = req.Response.WriteXmlExit(value.String())
-	// 	}
-	// }
+	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+		if value.String() != "" {
+			_ = req.Response.WriteXmlExit(value.String())
+		}
+	}
 
 	apiUrl = "https://api.juejin.cn/recommend_api/v1/article/recommend_all_feed?aid=2608&uuid=7007464640411485710"
 	rssData := dao.RSSFeed{
