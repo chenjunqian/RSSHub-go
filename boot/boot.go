@@ -1,14 +1,15 @@
 package boot
 
 import (
-	"github.com/RichardKnop/machinery/v1"
-	"rsshub/app/job/cronJob"
-	"rsshub/app/job/task"
 	_ "rsshub/packed"
 
+	"rsshub/app/component"
+	"rsshub/app/job/cronJob"
+	"rsshub/app/job/task"
+
+	"github.com/RichardKnop/machinery/v1"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/genv"
-	"rsshub/app/component"
 )
 
 func init() {
