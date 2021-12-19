@@ -1,9 +1,10 @@
 package router
 
 import (
+	"rsshub/router/routers"
+
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
-	"rsshub/router/routers"
 )
 
 func init() {
@@ -53,5 +54,6 @@ func init() {
 		group.Group("/ccg", routers.CCGRouter)
 		group.Group("/woshipm", routers.WoshipmRouter)
 		group.Group("/sspai", routers.SSPaiRouter)
+		group.Group("/juejin", routers.JuejinRouter)
 	})
 }
