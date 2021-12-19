@@ -35,6 +35,16 @@ func GetContentByMobile(link string) (resp string) {
 	return
 }
 
+func PostContentByMobile(link string, data ...interface{}) (resp string) {
+	var (
+		client *ghttp.Client
+	)
+	client = GetHttpClient()
+	resp = client.SetHeaderMap(getMobileHeader()).PostContent(link,data)
+
+	return
+}
+
 func getHeaders() map[string]string {
 	headers := make(map[string]string)
 	headers["accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
