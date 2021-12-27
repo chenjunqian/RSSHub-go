@@ -1,11 +1,8 @@
 package feed
 
 import (
-	"rsshub/app/component"
 	"rsshub/app/dao"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/gorilla/feeds"
@@ -46,20 +43,7 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 		feed.Items = append(feed.Items, &feedItem)
 	}
 
-	feedToStore := feed
 	if result, err := feed.ToRss(); err == nil {
-		var (
-			feedString, tags string
-		)
-		feedString = gjson.New(feedToStore).MustToJsonString()
-		tags = gjson.New(data.Tag).MustToJsonString()
-
-		if g.Cfg().GetBool("guoshao.asyncRefreshFeed") {
-			component.SendStoreFeedTask(feedString, tags, rsshubLink)
-		} else {
-			err = AddFeedChannelAndItem(feedToStore, data.Tag, rsshubLink)
-		}
-
 		return result
 	} else {
 		return ""

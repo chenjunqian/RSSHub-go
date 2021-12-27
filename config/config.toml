@@ -5,12 +5,6 @@ ServerAgent = "rsshub"
 LogPath = "/tmp/log/rsshub/server"
 DumpRouterMap = false
 
-[guoshao]
-autoRefreshFeed = true
-asyncRefreshFeed = false
-producer = true
-consumer = true
-
 # Logger.
 [logger]
 Path = "/tmp/log/rsshub"
@@ -19,39 +13,13 @@ Stdout = true
 writerColorEnable = true
 
 [redis]
-default = "127.0.0.1:6379,0,123456?idleTimeout=600"
+default = "8.217.70.225:6379,0,qazxsw?idleTimeout=600"
 
 [cookies]
 zhihu = ''
 bilibili = ''
 
-[database]
-[[database.default]]
-host = "127.0.0.1"
-port = "3306"
-user = "rsshub"
-pass = "qazxsw"
-name = "rsshubdb"
-type = "mysql"
-debug = "false"
-dryrun = 0
-weight = "100"
-charset = "utf8"
-maxIdle = "10"
-maxOpen = "100"
-maxLifetime = "30s"
-
-[database.logger]
-Path = "/tmp/log/rsshub/sql"
-Level = "all"
-Stdout = true
-
 [gfcli]
-[[gfcli.gen.dao]]
-link = "mysql:rsshub:qazxsw@tcp(127.0.0.1:3306)/rsshubdb"
-group = ""
-prefix = ""
-tables = ""
 [gfcli.build]
 name = "rsshub"
 arch = "amd64"
@@ -61,16 +29,4 @@ cgo = 0
 pack = "config"
 version = "v1.0.0"
 output = "./bin"
-extra = "-trimpath"
-
-[elasticsearch]
-host = "http://127.0.0.1"
-port = "9200"
-user = "elastic"
-pass = "qazxsw"
-
-[machinery]
-[machinery.redis]
-host = "127.0.0.1"
-port = "6379"
-pass = "123456"
+extra = ""
