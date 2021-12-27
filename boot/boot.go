@@ -12,9 +12,8 @@ func init() {
 	if configEvn != "" {
 		g.Cfg().SetFileName(configEvn)
 	}
-	//app 相关配置
+
 	s := g.Server()
-	//GF相关配置 Web Server配置
 	g.Log().Stack(true)
 	s.SetErrorLogEnabled(true)
 	s.SetAccessLogEnabled(true)
