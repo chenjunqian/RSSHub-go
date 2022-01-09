@@ -15,7 +15,7 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 		Link:        &feeds.Link{Href: data.Link},
 		Description: data.Description,
 		Author:      &feeds.Author{Name: data.Author},
-		Image:       &feeds.Image{Link: data.ImageUrl, Url: data.ImageUrl, Title: "favicon", Width: 100, Height: 100},
+		Image:       &feeds.Image{Link: data.ImageUrl, Url: data.ImageUrl},
 		Created:     gconv.Time(data.Created),
 	}
 
