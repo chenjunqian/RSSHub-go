@@ -42,7 +42,7 @@ func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
 		for _, item := range itemJsons {
 			rssItem := dao.RSSItem{}
 			rssItem.Title = item.GetString("title")
-			rssItem.Description = feed.GenerateDescription(item.GetString("cover_url"), item.GetString("mark"))
+			rssItem.Description = feed.GenerateDescription(item.GetString("mark"))
 			rssItem.Created = item.GetString("ctime")
 			if item.GetString("announce_link") != "" {
 				rssItem.Link = item.GetString("announce_link")

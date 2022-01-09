@@ -40,7 +40,7 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 			link = "https://www.baijingapp.com" + link
 		}
 		content = parseCommonDetail(link)
-		description := feed.GenerateDescription(imageLink, content)
+		description := feed.GenerateDescription(content)
 
 		rssItem := dao.RSSItem{
 			Title:       title,

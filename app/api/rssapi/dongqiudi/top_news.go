@@ -48,7 +48,7 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: feed.GenerateDescription(imageLink, ""),
+				Description: feed.GenerateDescription(imageLink),
 				Author:      author,
 				Created:     time,
 				Thumbnail:   imageLink,

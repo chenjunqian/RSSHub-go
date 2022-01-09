@@ -32,7 +32,7 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 		time = article.Find("time", "class", "entry-date").Attrs()["datetime"]
 		link = article.Find("h2", "class", "entry-title").Find("a").Attrs()["href"]
 		detailData = parseDetail(link)
-		description = feed.GenerateDescription(thumbnail, detailData)
+		description = feed.GenerateDescription(detailData)
 		rssItem := dao.RSSItem{
 			Title:       title,
 			Link:        link,

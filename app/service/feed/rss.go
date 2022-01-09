@@ -2,6 +2,7 @@ package feed
 
 import (
 	"rsshub/app/dao"
+	"strings"
 
 	"github.com/GuoShaoOrg/feeds"
 	"github.com/gogf/gf/os/gtime"
@@ -49,17 +50,18 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 	}
 }
 
-func GenerateDescription(imageLink, content string) (description string) {
+func GenerateDescription(content string) (description string) {
 	var imageHtml string
 	var contentHtml string
 	var htmlString string
-	if imageLink != "" && content != "" {
+	var imageLink string
+	if strings.HasPrefix(content, "http://") || strings.HasPrefix(content, "https://") {
+		imageLink = content
+	}
+	if imageLink != "" {
 		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
 		contentHtml = "<div style='margin-top: 8px' >" + content + "</div>"
 		htmlString = "<meta name='referrer' content='no-referrer' /><div style='position: relative;text-align: left;'>" + imageHtml + contentHtml + "</div>"
-	} else if imageLink != "" && content == "" {
-		imageHtml = "<img src=" + imageLink + " style='width:100%' >"
-		htmlString = "<div style='position: relative;text-align: left;'>" + imageHtml + "</div>"
 	} else {
 		contentHtml = "<div >" + content + "</div>"
 		htmlString = "<div style='position: relative;text-align: left;'>" + contentHtml + "</div>"

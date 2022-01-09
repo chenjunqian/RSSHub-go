@@ -49,7 +49,7 @@ func catalogueParser(jsonString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}
@@ -62,7 +62,7 @@ func parseCatalogueDetail(detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-    if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -103,7 +103,7 @@ func livesParser(jsonString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}
@@ -116,7 +116,7 @@ func parseLiveDetail(detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-    if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -158,7 +158,7 @@ func timelineParser(jsonString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}
@@ -171,7 +171,7 @@ func parseTimelineDetail(detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-    if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root

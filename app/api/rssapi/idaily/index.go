@@ -27,7 +27,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "iDaily 每日环球视野",
 		ImageUrl:    "https://dayoneapp.com/favicon-32x32.png?v=9277df7ae7503b6e383587ae0e7210ee",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJsonArray := respJson.Array()
 		rssItems := make([]dao.RSSItem, 0)
@@ -49,7 +49,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: feed.GenerateDescription(coverImageLink, content),
+				Description: feed.GenerateDescription(content),
 				Created:     time,
 				Thumbnail:   coverImageLink,
 			}

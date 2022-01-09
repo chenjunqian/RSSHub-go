@@ -47,7 +47,7 @@ func indexParser(jsonString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}
@@ -81,8 +81,9 @@ func portalParser(jsonString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
+			Thumbnail:   imageLink,
 		}
 		items = append(items, rssItem)
 	}

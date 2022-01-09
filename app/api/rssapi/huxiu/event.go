@@ -29,7 +29,7 @@ func (ctl *Controller) GetEvent(req *ghttp.Request) {
 		Description: "聚合优质的创新信息与人群，捕获精选|深度|犀利的商业科技资讯。在虎嗅，不错过互联网的每个重要时刻。",
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(apiUrl); resp != "" {
 		rssItems := make([]dao.RSSItem, 0)
 		reg := regexp.MustCompile(`window.__INITIAL_STATE__=(.*?);\(function\(\)`)
 		contentStrs := reg.FindStringSubmatch(resp)
@@ -56,7 +56,7 @@ func (ctl *Controller) GetEvent(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Author:      author,
-				Description: feed.GenerateDescription(imageLink, content),
+				Description: feed.GenerateDescription(content),
 				Created:     time,
 				Thumbnail:   imageLink,
 			}

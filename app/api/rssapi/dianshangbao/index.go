@@ -56,7 +56,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: feed.GenerateDescription(imageLink, content),
+				Description: feed.GenerateDescription(content),
 				Thumbnail:   imageLink,
 			}
 			rssItems = append(rssItems, rssItem)

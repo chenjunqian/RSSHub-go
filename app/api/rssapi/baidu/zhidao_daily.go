@@ -51,7 +51,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: feed.GenerateDescription("", content),
+				Description: feed.GenerateDescription(content),
 				Thumbnail:   imageLink,
 			}
 			rssItems = append(rssItems, rssItem)

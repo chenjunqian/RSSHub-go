@@ -59,7 +59,7 @@ func parseNews(respString string) (items []dao.RSSItem) {
 				item.Link = titleDoc.Attrs()["href"]
 			}
 		}
-		item.Description = feed.GenerateDescription("", parseNewsDetail(item.Link))
+		item.Description = feed.GenerateDescription(parseNewsDetail(item.Link))
 		items = append(items, item)
 	}
 	return

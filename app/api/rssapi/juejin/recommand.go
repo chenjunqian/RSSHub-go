@@ -69,7 +69,7 @@ func parseRecommand(respString string) (items []dao.RSSItem) {
 			item.Author = articleInfo.GetString("author_user_info.user_name")
 			item.Created = articleInfo.GetString("ctime")
 			item.Link = articleBaseUrl + articleInfo.GetString("article_id")
-			item.Description = feed.GenerateDescription(item.Thumbnail, articleInfo.GetString("brief_content"))
+			item.Description = feed.GenerateDescription(articleInfo.GetString("brief_content"))
 			items = append(items, item)
 		} else if jsonItem.GetInt("item_type") == 14 {
 			item.Title = jsonItemInfo.GetString("title")
@@ -77,7 +77,7 @@ func parseRecommand(respString string) (items []dao.RSSItem) {
 			item.Author = jsonItemInfo.GetString("author_name")
 			item.Created = jsonItemInfo.GetString("ctime")
 			item.Link = jsonItemInfo.GetString("url")
-			item.Description = feed.GenerateDescription(item.Thumbnail, jsonItemInfo.GetString("brief"))
+			item.Description = feed.GenerateDescription(jsonItemInfo.GetString("brief"))
 			items = append(items, item)
 		}
 	}

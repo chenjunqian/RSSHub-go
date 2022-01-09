@@ -27,7 +27,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "后续 · 有记忆的新闻，持续追踪热点新闻",
 		ImageUrl:    "https://assets-1256259474.cos.ap-shanghai.myqcloud.com/static/img/icon-180.jpg",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(apiUrl); resp != "" {
 
 		respJson := gjson.New(resp)
 		dataJsonArray := respJson.GetJsons("indexRecords.results")
@@ -49,7 +49,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 				Title:       title,
 				Link:        link,
 				Author:      author,
-				Description: feed.GenerateDescription(imageLink, content),
+				Description: feed.GenerateDescription(content),
 				Created:     time,
 				Thumbnail:   imageLink,
 			}

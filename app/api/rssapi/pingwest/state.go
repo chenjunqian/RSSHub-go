@@ -30,7 +30,7 @@ func (ctl *Controller) GetState(req *ghttp.Request) {
 		ImageUrl:    "https://cdn.pingwest.com/static/pingwest-logo-cn.jpg",
 	}
 
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(apiUrl); resp != "" {
 
 		rssItems := stateParser(resp)
 		rssData.Items = rssItems
@@ -68,7 +68,7 @@ func stateParser(respString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}

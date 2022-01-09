@@ -65,7 +65,7 @@ func indexParser(respString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}

@@ -52,7 +52,7 @@ func parseNews(htmlStr string) []dao.RSSItem {
 		summary = parseDetail(rssItem.Link)
 		author = informationJson.GetString("templateMaterial.authorName")
 		imgLink = informationJson.GetString("templateMaterial.widgetImage")
-		rssItem.Description = feed.GenerateDescription(imgLink, summary)
+		rssItem.Description = feed.GenerateDescription(summary)
 		rssItem.Author = author
 		rssItem.Thumbnail = imgLink
 

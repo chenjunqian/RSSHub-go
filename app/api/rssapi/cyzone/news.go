@@ -61,7 +61,7 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: feed.GenerateDescription(imageLink, content),
+				Description: feed.GenerateDescription(content),
 				Created:     time,
 				Thumbnail:   imageLink,
 			}

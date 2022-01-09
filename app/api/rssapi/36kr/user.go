@@ -26,7 +26,7 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 		Link:     apiUrl,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""  {
+	if resp := component.GetContent(apiUrl); resp != "" {
 		reg := regexp.MustCompile(`"authorDetailData":(.*?),"channel":`)
 		contentStr := reg.FindStringSubmatch(resp)
 		if len(contentStr) >= 1 {
@@ -39,7 +39,7 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 			for _, itemJson := range itemListJson {
 				widgetContent := itemJson.GetString("templateMaterial.widgetContent")
 				widgetImage := itemJson.GetString("templateMaterial.widgetImage")
-				description := feed.GenerateDescription(widgetImage, widgetContent)
+				description := feed.GenerateDescription(widgetContent)
 				rssItem := dao.RSSItem{
 					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
 					Created:     itemJson.GetString("templateMaterial.publishTime"),

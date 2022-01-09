@@ -47,7 +47,7 @@ func commonParser(respString string) (items []dao.RSSItem) {
 			Title:       title,
 			Link:        link,
 			Author:      author,
-			Description: feed.GenerateDescription(imageLink, content),
+			Description: feed.GenerateDescription(content),
 			Created:     time,
 			Thumbnail:   imageLink,
 		}
@@ -60,7 +60,7 @@ func parseCommonDetail(detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-    if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root

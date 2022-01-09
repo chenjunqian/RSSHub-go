@@ -25,7 +25,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Description: "爱范每日早报",
 		ImageUrl:    "https://images.ifanr.cn/wp-content/themes/ifanr-5.0-pc/static/images/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(apiUrl); resp != "" {
 
 		respJson := gjson.New(resp)
 		itemJsonList := respJson.GetJsons("objects")
@@ -38,7 +38,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			time := itemJson.GetString("created_at")
 			imageLink := itemJson.GetString("post_cover_image")
 			content := parseCommonDetail(link)
-			description := feed.GenerateDescription(imageLink, content)
+			description := feed.GenerateDescription(content)
 
 			rssItem.Title = title
 			rssItem.Created = time

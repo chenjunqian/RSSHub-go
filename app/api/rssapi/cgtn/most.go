@@ -50,7 +50,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 			cgContent = item.Find("div", "class", "cg-content").Text()
 			mainContent = getMainContent(link)
 			description = fmt.Sprintf("%s<br>%s", cgContent, mainContent)
-			description = feed.GenerateDescription("", description)
+			description = feed.GenerateDescription(description)
 			rssItem.Title = title
 			rssItem.Link = link
 			rssItem.Created = time

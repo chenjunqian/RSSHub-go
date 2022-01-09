@@ -37,7 +37,7 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 
 			rssItem := dao.RSSItem{
 				Title:       title,
-				Description: feed.GenerateDescription("", content),
+				Description: feed.GenerateDescription(content),
 				Author:      "",
 				Created:     time,
 			}

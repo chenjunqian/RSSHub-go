@@ -25,7 +25,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		Tag:         []string{"汽车"},
 		ImageUrl:    "https://static001.infoq.cn/static/infoq/template/img/logo-fasdkjfasdf.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(apiUrl); resp != "" {
 
 		docs := soup.HTMLParse(resp)
 		itemList := docs.FindAll("div", "class", "item-main")
@@ -38,7 +38,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
-				Description: feed.GenerateDescription("", summary),
+				Description: feed.GenerateDescription(summary),
 				Author:      author,
 			}
 			rssItems = append(rssItems, rssItem)

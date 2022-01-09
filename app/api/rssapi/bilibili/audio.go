@@ -42,7 +42,8 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 			rssItem.Author = dataJson.GetString("author")
 			intro := dataJson.GetString("intro")
 			cover := dataJson.GetString("cover")
-			rssItem.Description = feed.GenerateDescription(cover, intro)
+			rssItem.Description = feed.GenerateDescription(intro)
+			rssItem.Thumbnail = cover
 			items = append(items, rssItem)
 		}
 
