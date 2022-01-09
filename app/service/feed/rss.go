@@ -3,9 +3,9 @@ package feed
 import (
 	"rsshub/app/dao"
 
+	"github.com/GuoShaoOrg/feeds"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
-	"github.com/gorilla/feeds"
 )
 
 func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
@@ -15,14 +15,13 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 		Link:        &feeds.Link{Href: data.Link},
 		Description: data.Description,
 		Author:      &feeds.Author{Name: data.Author},
-		Image:       &feeds.Image{Url: data.ImageUrl},
+		Image:       &feeds.Image{Link: data.ImageUrl, Url: data.ImageUrl, Title: "favicon", Width: 100, Height: 100},
 		Created:     gconv.Time(data.Created),
 	}
 
 	feed.Items = make([]*feeds.Item, 0)
-	itemList := data.Items
 
-	for _, item := range itemList {
+	for _, item := range data.Items {
 		feedItem := feeds.Item{
 			Title:       item.Title,
 			Link:        &feeds.Link{Href: item.Link},
@@ -43,7 +42,7 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 		feed.Items = append(feed.Items, &feedItem)
 	}
 
-	if result, err := feed.ToRss(); err == nil {
+	if result, err := feed.ToAtom(); err == nil {
 		return result
 	} else {
 		return ""
