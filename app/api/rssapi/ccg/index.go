@@ -28,7 +28,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Link:        apiUrl,
 		Tag:         linkConfig.Tags,
 		Description: "以全球的视野为中国建言，以中国智慧为全球贡献。",
-		ImageUrl:    "https://www.ccg.org.cn/wp-content/uploads/2020/06/ccg.ico",
+		ImageUrl:    "http://www.ccg.org.cn/favicon.ico",
 	}
 
 	if resp := component.GetContent(apiUrl); resp != "" {
