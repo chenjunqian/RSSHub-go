@@ -24,7 +24,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 		Title:    "Day One Blog",
 		Link:     apiUrl,
 		Tag:      []string{"其他"},
-		ImageUrl: "https://dayoneapp.com/favicon-32x32.png?v=9277df7ae7503b6e383587ae0e7210ee",
+		ImageUrl: "https://i0.wp.com/dayoneapp.com/wp-content/uploads/2021/11/favicon-32x32-1.png?fit=32%2C32&ssl=1",
 	}
 	if resp := component.GetContent(apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
