@@ -53,6 +53,9 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 			}
 			time = dataDocs.Find("span", "class", "time-update").Attrs()["data-time"]
 			author = dataDocs.Find("span", "class", "author-name").Text()
+			if content == "" {
+				content = imageLink
+			}
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,

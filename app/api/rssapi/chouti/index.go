@@ -33,7 +33,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		apiUrl = fmt.Sprintf("https://m.chouti.com/api/m/zone/%s?afterScore=0", linkConfig.LinkType)
 	}
 	var rssData = dao.RSSFeed{
-		Title:       "抽屉新热榜" + linkConfig.Title,
+		Title:       "抽屉新热榜 - " + linkConfig.Title,
 		Link:        "https://m.chouti.com",
 		Tag:         linkConfig.Tags,
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
@@ -58,6 +58,9 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 			author = dataJson.GetString("submitted_user.nick")
 			link = dataJson.GetString("originalUrl")
 			content = parseIndexDetail(link)
+			if content == "" {
+				content = imageLink
+			}
 			rssItem := dao.RSSItem{
 				Title:       title,
 				Link:        link,
