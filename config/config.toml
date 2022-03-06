@@ -13,7 +13,7 @@ Stdout = true
 writerColorEnable = true
 
 [redis]
-default = "8.217.70.225:6379,0,qazxsw?idleTimeout=600"
+default = "0.0.0.0:6379,0,123456?idleTimeout=600"
 
 [cookies]
 zhihu = ''
