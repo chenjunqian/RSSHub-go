@@ -58,5 +58,6 @@ func init() {
 		group.Group("/oschina", routers.OSChinaRouter)
 		group.Group("/api", routers.WebRouter)
 		group.Group("/latextstudio", routers.LatextStudioRouter)
+		group.Group("/yanxishe", routers.YanXiSheRouter)
 	})
 }
