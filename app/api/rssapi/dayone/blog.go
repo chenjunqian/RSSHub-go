@@ -49,7 +49,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 
 			rssItem.Title = title
 			rssItem.Link = link
-			rssItem.Description = getFullDescription(rssItem.Link)
+			rssItem.Content = getFullContent(rssItem.Link)
 			rssItems = append(rssItems, rssItem)
 		}
 
@@ -61,7 +61,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 	_ = req.Response.WriteXmlExit(rssStr)
 }
 
-func getFullDescription(url string) (content string) {
+func getFullContent(url string) (content string) {
 	if resp := component.GetContent(url); resp != "" {
 		docs := soup.HTMLParse(resp)
 		content = docs.Find("main").HTML()

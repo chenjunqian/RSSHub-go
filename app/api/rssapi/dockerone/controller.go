@@ -28,25 +28,24 @@ func parseRecommand(respString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-
 		if titleDoc := article.Find("h4"); titleDoc.Pointer != nil {
 			title = titleDoc.Find("a").Text()
 			link = titleDoc.Find("a").Attrs()["href"]
 		}
 
-		author = article.Find("a","class","aw-user-name").Text()
-		dateDoc := article.FindAll("span","class","text-color-999")[0].Text()
+		author = article.Find("a", "class", "aw-user-name").Text()
+		dateDoc := article.FindAll("span", "class", "text-color-999")[0].Text()
 		timeArray := strings.Split(dateDoc, " • ")
 		time = timeArray[len(timeArray)-1]
 		content = parseRecommandDetail(link)
 
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Author:      author,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Author:    author,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}
@@ -62,6 +61,6 @@ func parseRecommandDetail(link string) (detailData string) {
 	} else {
 		g.Log().Error(link)
 	}
-	
+
 	return
 }

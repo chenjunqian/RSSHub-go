@@ -46,12 +46,12 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			content = dataJson.GetString("object.summary")
 			time = dataJson.GetString("object.news_update_at")
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Author:      author,
-				Description: feed.GenerateDescription(content),
-				Created:     time,
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Author:    author,
+				Content:   feed.GenerateContent(content),
+				Created:   time,
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

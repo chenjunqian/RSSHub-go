@@ -49,10 +49,10 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 			link = "https://zhidao.baidu.com/" + link
 			content = parseDetail(link)
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(content),
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Content:   feed.GenerateContent(content),
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

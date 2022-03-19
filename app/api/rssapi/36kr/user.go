@@ -39,12 +39,12 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 			for _, itemJson := range itemListJson {
 				widgetContent := itemJson.GetString("templateMaterial.widgetContent")
 				widgetImage := itemJson.GetString("templateMaterial.widgetImage")
-				description := feed.GenerateDescription(widgetContent)
+				content := feed.GenerateContent(widgetContent)
 				rssItem := dao.RSSItem{
-					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
-					Created:     itemJson.GetString("templateMaterial.publishTime"),
-					Description: description,
-					Thumbnail:   widgetImage,
+					Title:     itemJson.GetString("templateMaterial.widgetTitle"),
+					Created:   itemJson.GetString("templateMaterial.publishTime"),
+					Content:   content,
+					Thumbnail: widgetImage,
 				}
 				router := itemJson.GetString("route")
 				if strings.Split(router, "?")[0] == "detail_video" {

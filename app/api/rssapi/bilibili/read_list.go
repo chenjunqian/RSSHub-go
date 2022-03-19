@@ -35,7 +35,7 @@ func (ctl *Controller) GetReadList(req *ghttp.Request) {
 			rssItem := dao.RSSItem{}
 			rssItem.Title = articleJson.GetString("title")
 			rssItem.Author = articleJson.GetString("author.name")
-			rssItem.Description = feed.GenerateDescription(articleJson.GetString("summary"))
+			rssItem.Content = feed.GenerateContent(articleJson.GetString("summary"))
 			rssItem.Created = articleJson.GetString("publish_time")
 			rssItem.Link = fmt.Sprintf("https://www.bilibili.com/read/cv%s/?from=readlist", articleJson.GetString("id"))
 			rssItems = append(rssItems, rssItem)

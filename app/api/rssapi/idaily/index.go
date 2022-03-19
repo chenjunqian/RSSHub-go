@@ -47,11 +47,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			coverImageLink = dataJson.GetString("cover_landscape")
 			content = dataJson.GetString("content")
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(content),
-				Created:     time,
-				Thumbnail:   coverImageLink,
+				Title:     title,
+				Link:      link,
+				Content:   feed.GenerateContent(content),
+				Created:   time,
+				Thumbnail: coverImageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

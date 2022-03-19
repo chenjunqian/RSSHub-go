@@ -38,11 +38,11 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			time := itemJson.GetString("created_at")
 			imageLink := itemJson.GetString("post_cover_image")
 			content := parseCommonDetail(link)
-			description := feed.GenerateDescription(content)
+			content = feed.GenerateContent(content)
 
 			rssItem.Title = title
 			rssItem.Created = time
-			rssItem.Description = description
+			rssItem.Content = content
 			rssItem.Link = link
 			rssItem.Author = author
 			rssItem.Thumbnail = imageLink

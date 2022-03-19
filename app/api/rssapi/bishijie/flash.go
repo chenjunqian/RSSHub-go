@@ -48,9 +48,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 				imageDiv := newsSubDiv.Find("img")
 				if imageDiv.Error == nil {
 					imageLink = imageDiv.Attrs()["src"]
-					description = feed.GenerateDescription(content)
-				} else {
-					description = content
+					content = feed.GenerateContent(content)
 				}
 			}
 			rssItem := dao.RSSItem{

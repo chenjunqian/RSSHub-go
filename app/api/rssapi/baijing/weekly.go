@@ -36,10 +36,10 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 			content := articleDoc.Find("div", "class", "newsflashesText").Text()
 
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Description: feed.GenerateDescription(content),
-				Author:      "",
-				Created:     time,
+				Title:   title,
+				Content: feed.GenerateContent(content),
+				Author:  "",
+				Created: time,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

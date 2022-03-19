@@ -46,12 +46,12 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 			time := articleJson.GetString("published_at")
 			author := articleJson.GetString("author_classify")
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(imageLink),
-				Author:      author,
-				Created:     time,
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Content:   feed.GenerateContent(imageLink),
+				Author:    author,
+				Created:   time,
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

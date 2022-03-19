@@ -31,22 +31,22 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		rssItems := make([]dao.RSSItem, 0)
 		for _, item := range topItems {
 			var (
-				title       string
-				time        string
-				link        string
-				description string
+				title   string
+				time    string
+				link    string
+				content string
 			)
 			rssItem := dao.RSSItem{}
 			contentHtml := item.Find("div", "class", "top-news-item-content")
 			title = contentHtml.Find("a").Text()
 			time = contentHtml.Find("a").Attrs()["data-time"]
 			link = contentHtml.Find("a").Attrs()["href"]
-			description = getMainContent(link)
+			content = getMainContent(link)
 
 			rssItem.Title = title
 			rssItem.Link = link
 			rssItem.Created = time
-			rssItem.Description = description
+			rssItem.Content = content
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems

@@ -47,10 +47,10 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 			}
 			content := articleDoc.Find("p", "class", "articles-text").Text()
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(content),
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Content:   feed.GenerateContent(content),
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

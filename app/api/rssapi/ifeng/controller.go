@@ -50,11 +50,11 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		time = dataJson.GetString("newsTime")
 		link = dataJson.GetString("url")
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}
@@ -91,12 +91,12 @@ func moneyCommonParser(htmlStr, typeStr string) (items []dao.RSSItem) {
 		link = dataJson.GetString("url")
 		author = dataJson.GetString("editorName")
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Author:      author,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Author:    author,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}

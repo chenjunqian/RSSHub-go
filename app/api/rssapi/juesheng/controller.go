@@ -42,12 +42,12 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		link = article.Find("a", "class", "news-item-cover").Attrs()["href"]
 
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Author:      author,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Author:    author,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}

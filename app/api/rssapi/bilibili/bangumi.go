@@ -36,7 +36,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 				for _, episodeJson := range episodeJsons {
 					rssItem := dao.RSSItem{}
 					rssItem.Title = fmt.Sprintf("第%s话 %s", episodeJson.GetString("title"), episodeJson.GetString("long_title"))
-					rssItem.Description = fmt.Sprintf("<img src='%s'>", episodeJson.GetString("cover"))
+					rssItem.Content = fmt.Sprintf("<img src='%s'>", episodeJson.GetString("cover"))
 					rssItem.Link = "https://www.bilibili.com/bangumi/play/ep" + episodeJson.GetString("id")
 					items = append(items, rssItem)
 				}
@@ -47,7 +47,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 				for _, sectionJson := range sectionJsons {
 					rssItem := dao.RSSItem{}
 					rssItem.Title = fmt.Sprintf("%s %s", sectionJson.GetString("title"), sectionJson.GetString("long_title"))
-					rssItem.Description = fmt.Sprintf("<img src='%s'>", sectionJson.GetString("cover"))
+					rssItem.Content = fmt.Sprintf("<img src='%s'>", sectionJson.GetString("cover"))
 					rssItem.Link = "https://www.bilibili.com/bangumi/play/ep" + sectionJson.GetString("id")
 					items = append(items, rssItem)
 				}

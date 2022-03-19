@@ -36,10 +36,10 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 			author := item.Find("a", "class", "com-author-name").Text()
 			summary := parseRecommendDetail(link)
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(summary),
-				Author:      author,
+				Title:   title,
+				Link:    link,
+				Content: feed.GenerateContent(summary),
+				Author:  author,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

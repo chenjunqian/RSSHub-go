@@ -39,11 +39,11 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 			title := itemJson.GetString("name")
 			content := itemJson.GetString("content")
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        "http://www.mittrchina.com/newsflash",
-				Description: feed.GenerateDescription(content),
-				Author:      "MIT 中国",
-				Created:     time,
+				Title:   title,
+				Link:    "http://www.mittrchina.com/newsflash",
+				Content: feed.GenerateContent(content),
+				Author:  "MIT 中国",
+				Created: time,
 			}
 
 			rssItems = append(rssItems, rssItem)

@@ -35,7 +35,7 @@ func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
 			}
 			rssItem := dao.RSSItem{}
 			rssItem.Title = title
-			rssItem.Description = fmt.Sprintf("%s<br> %s", dataJson.GetString("name"), dataJson.GetString("desc"))
+			rssItem.Content = fmt.Sprintf("%s<br> %s", dataJson.GetString("name"), dataJson.GetString("desc"))
 			rssItem.Link = dataJson.GetString("pc_url")
 			rssItem.Created = dataJson.GetString("ctime")
 			items = append(items, rssItem)

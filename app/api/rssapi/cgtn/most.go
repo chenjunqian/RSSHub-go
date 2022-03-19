@@ -41,7 +41,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 				link        string
 				cgContent   string
 				mainContent string
-				description string
+				content     string
 			)
 			var rssItem = dao.RSSItem{}
 			title = item.Find("a").Text()
@@ -49,12 +49,12 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 			link = item.Find("a").Attrs()["href"]
 			cgContent = item.Find("div", "class", "cg-content").Text()
 			mainContent = getMainContent(link)
-			description = fmt.Sprintf("%s<br>%s", cgContent, mainContent)
-			description = feed.GenerateDescription(description)
+			content = fmt.Sprintf("%s<br>%s", cgContent, mainContent)
+			content = feed.GenerateContent(content)
 			rssItem.Title = title
 			rssItem.Link = link
 			rssItem.Created = time
-			rssItem.Description = description
+			rssItem.Content = content
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems

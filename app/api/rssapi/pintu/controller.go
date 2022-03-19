@@ -49,12 +49,12 @@ func indexParser(respString string) (items []dao.RSSItem) {
 		link = fmt.Sprintf("https://www.pintu360.com/a%s.html?%s", id, op)
 
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Author:      author,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Author:    author,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}

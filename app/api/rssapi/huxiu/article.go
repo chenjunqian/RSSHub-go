@@ -53,12 +53,12 @@ func (ctl *Controller) GetArticle(req *ghttp.Request) {
 			content = parseCommonDetail(link)
 
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Author:      author,
-				Description: feed.GenerateDescription(content),
-				Created:     time,
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Author:    author,
+				Content:   feed.GenerateContent(content),
+				Created:   time,
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

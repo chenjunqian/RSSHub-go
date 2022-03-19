@@ -45,12 +45,12 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 			link := dataJson.GetString("origin_url")
 			fullContent := dataJson.GetString("content")
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(summary + "<br>" + fullContent),
-				Author:      author,
-				Created:     time,
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Content:   feed.GenerateContent(summary + "<br>" + fullContent),
+				Author:    author,
+				Created:   time,
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

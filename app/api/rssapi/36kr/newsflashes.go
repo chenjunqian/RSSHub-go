@@ -38,9 +38,9 @@ func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
 			rssItems := make([]dao.RSSItem, 0)
 			for _, itemJson := range itemListJson {
 				rssItem := dao.RSSItem{
-					Title:       itemJson.GetString("templateMaterial.widgetTitle"),
-					Created:     itemJson.GetString("templateMaterial.publishTime"),
-					Description: itemJson.GetString("templateMaterial.widgetContent"),
+					Title:   itemJson.GetString("templateMaterial.widgetTitle"),
+					Created: itemJson.GetString("templateMaterial.publishTime"),
+					Content: itemJson.GetString("templateMaterial.widgetContent"),
 				}
 				sourceUrlRoute := itemJson.GetString("templateMaterial.sourceUrlRoute")
 				if sourceUrlRoute == "" {

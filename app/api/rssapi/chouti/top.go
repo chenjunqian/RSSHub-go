@@ -57,12 +57,12 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 				content = imageLink
 			}
 			rssItem := dao.RSSItem{
-				Title:       title,
-				Link:        link,
-				Description: feed.GenerateDescription(content),
-				Author:      author,
-				Created:     time,
-				Thumbnail:   imageLink,
+				Title:     title,
+				Link:      link,
+				Content:   feed.GenerateContent(content),
+				Author:    author,
+				Created:   time,
+				Thumbnail: imageLink,
 			}
 			rssItems = append(rssItems, rssItem)
 		}

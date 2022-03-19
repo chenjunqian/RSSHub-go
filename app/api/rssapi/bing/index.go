@@ -35,9 +35,9 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 				Title: imageJson.GetString("copyright"),
 				Link:  imageJson.GetString("copyrightlink"),
 			}
-			var description string
-			description = description + fmt.Sprintf("<img src=\"%s%s\">", baseUrl, imageJson.GetString("url"))
-			rssItem.Description = description
+			var content string
+			content = content + fmt.Sprintf("<img src=\"%s%s\">", baseUrl, imageJson.GetString("url"))
+			rssItem.Description = content
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems

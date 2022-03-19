@@ -44,12 +44,12 @@ func indexParser(jsonString string) (items []dao.RSSItem) {
 		link = fmt.Sprintf("https://m.whalegogo.com/article?id=%s&cid=%s", id, cId)
 
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Author:      author,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Author:    author,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}
@@ -78,12 +78,12 @@ func portalParser(jsonString string) (items []dao.RSSItem) {
 		link = fmt.Sprintf("https://www.whalegogo.com/news?id=%s", id)
 
 		rssItem := dao.RSSItem{
-			Title:       title,
-			Link:        link,
-			Author:      author,
-			Description: feed.GenerateDescription(content),
-			Created:     time,
-			Thumbnail:   imageLink,
+			Title:     title,
+			Link:      link,
+			Author:    author,
+			Content:   feed.GenerateContent(content),
+			Created:   time,
+			Thumbnail: imageLink,
 		}
 		items = append(items, rssItem)
 	}

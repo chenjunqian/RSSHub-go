@@ -27,6 +27,7 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 			Title:       item.Title,
 			Link:        &feeds.Link{Href: item.Link},
 			Description: item.Description,
+			Content:     item.Content,
 			Author:      &feeds.Author{Name: item.Author},
 			Enclosure:   &feeds.Enclosure{Url: item.Thumbnail},
 		}
@@ -50,7 +51,7 @@ func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {
 	}
 }
 
-func GenerateDescription(content string) (description string) {
+func GenerateContent(content string) (description string) {
 	var imageHtml string
 	var contentHtml string
 	var htmlString string
