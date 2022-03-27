@@ -24,7 +24,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 		Link:        apiUrl,
 		Description: "百度知道日报精选",
 		Tag:         []string{"知识", "百科", "问答"},
-		ImageUrl:    "www.baidu.com/favicon.ico",
+		ImageUrl:    "https://www.baidu.com/favicon.ico",
 	}
 	if resp := component.GetContent(apiUrl); resp != "" {
 		respString, _ := gcharset.Convert("UTF-8", "gbk", resp)

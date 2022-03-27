@@ -27,7 +27,7 @@ func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
 		Link:        apiUrl,
 		Tag:         linkConfig.Tags,
 		Description: "多知网 - 独立商业视角 新锐教育观察",
-		ImageUrl:    "https://www.duozhi.com/favicon.ico",
+		ImageUrl:    "http://www.duozhi.com/favicon.ico",
 	}
 	if resp := component.GetContent(apiUrl); resp != "" {
 		rssData.Items = commonParser(resp)
