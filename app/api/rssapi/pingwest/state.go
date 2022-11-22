@@ -1,24 +1,27 @@
 package pingwest
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
-	"github.com/gogf/gf/os/gtime"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
+	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 func (ctl *Controller) GetState(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	cacheKey := "PINGWEST_STATE"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://www.pingwest.com/api/state/list"
@@ -30,21 +33,21 @@ func (ctl *Controller) GetState(req *ghttp.Request) {
 		ImageUrl:    "https://cdn.pingwest.com/static/pingwest-logo-cn.jpg",
 	}
 
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 
-		rssItems := stateParser(resp)
+		rssItems := stateParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func stateParser(respString string) (items []dao.RSSItem) {
+func stateParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respJson := gjson.New(respString)
-	dataListHtml := respJson.GetString("data.list")
+	dataListHtml := respJson.Get("data.list").String()
 	dataSoup := soup.HTMLParse(dataListHtml)
 	articleList := dataSoup.FindAll("section", "class", "item")
 	for _, article := range articleList {
@@ -58,7 +61,7 @@ func stateParser(respString string) (items []dao.RSSItem) {
 		time = gtime.Now().Format("Y-m-d") + " " + article.Find("section", "class", "time").Find("span").Text()
 		title = article.Find("p", "class", "title").Find("a").Text()
 		link = article.Find("p", "class", "title").Find("a").Attrs()["href"]
-		content = parseStateDetail(link)
+		content = parseStateDetail(ctx, link)
 
 		if imageDoc := article.Find("section", "class", "news-img"); imageDoc.Error == nil {
 			imageLink = imageDoc.Find("img").Attrs()["src"]
@@ -77,24 +80,24 @@ func stateParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseStateDetail(detailLink string) (detailData string) {
+func parseStateDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
-		resp *ghttp.ClientResponse
+		resp *gclient.Response
 		err  error
 	)
 	if strings.HasPrefix(detailLink, "//") {
 		detailLink = "https:" + detailLink
 	}
-	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(detailLink); err == nil {
+	if resp, err = component.GetHttpClient().SetHeaderMap(getHeaders()).Get(ctx, detailLink); err == nil {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
 			respString  string
 		)
-		defer func(resp *ghttp.ClientResponse) {
+		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
 		respString = resp.ReadAllString()
@@ -106,7 +109,7 @@ func parseStateDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request pingwest article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request pingwest article detail failed, link  %s \n", detailLink)
 	}
 
 	return

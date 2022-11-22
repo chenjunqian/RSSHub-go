@@ -1,13 +1,14 @@
 package jinse
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -26,7 +27,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func catalogueParser(jsonString string) (items []dao.RSSItem) {
+func catalogueParser(ctx context.Context, jsonString string) (items []dao.RSSItem) {
 	respJson := gjson.New(jsonString)
 	articleList := respJson.GetJsons("list")
 
@@ -38,12 +39,12 @@ func catalogueParser(jsonString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("title")
-		imageLink = article.GetString("extra.thumbnail_pic")
-		author = article.GetString("extra.author")
-		time = article.GetString("extra.published_at")
-		link = article.GetString("extra.topic_url")
-		content = parseCatalogueDetail(link)
+		title = article.Get("title").String()
+		imageLink = article.Get("extra.thumbnail_pic").String()
+		author = article.Get("extra.author").String()
+		time = article.Get("extra.published_at").String()
+		link = article.Get("extra.topic_url").String()
+		content = parseCatalogueDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:     title,
@@ -58,11 +59,11 @@ func catalogueParser(jsonString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCatalogueDetail(detailLink string) (detailData string) {
+func parseCatalogueDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -75,13 +76,13 @@ func parseCatalogueDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request jinse Catalogue article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request jinse Catalogue article detail failed, link  %s \n", detailLink)
 	}
 
 	return
 }
 
-func livesParser(jsonString string) (items []dao.RSSItem) {
+func livesParser(ctx context.Context, jsonString string) (items []dao.RSSItem) {
 	respJson := gjson.New(jsonString)
 	articleList := respJson.GetJsons("list.0.lives")
 
@@ -93,11 +94,11 @@ func livesParser(jsonString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("content")
-		imageLink = article.GetString("images.0.url")
-		time = article.GetString("created_at")
-		link = article.GetString("link")
-		content = parseLiveDetail(link)
+		title = article.Get("content").String()
+		imageLink = article.Get("images.0.url").String()
+		time = article.Get("created_at").String()
+		link = article.Get("link").String()
+		content = parseLiveDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -112,11 +113,11 @@ func livesParser(jsonString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseLiveDetail(detailLink string) (detailData string) {
+func parseLiveDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -129,13 +130,13 @@ func parseLiveDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request jinse Catalogue article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request jinse Catalogue article detail failed, link  %s \n", detailLink)
 	}
 
 	return
 }
 
-func timelineParser(jsonString string) (items []dao.RSSItem) {
+func timelineParser(ctx context.Context, jsonString string) (items []dao.RSSItem) {
 	respJson := gjson.New(jsonString)
 	articleList := respJson.GetJsons("data.list")
 
@@ -147,12 +148,12 @@ func timelineParser(jsonString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("title")
-		imageLink = article.GetString("extra.thumbnail_pic")
-		time = article.GetString("extra.published_at")
-		link = article.GetString("extra.topic_url")
-		author = article.GetString("extra.author")
-		content = parseTimelineDetail(link)
+		title = article.Get("title").String()
+		imageLink = article.Get("extra.thumbnail_pic").String()
+		time = article.Get("extra.published_at").String()
+		link = article.Get("extra.topic_url").String()
+		author = article.Get("extra.author").String()
+		content = parseTimelineDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -167,11 +168,11 @@ func timelineParser(jsonString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseTimelineDetail(detailLink string) (detailData string) {
+func parseTimelineDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -184,7 +185,7 @@ func parseTimelineDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request jinse Catalogue article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request jinse Catalogue article detail failed, link  %s \n", detailLink)
 	}
 
 	return

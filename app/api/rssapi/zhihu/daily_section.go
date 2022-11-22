@@ -1,23 +1,26 @@
 package zhihu
 
 import (
+	"context"
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
-
+	var ctx context.Context = context.Background()
 	sectionId := req.Get("id")
 	redisKey := fmt.Sprintf("ZHIHU_DAILY_SECTION_%s", sectionId)
-	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -25,15 +28,15 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Referer"] = dailyUrl
 
-	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(dailyUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, dailyUrl); err == nil {
+		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
-		respDataList := jsonResp.GetArray("stories")
+		respDataList := jsonResp.Get("stories").Strings()
 
 		rssData := dao.RSSFeed{}
 		rssData.Title = "知乎日报"
@@ -43,16 +46,16 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {
 			feedItem := dao.RSSItem{
-				Title: jsonResp.GetString(fmt.Sprintf("stories.%d.title", index)),
-				Link:  jsonResp.GetString(fmt.Sprintf("stories.%d.url", index)),
+				Title: jsonResp.Get(fmt.Sprintf("stories.%d.title", index)).String(),
+				Link:  jsonResp.Get(fmt.Sprintf("stories.%d.url", index)).String(),
 			}
-			storyId := jsonResp.GetString(fmt.Sprintf("stories.%d.id", index))
+			storyId := jsonResp.Get(fmt.Sprintf("stories.%d.id", index))
 			storyUrl := fmt.Sprintf("https://news-at.zhihu.com/api/7/news/%s", storyId)
-			if itemResp, err := component.GetHttpClient().SetHeaderMap(headers).Get(storyUrl); err == nil {
+			if itemResp, err := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, storyUrl); err == nil {
 				jsonItemResp := gjson.New(itemResp.ReadAllString())
-				content := jsonItemResp.GetString("body")
+				content := jsonItemResp.Get("body").String()
 				reg := regexp.MustCompile(`<div class="meta">([\s\S]*?)<\/div>`)
-				content = reg.ReplaceAllString(content, `<strong>${1}</strong>`)
+				content = reg.ReplaceAllString(content, `<strong>${1}</strong>`) 
 				reg = regexp.MustCompile(`<\/?h2.*?>`)
 				content = reg.ReplaceAllString(content, "")
 				feedItem.Description = content
@@ -63,8 +66,8 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		g.Redis().DoVar("SET", redisKey, rssStr)
-		g.Redis().DoVar("EXPIRE", redisKey, 60*60*6)
-		_ = req.Response.WriteXmlExit(rssStr)
+		component.GetRedis().Do(ctx,"SET", redisKey, rssStr)
+		component.GetRedis().Do(ctx,"EXPIRE", redisKey, 60*60*6)
+		req.Response.WriteXmlExit(rssStr)
 	}
 }

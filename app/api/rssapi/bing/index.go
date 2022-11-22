@@ -1,21 +1,21 @@
 package bing
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
-
-	if value, err := g.Redis().DoVar("GET", "BING_DAILY_IMG"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "BING_DAILY_IMG"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -26,17 +26,17 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	rssData.Link = "https://cn.bing.com/"
 	rssData.Tag = []string{"壁纸", "图片"}
 	rssData.ImageUrl = "https://cn.bing.com/sa/simg/favicon-2x.ico"
-	if statusResp := component.GetContent(apiUrl); statusResp != "" {
+	if statusResp := component.GetContent(ctx,apiUrl); statusResp != "" {
 		respJson := gjson.New(statusResp)
 		imageListJson := respJson.GetJsons("images")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, imageJson := range imageListJson {
 			rssItem := dao.RSSItem{
-				Title: imageJson.GetString("copyright"),
-				Link:  imageJson.GetString("copyrightlink"),
+				Title: imageJson.Get("copyright").String(),
+				Link:  imageJson.Get("copyrightlink").String(),
 			}
 			var content string
-			content = content + fmt.Sprintf("<img src=\"%s%s\">", baseUrl, imageJson.GetString("url"))
+			content = content + fmt.Sprintf("<img src=\"%s%s\">", baseUrl, imageJson.Get("url"))
 			rssItem.Description = content
 			rssItems = append(rssItems, rssItem)
 		}
@@ -44,7 +44,7 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "BING_DAILY_IMG", rssStr)
-	g.Redis().DoVar("EXPIRE", "BING_DAILY_IMG", 60*60*6)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "BING_DAILY_IMG", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "BING_DAILY_IMG", 60*60*6)
+	req.Response.WriteXmlExit(rssStr)
 }

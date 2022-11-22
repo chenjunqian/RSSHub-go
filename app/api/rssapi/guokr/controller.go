@@ -1,6 +1,7 @@
 package guokr
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"rsshub/app/component"
@@ -9,9 +10,9 @@ import (
 	"strconv"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/encoding/gurl"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -31,7 +32,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonParser(respString string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respJson := gjson.New(respString)
 	dataJsonArray := respJson.Array()
 	for index := range dataJsonArray {
@@ -43,12 +44,12 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		var time string
 		dataJson := respJson.GetJson(strconv.Itoa(index))
 
-		title = dataJson.GetString("title")
-		link = fmt.Sprintf("https://www.guokr.com/article/%s/", dataJson.GetString("id"))
-		author = dataJson.GetString("author.nickname")
-		imageLink = dataJson.GetString("small_image")
-		content = parseCommonDetail(link)
-		time = dataJson.GetString("date_published")
+		title = dataJson.Get("title").String()
+		link = fmt.Sprintf("https://www.guokr.com/article/%s/", dataJson.Get("id"))
+		author = dataJson.Get("author.nickname").String()
+		imageLink = dataJson.Get("small_image").String()
+		content = parseCommonDetail(ctx, link)
+		time = dataJson.Get("date_published").String()
 		rssItem := dao.RSSItem{
 			Title:     title,
 			Link:      link,
@@ -62,11 +63,11 @@ func commonParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCommonDetail(detailLink string) (detailData string) {
+func parseCommonDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -79,13 +80,13 @@ func parseCommonDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request guokr article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request guokr article detail failed, link  %s \n", detailLink)
 	}
 
 	return
 }
 
-func commonHtmlParser(htmlStr, linkType string) (items []dao.RSSItem) {
+func commonHtmlParser(ctx context.Context, htmlStr, linkType string) (items []dao.RSSItem) {
 	reg := regexp.MustCompile(`window.INITIAL_STORE=(.*?)\n`)
 	jsonStr := reg.FindStringSubmatch(htmlStr)
 	if len(jsonStr) <= 1 {
@@ -109,13 +110,13 @@ func commonHtmlParser(htmlStr, linkType string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = dataJson.GetString("title")
-		link = fmt.Sprintf("https://www.guokr.com/article/%s/", dataJson.GetString("id"))
-		author = dataJson.GetString("author.nickname")
-		imageLink = dataJson.GetString("small_image")
+		title = dataJson.Get("title").String()
+		link = fmt.Sprintf("https://www.guokr.com/article/%s/", dataJson.Get("id"))
+		author = dataJson.Get("author.nickname").String()
+		imageLink = dataJson.Get("small_image").String()
 		imageLink, _ = gurl.Decode(imageLink)
-		content = parseCommonDetail(link)
-		time = dataJson.GetString("date_published")
+		content = parseCommonDetail(ctx, link)
+		time = dataJson.Get("date_published").String()
 		rssItem := dao.RSSItem{
 			Title:     title,
 			Link:      link,

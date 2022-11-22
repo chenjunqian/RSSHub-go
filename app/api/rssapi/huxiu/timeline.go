@@ -1,24 +1,25 @@
 package huxiu
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/encoding/gurl"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetTimeline(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	cacheKey := "HUXIU_TIMELINE"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://www.huxiu.com/timeline/"
@@ -29,7 +30,7 @@ func (ctl *Controller) GetTimeline(req *ghttp.Request) {
 		Description: "聚合优质的创新信息与人群，捕获精选|深度|犀利的商业科技资讯。在虎嗅，不错过互联网的每个重要时刻。",
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		rssItems := make([]dao.RSSItem, 0)
 		reg := regexp.MustCompile(`window.__INITIAL_STATE__=(.*?);\(function\(\)`)
 		contentStrs := reg.FindStringSubmatch(resp)
@@ -46,11 +47,11 @@ func (ctl *Controller) GetTimeline(req *ghttp.Request) {
 			var content string
 			var time string
 
-			title = dataJson.GetString("name")
-			time = dataJson.GetString("update_time")
-			link = fmt.Sprintf("https://www.huxiu.com/timeline/%s.html", dataJson.GetString("id"))
-			imageLink, _ = gurl.Decode(dataJson.GetString("cover_path"))
-			content = dataJson.GetString("introduce")
+			title = dataJson.Get("name").String()
+			time = dataJson.Get("update_time").String()
+			link = fmt.Sprintf("https://www.huxiu.com/timeline/%s.html", dataJson.Get("id"))
+			imageLink, _ = gurl.Decode(dataJson.Get("cover_path").String())
+			content = dataJson.Get("introduce").String()
 
 			rssItem := dao.RSSItem{
 				Title:     title,
@@ -66,7 +67,7 @@ func (ctl *Controller) GetTimeline(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

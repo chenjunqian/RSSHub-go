@@ -1,19 +1,20 @@
 package infoq
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetRecommend(req *ghttp.Request) {
-	if value, err := g.Redis().DoVar("GET", "INFOQ_RECOMMEND"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "INFOQ_RECOMMEND"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -25,7 +26,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		Tag:         []string{"汽车"},
 		ImageUrl:    "https://static001.infoq.cn/static/infoq/template/img/logo-fasdkjfasdf.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 
 		docs := soup.HTMLParse(resp)
 		itemList := docs.FindAll("div", "class", "item-main")
@@ -34,7 +35,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 			title := item.Find("a", "class", "com-article-title").Text()
 			link := item.Find("a", "class", "com-article-title").Attrs()["href"]
 			author := item.Find("a", "class", "com-author-name").Text()
-			summary := parseRecommendDetail(link)
+			summary := parseRecommendDetail(ctx, link)
 			rssItem := dao.RSSItem{
 				Title:   title,
 				Link:    link,
@@ -48,7 +49,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "INFOQ_RECOMMEND", rssStr)
-	g.Redis().DoVar("EXPIRE", "INFOQ_RECOMMEND", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "INFOQ_RECOMMEND", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "INFOQ_RECOMMEND", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

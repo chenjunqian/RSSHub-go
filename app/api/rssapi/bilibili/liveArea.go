@@ -1,20 +1,22 @@
 package bilibili
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
-	areaId := req.GetString("areaId")
-	order := req.GetString("order")
+	areaId := req.Get("areaId").String()
+	order := req.Get("order").String()
 
 	var orderTitle string
 
@@ -35,20 +37,20 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 	apiUrl := "https://api.live.bilibili.com/room/v1/Area/getList"
 	header := getHeaders()
 	header["Referer"] = "https://link.bilibili.com/p/center/index"
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		dataJsonList := jsonResp.GetJsons("data")
 
 		for _, dataJson := range dataJsonList {
 			itemList := dataJson.GetJsons("list")
 			for _, item := range itemList {
-				if item.GetString("id") == areaId {
-					parentTitle = dataJson.GetString("name")
-					parentId = dataJson.GetString("id")
-					areaTitle = item.GetString("name")
+				if item.Get("id").String() == areaId {
+					parentTitle = dataJson.Get("name").String()
+					parentId = dataJson.Get("id").String()
+					areaTitle = item.Get("name").String()
 					switch parentId {
 					case "1":
-						areaLink = fmt.Sprintf("https://live.bilibili.com/pages/area/ent-all#%s/%s", item.GetString("cate_id"), areaId)
+						areaLink = fmt.Sprintf("https://live.bilibili.com/pages/area/ent-all#%s/%s", item.Get("cate_id"), areaId)
 						break
 					case "2":
 					case "3":
@@ -69,16 +71,16 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 
 		rssItems := make([]dao.RSSItem, 0)
 		areaApiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/area/getRoomList?area_id=%s&sort_type=%s&page_size=30&page_no=1", areaId, order)
-		if areaResp := component.GetContent(areaApiUrl); resp != "" {
+		if areaResp := component.GetContent(ctx,areaApiUrl); resp != "" {
 			areaJsonResp := gjson.New(areaResp)
 			dataJsonList := areaJsonResp.GetJsons("data")
 
 			for _, dataJson := range dataJsonList {
 				rssItem := dao.RSSItem{}
-				rssItem.Title = dataJson.GetString("uname") + " " + dataJson.GetString("title")
+				rssItem.Title = dataJson.Get("uname").String() + " " + dataJson.Get("title").String()
 				rssItem.Description = rssItem.Title
 				rssItem.Created = time.Now().String()
-				rssItem.Link = "https://live.bilibili.com/" + dataJson.GetString("roomid")
+				rssItem.Link = "https://live.bilibili.com/" + dataJson.Get("roomid").String()
 				rssItems = append(rssItems, rssItem)
 			}
 		}
@@ -88,5 +90,5 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	_ = req.Response.WriteXmlExit(rssStr)
+	req.Response.WriteXmlExit(rssStr)
 }

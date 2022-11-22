@@ -1,24 +1,28 @@
 package pintu
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
+
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getInfoLinks()[linkType]
 
 	cacheKey := "PINTU_INDEX_" + linkConfig.ChannelId
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://www.pintu360.com/service/ajax_article_service.php"
@@ -34,25 +38,25 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	} else {
 		contentType = "classId"
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(apiUrl, g.Map{
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(ctx, apiUrl, g.Map{
 		"fnName":     "getArticleList",
 		"type":       contentType,
 		"id":         linkConfig.ChannelId,
 		"pageNumber": 0,
 		"duration":   "quarter",
 	}); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
+		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
-		rssItems := indexParser(resp.ReadAllString())
+		rssItems := indexParser(ctx,resp.ReadAllString())
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

@@ -1,26 +1,28 @@
 package dianshangbao
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetIndex(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "DSB_INDEX_" + linkType
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx, "GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://www.dsb.cn/" + linkConfig.ChannelId
@@ -31,7 +33,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "电商报行业观察栏目，重点针对电子商务行业、互联网行业、it行业重大新闻24小时跟踪报道，揭示电子商务、互联网等行业的发展趋势和分析报告。",
 		ImageUrl:    "https://www.dsb.cn/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx, apiUrl); resp != "" {
 		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("li", "class", "clearfix")
 		rssItems := make([]dao.RSSItem, 0)
@@ -51,7 +53,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 				continue
 			}
 
-			content = parseNewsDetail(link)
+			content = parseNewsDetail(ctx, link)
 
 			rssItem := dao.RSSItem{
 				Title:     title,
@@ -64,16 +66,16 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx, "SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx, "EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseNewsDetail(detailLink string) (detailData string) {
+func parseNewsDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -85,7 +87,7 @@ func parseNewsDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request dianshangbao news article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request dianshangbao news article detail failed, link  %s \n", detailLink)
 	}
 
 	return

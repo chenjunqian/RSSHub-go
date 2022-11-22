@@ -1,17 +1,18 @@
 package dx2025
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	routeArray := strings.Split(req.Router.Uri, "/")
 	var linkConfig IndustryInfoRouteConfig
 	var categoryType string
@@ -22,9 +23,9 @@ func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
 	}
 
 	cacheKey := fmt.Sprintf("DX2025_%s_%s", categoryType, linkConfig.ChannelId)
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	var dxRouteType string
@@ -46,12 +47,12 @@ func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
 		Tag:         []string{"其他"},
 		ImageUrl:    "https://www.dx2025.com/wp-content/uploads/2020/04/cropped-east_west_think_tank_800x800-32x32.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
-		rssData.Items = commonParser(resp)
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
+		rssData.Items = commonParser(ctx, resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

@@ -1,6 +1,7 @@
 package zhihu
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"rsshub/app/dao"
@@ -8,7 +9,7 @@ import (
 
 	"rsshub/app/service"
 
-	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/v2/encoding/gjson"
 )
 
 type Controller struct {
@@ -23,14 +24,14 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func getCookieMap() map[string]string {
-	cookieMap := service.GetSiteCookies("zhihu")
+func getCookieMap(ctx context.Context) map[string]string {
+	cookieMap := service.GetSiteCookies(ctx, "zhihu")
 	return cookieMap
 }
 
 func getPinRSSItems(data string) []dao.RSSItem {
 	jsonResp := gjson.New(data)
-	respDataList := jsonResp.GetArray("data")
+	respDataList := jsonResp.Get("data").Strings()
 
 	items := make([]dao.RSSItem, 0)
 	for index := range respDataList {
@@ -39,38 +40,38 @@ func getPinRSSItems(data string) []dao.RSSItem {
 		if targetJson == nil {
 			targetJson = jsonResp.GetJson(fmt.Sprintf("data.%d", index))
 		}
-		feedItem.Created = time.Unix(targetJson.GetInt64("created"), 0).String()
-		feedItem.Author = targetJson.GetString("author.name")
-		feedItem.Title = fmt.Sprintf("%s: %s", feedItem.Author, targetJson.GetString("excerpt_title"))
-		feedItem.Link = fmt.Sprintf("https://www.zhihu.com/pin/%s", targetJson.GetString("id"))
+		feedItem.Created = time.Unix(targetJson.Get("created").Int64(), 0).String()
+		feedItem.Author = targetJson.Get("author.name").String()
+		feedItem.Title = fmt.Sprintf("%s: %s", feedItem.Author, targetJson.Get("excerpt_title"))
+		feedItem.Link = fmt.Sprintf("https://www.zhihu.com/pin/%s", targetJson.Get("id"))
 
 		var description string
 		contents := targetJson.GetJsons("content")
 		for _, content := range contents {
-			contentType := content.GetString("type")
+			contentType := content.Get("type").String()
 			switch contentType {
 			case "text":
-				description = fmt.Sprintf("%s<div>%s</div>", description, content.GetString("content"))
+				description = fmt.Sprintf("%s<div>%s</div>", description, content.Get("content"))
 			case "image":
-				contentUrl := content.GetString("url")
+				contentUrl := content.Get("url").String()
 				reg := regexp.MustCompile(`_.+\.jpg`)
 				contentUrl = reg.ReplaceAllString(contentUrl, `.jpg`)
 				description = fmt.Sprintf("%s<img src='%s' />", description, contentUrl)
 			case "video":
-				width := content.GetString("playlist.hd.width")
-				height := content.GetString("playlist.hd.height")
-				thumbnail := content.GetString("cover_info.thumbnail")
-				playUrl := content.GetString("playlist.hd.play_url")
+				width := content.Get("playlist.hd.width")
+				height := content.Get("playlist.hd.height")
+				thumbnail := content.Get("cover_info.thumbnail")
+				playUrl := content.Get("playlist.hd.play_url")
 				description = fmt.Sprintf("%s<video controls='controls' width='%s' height='%s' poster='%s' src='%s'", description, width, height, thumbnail, playUrl)
 			case "link":
-				linkUrl := content.GetString("url")
-				linkTitle := content.GetString("title")
-				imageUrl := content.GetString("image_url")
+				linkUrl := content.Get("url")
+				linkTitle := content.Get("title")
+				imageUrl := content.Get("image_url")
 				description = fmt.Sprintf("%s<div><a href='%s'>%s</a><br><img src='%s' /></div>", description, linkUrl, linkTitle, imageUrl)
 			}
 		}
 
-		endTag := fmt.Sprintf("<a href='https://www.zhihu.com%s'>%s</a>", targetJson.GetString("author.url"), feedItem.Author)
+		endTag := fmt.Sprintf("<a href='https://www.zhihu.com%s'>%s</a>", targetJson.Get("author.url"), feedItem.Author)
 		feedItem.Description = fmt.Sprintf("%s%s", description, endTag)
 		items = append(items, feedItem)
 	}

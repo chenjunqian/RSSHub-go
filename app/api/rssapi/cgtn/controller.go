@@ -1,6 +1,7 @@
 package cgtn
 
 import (
+	"context"
 	"rsshub/app/component"
 
 	"github.com/anaskhan96/soup"
@@ -18,8 +19,8 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func getMainContent(url string) (content string) {
-	if resp := component.GetContent(url); resp != "" {
+func getMainContent(ctx context.Context, url string) (content string) {
+	if resp := component.GetContent(ctx,url); resp != "" {
 		docs := soup.HTMLParse(resp)
 		contentElem := docs.Find("div", "id", "cmsMainContent")
 		if contentElem.Error == nil {

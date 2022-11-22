@@ -1,10 +1,12 @@
 package whalegogo
 
 import (
+	"context"
 	"fmt"
-	"github.com/gogf/gf/encoding/gjson"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/v2/encoding/gjson"
 )
 
 type Controller struct {
@@ -22,7 +24,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func indexParser(jsonString string) (items []dao.RSSItem) {
+func indexParser(ctx context.Context,jsonString string) (items []dao.RSSItem) {
 	respJson := gjson.New(jsonString)
 	articleList := respJson.GetJsons("response.items.item")
 
@@ -34,13 +36,13 @@ func indexParser(jsonString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("title")
-		content = article.GetString("description")
-		imageLink = article.GetString("cover")
-		author = article.GetString("author.username")
-		time = article.GetString("created_at")
-		id := article.GetString("id")
-		cId := article.GetString("cid")
+		title = article.Get("title").String()
+		content = article.Get("description").String()
+		imageLink = article.Get("cover").String()
+		author = article.Get("author.username").String()
+		time = article.Get("created_at").String()
+		id := article.Get("id")
+		cId := article.Get("cid")
 		link = fmt.Sprintf("https://m.whalegogo.com/article?id=%s&cid=%s", id, cId)
 
 		rssItem := dao.RSSItem{
@@ -69,12 +71,12 @@ func portalParser(jsonString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("title")
-		content = article.GetString("description")
-		imageLink = article.GetString("cover")
-		author = article.GetString("author.username")
-		time = article.GetString("created_at")
-		id := article.GetString("id")
+		title = article.Get("title").String()
+		content = article.Get("description").String()
+		imageLink = article.Get("cover").String()
+		author = article.Get("author.username").String()
+		time = article.Get("created_at").String()
+		id := article.Get("id")
 		link = fmt.Sprintf("https://www.whalegogo.com/news?id=%s", id)
 
 		rssItem := dao.RSSItem{

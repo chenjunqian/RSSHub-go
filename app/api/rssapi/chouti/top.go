@@ -1,20 +1,21 @@
 package chouti
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetTop(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	cacheKey := "CHOUTI_TOP"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -26,7 +27,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("div", "class", "link-area")
 		rssItems := make([]dao.RSSItem, 0)
@@ -69,7 +70,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*3)
+	req.Response.WriteXmlExit(rssStr)
 }

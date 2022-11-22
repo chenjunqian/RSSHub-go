@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/api/rssapi/weibo"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func WeiboRouter(group *ghttp.RouterGroup) {

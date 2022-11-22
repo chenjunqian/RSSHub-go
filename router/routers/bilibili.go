@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 
 	"rsshub/app/api/rssapi/bilibili"
 )

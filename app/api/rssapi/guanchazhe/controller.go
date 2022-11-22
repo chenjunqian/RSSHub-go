@@ -1,12 +1,13 @@
 package guanchazhe
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -26,7 +27,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func indexParser(htmlStr string) (items []dao.RSSItem) {
+func indexParser(ctx context.Context,htmlStr string) (items []dao.RSSItem) {
 	docs := soup.HTMLParse(htmlStr)
 	baseUrl := "https://www.guancha.cn"
 	imgList := docs.FindAll("ul", "class", "img-List")
@@ -79,7 +80,7 @@ func indexParser(htmlStr string) (items []dao.RSSItem) {
 		imageLink = newsItem.Find("div", "class", "author-intro").Find("img").Attrs()["src"]
 		author = newsItem.Find("div", "class", "author-intro").Find("img").Attrs()["alt"]
 		link = baseUrl + newsItem.Find("h4", "class", "module-title").Find("a").Attrs()["href"]
-		content = parseCommonDetail(link)
+		content = parseCommonDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:     title,
@@ -95,7 +96,7 @@ func indexParser(htmlStr string) (items []dao.RSSItem) {
 	return
 }
 
-func commonParser(htmlStr string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, htmlStr string) (items []dao.RSSItem) {
 	docs := soup.HTMLParse(htmlStr)
 	articleList := docs.Find("ul", "class", "new-left-list").FindAll("li")
 	baseUrl := "https://www.guancha.cn"
@@ -114,7 +115,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 				imageLink = aTag.Find("img").Attrs()["src"]
 			}
 		}
-		content = parseCommonDetail(link)
+		content = parseCommonDetail(ctx, link)
 		time = article.Find("span").Text()
 		rssItem := dao.RSSItem{
 			Title:     title,
@@ -129,11 +130,11 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCommonDetail(detailLink string) (detailData string) {
+func parseCommonDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -146,7 +147,7 @@ func parseCommonDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request guanchazhe article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request guanchazhe article detail failed, link  %s \n", detailLink)
 	}
 
 	return

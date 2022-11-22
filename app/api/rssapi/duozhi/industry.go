@@ -1,24 +1,25 @@
 package duozhi
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getIndustryNewsLinks()[linkType]
 
 	cacheKey := "DUOZHI_INDUSTRY_" + linkConfig.ChannelId
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "http://www.duozhi.com/industry/" + linkConfig.ChannelId
@@ -29,12 +30,12 @@ func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
 		Description: "多知网 - 独立商业视角 新锐教育观察",
 		ImageUrl:    "http://www.duozhi.com/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
-		rssData.Items = commonParser(resp)
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
+		rssData.Items = commonParser(ctx, resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*6)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*6)
+	req.Response.WriteXmlExit(rssStr)
 }

@@ -1,23 +1,26 @@
 package zhihu
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetTopic(req *ghttp.Request) {
-	topicId := req.GetString("id")
+	var ctx context.Context = context.Background()
+	topicId := req.Get("id").String()
 	redisKey := "ZHIHU_TOPIC"
-	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -26,11 +29,11 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 	headers := getHeaders()
 	headers["Authorization"] = "oauth c3cef7c66a1843f8b3a9e6a1e3160e20"
 	headers["Referer"] = link
-	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(topicGetUrl); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, topicGetUrl); err == nil {
+		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
@@ -49,19 +52,19 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 			var author string
 
 			targetJson := dataJson.GetJson("target")
-			dataType := targetJson.GetString("type")
+			dataType := targetJson.Get("type").String()
 			switch dataType {
 			case "answer":
-				title = fmt.Sprintf("%s-%s的回答：%s", targetJson.GetString("question.title"), targetJson.GetString("author.name"), targetJson.GetString("excerpt"))
-				description = fmt.Sprintf("<strong>%s</strong><br>%s的回答<br/>%s", targetJson.GetString("question.title"), targetJson.GetString("author.name"), targetJson.GetString("content"))
-				link = fmt.Sprintf("https://www.zhihu.com/question/%s/answer/%s", targetJson.GetString("question.id"), targetJson.GetString("id"))
-				pubDate = time.Unix(targetJson.GetInt64("updated_time"), 0).String()
-				author = targetJson.GetString("author.name")
+				title = fmt.Sprintf("%s-%s的回答：%s", targetJson.Get("question.title"), targetJson.Get("author.name"), targetJson.Get("excerpt"))
+				description = fmt.Sprintf("<strong>%s</strong><br>%s的回答<br/>%s", targetJson.Get("question.title"), targetJson.Get("author.name"), targetJson.Get("content"))
+				link = fmt.Sprintf("https://www.zhihu.com/question/%s/answer/%s", targetJson.Get("question.id"), targetJson.Get("id"))
+				pubDate = time.Unix(targetJson.Get("updated_time").Int64(), 0).String()
+				author = targetJson.Get("author.name").String()
 			case "question":
-				title = targetJson.GetString("title")
-				description = targetJson.GetString("title")
-				link = fmt.Sprintf("https://www.zhihu.com/question/%s", targetJson.GetString("title"))
-				pubDate = time.Unix(targetJson.GetInt64("created"), 0).String()
+				title = targetJson.Get("title").String()
+				description = targetJson.Get("title").String()
+				link = fmt.Sprintf("https://www.zhihu.com/question/%s", targetJson.Get("title"))
+				pubDate = time.Unix(targetJson.Get("created").Int64(), 0).String()
 			}
 
 			rssItem := dao.RSSItem{
@@ -76,6 +79,6 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		_ = req.Response.WriteXmlExit(rssStr)
+		req.Response.WriteXmlExit(rssStr)
 	}
 }

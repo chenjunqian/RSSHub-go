@@ -1,29 +1,30 @@
 package zhihu
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"time"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	redisKey := "ZHIHU_HOT_LIST"
-	if value, err := g.Redis().DoVar("GET", redisKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", redisKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	hotListUrl := "https://www.zhihu.com/api/v3/explore/guest/feeds?limit=40"
 	headers := getHeaders()
-	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(hotListUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, hotListUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
-		respDataList := jsonResp.GetArray("data")
+		respDataList := jsonResp.Get("data").Strings()
 
 		rssData := dao.RSSFeed{}
 		rssData.Title = "知乎热榜"
@@ -32,29 +33,29 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {
-			itemType := jsonResp.GetString(fmt.Sprintf("data.%d.target.type", index))
+			itemType := jsonResp.Get(fmt.Sprintf("data.%d.target.type", index)).String()
 			feedItem := dao.RSSItem{}
 			switch itemType {
 			case "answer":
-				questionId := jsonResp.GetString(fmt.Sprintf("data.%d.target.question.id", index))
-				answerId := jsonResp.GetString(fmt.Sprintf("data.%d.target.id", index))
-				content := jsonResp.GetString(fmt.Sprintf("data.%d.target.content", index))
-				createdTime := jsonResp.GetInt64(fmt.Sprintf("data.%d.target.updated_time", index))
+				questionId := jsonResp.Get(fmt.Sprintf("data.%d.target.question.id", index))
+				answerId := jsonResp.Get(fmt.Sprintf("data.%d.target.id", index))
+				content := jsonResp.Get(fmt.Sprintf("data.%d.target.content", index))
+				createdTime := jsonResp.Get(fmt.Sprintf("data.%d.target.updated_time", index)).Int64()
 
-				feedItem.Title = jsonResp.GetString(fmt.Sprintf("data.%d.target.question.title", index))
+				feedItem.Title = jsonResp.Get(fmt.Sprintf("data.%d.target.question.title", index)).String()
 				feedItem.Link = fmt.Sprintf("https://www.zhihu.com/%s/answer/%s", questionId, answerId)
-				feedItem.Author = jsonResp.GetString(fmt.Sprintf("data.%d.target.author.name", index))
+				feedItem.Author = jsonResp.Get(fmt.Sprintf("data.%d.target.author.name", index)).String()
 				feedItem.Description = fmt.Sprintf("%s的回答<br/><br/>%s", feedItem.Author, content)
 				feedItem.Created = time.Unix(createdTime, 0).String()
 			case "article":
-				feedItem.Title = jsonResp.GetString(fmt.Sprintf("data.%d.target.title", index))
-				content := jsonResp.GetString(fmt.Sprintf("data.%d.target.content", index))
-				createdTime := jsonResp.GetInt64(fmt.Sprintf("data.%d.target.updated_time", index))
-				articleId := jsonResp.GetString(fmt.Sprintf("data.%d.target.id", index))
+				feedItem.Title = jsonResp.Get(fmt.Sprintf("data.%d.target.title", index)).String()
+				content := jsonResp.Get(fmt.Sprintf("data.%d.target.content", index))
+				createdTime := jsonResp.Get(fmt.Sprintf("data.%d.target.updated_time", index)).Int64()
+				articleId := jsonResp.Get(fmt.Sprintf("data.%d.target.id", index))
 
-				feedItem.Title = jsonResp.GetString(fmt.Sprintf("data.%d.target.title", index))
+				feedItem.Title = jsonResp.Get(fmt.Sprintf("data.%d.target.title", index)).String()
 				feedItem.Link = fmt.Sprintf("https://zhuanlan.zhihu.com/p/%s", articleId)
-				feedItem.Author = jsonResp.GetString(fmt.Sprintf("data.%d.target.author.name", index))
+				feedItem.Author = jsonResp.Get(fmt.Sprintf("data.%d.target.author.name", index)).String()
 				feedItem.Description = fmt.Sprintf("%s的回答<br/><br/>%s", feedItem.Author, content)
 				feedItem.Created = time.Unix(createdTime, 0).String()
 			}
@@ -64,8 +65,8 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		g.Redis().DoVar("SET", redisKey, rssStr)
-		g.Redis().DoVar("EXPIRE", redisKey, 60*60*1)
-		_ = req.Response.WriteXmlExit(rssStr)
+		component.GetRedis().Do(ctx,"SET", redisKey, rssStr)
+		component.GetRedis().Do(ctx,"EXPIRE", redisKey, 60*60*1)
+		req.Response.WriteXmlExit(rssStr)
 	}
 }

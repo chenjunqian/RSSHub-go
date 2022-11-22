@@ -1,18 +1,19 @@
 package _199IT
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
-	if value, err := g.Redis().DoVar("GET", "199IT_INDEX"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "199IT_INDEX"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -24,13 +25,13 @@ func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 		Tag:         []string{"互联网", "IT", "科技"},
 		Description: "互联网数据资讯网-199IT",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
-		rssItems := parseArticle(resp)
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
+		rssItems := parseArticle(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "199IT_INDEX", rssStr)
-	g.Redis().DoVar("EXPIRE", "199IT_INDEX", 60*10)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "199IT_INDEX", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "199IT_INDEX", 60*10)
+	req.Response.WriteXmlExit(rssStr)
 }

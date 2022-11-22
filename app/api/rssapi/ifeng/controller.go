@@ -1,10 +1,12 @@
 package ifeng
 
 import (
-	"github.com/gogf/gf/encoding/gjson"
+	"context"
 	"regexp"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/v2/encoding/gjson"
 )
 
 type Controller struct {
@@ -22,7 +24,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonParser(htmlStr string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, htmlStr string) (items []dao.RSSItem) {
 	reg := regexp.MustCompile(`var allData = (.*?);\n`)
 	jsonStr := reg.FindStringSubmatch(htmlStr)
 	if len(jsonStr) <= 1 {
@@ -41,14 +43,14 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 		var time string
 		imageJson := dataJson.GetJson("thumbnails.image")
 		if imageJson.IsNil() {
-			imageLink = dataJson.GetString("thumbnail")
+			imageLink = dataJson.Get("thumbnail").String()
 		} else {
-			imageLink = dataJson.GetString("thumbnails.image.0.url")
+			imageLink = dataJson.Get("thumbnails.image.0.url").String()
 		}
-		title = dataJson.GetString("title")
-		content = dataJson.GetString("summary")
-		time = dataJson.GetString("newsTime")
-		link = dataJson.GetString("url")
+		title = dataJson.Get("title").String()
+		content = dataJson.Get("summary").String()
+		time = dataJson.Get("newsTime").String()
+		link = dataJson.Get("url").String()
 		rssItem := dao.RSSItem{
 			Title:     title,
 			Link:      link,
@@ -61,7 +63,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 	return
 }
 
-func moneyCommonParser(htmlStr, typeStr string) (items []dao.RSSItem) {
+func moneycommonParser(ctx context.Context, htmlStr, typeStr string) (items []dao.RSSItem) {
 	reg := regexp.MustCompile(`var allData = (.*?);\n`)
 	jsonStr := reg.FindStringSubmatch(htmlStr)
 	if len(jsonStr) <= 1 {
@@ -81,15 +83,15 @@ func moneyCommonParser(htmlStr, typeStr string) (items []dao.RSSItem) {
 		var time string
 		imageJson := dataJson.GetJson("thumbnails.image")
 		if imageJson.IsNil() {
-			imageLink = dataJson.GetString("thumbnail")
+			imageLink = dataJson.Get("thumbnail").String()
 		} else {
-			imageLink = dataJson.GetString("thumbnails.image.0.url")
+			imageLink = dataJson.Get("thumbnails.image.0.url").String()
 		}
-		title = dataJson.GetString("title")
-		content = dataJson.GetString("summary")
-		time = dataJson.GetString("newsTime")
-		link = dataJson.GetString("url")
-		author = dataJson.GetString("editorName")
+		title = dataJson.Get("title").String()
+		content = dataJson.Get("summary").String()
+		time = dataJson.Get("newsTime").String()
+		link = dataJson.Get("url").String()
+		author = dataJson.Get("editorName").String()
 		rssItem := dao.RSSItem{
 			Title:     title,
 			Link:      link,

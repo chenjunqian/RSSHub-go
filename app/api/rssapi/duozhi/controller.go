@@ -1,13 +1,14 @@
 package duozhi
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -26,7 +27,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonParser(htmlStr string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, htmlStr string) (items []dao.RSSItem) {
 	respDocs := soup.HTMLParse(htmlStr)
 	dataDocsList := respDocs.FindAll("div", "class", "post-item")
 	if len(dataDocsList) > 20 {
@@ -53,7 +54,7 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 			}
 		}
 
-		content = parseCommonDetail(link)
+		content = parseCommonDetail(ctx, link)
 
 		authorWrap := dataDocs.Find("span", "class", "post-attr")
 		if authorWrap.Error == nil {
@@ -73,11 +74,11 @@ func commonParser(htmlStr string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCommonDetail(detailLink string) (detailData string) {
+func parseCommonDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -89,7 +90,7 @@ func parseCommonDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request duozhi article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request duozhi article detail failed, link  %s \n", detailLink)
 	}
 
 	return

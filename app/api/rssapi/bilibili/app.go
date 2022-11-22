@@ -1,6 +1,7 @@
 package bilibili
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/service/feed"
@@ -9,12 +10,13 @@ import (
 
 	"rsshub/app/dao"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetAppVersion(req *ghttp.Request) {
-	id := req.GetString("id")
+	var ctx context.Context = context.Background()
+	id := req.Get("id").String()
 
 	config := map[string]string{
 		"android":        "安卓版",
@@ -26,7 +28,7 @@ func (ctl *Controller) GetAppVersion(req *ghttp.Request) {
 
 	rootUrl := "https://app.bilibili.com"
 	apiUrl := fmt.Sprintf("%s/x/v2/version?mobi_app=%s", rootUrl, id)
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		respDataList := jsonResp.GetJsons("data")
 
@@ -38,11 +40,11 @@ func (ctl *Controller) GetAppVersion(req *ghttp.Request) {
 		for _, dataJson := range respDataList {
 			rssItem := dao.RSSItem{
 				Link:  rootUrl,
-				Title: dataJson.GetString("version"),
+				Title: dataJson.Get("version").String(),
 			}
-			timeStamp := jsonResp.GetInt64("ptime")
+			timeStamp := jsonResp.Get("ptime").Int64()
 			rssItem.Created = time.Unix(timeStamp, 0).String()
-			desc := dataJson.GetString("desc")
+			desc := dataJson.Get("desc").String()
 			descs := strings.Split(desc, "\n-")
 			desc = strings.Join(descs, "")
 			rssItem.Description = desc
@@ -51,6 +53,6 @@ func (ctl *Controller) GetAppVersion(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		_ = req.Response.WriteXmlExit(rssStr)
+		req.Response.WriteXmlExit(rssStr)
 	}
 }

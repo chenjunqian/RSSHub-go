@@ -1,6 +1,7 @@
 package dayone
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
@@ -8,15 +9,15 @@ import (
 	"time"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetMostRead(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
-	if value, err := g.Redis().DoVar("GET", "DAY_ONE_BLOG"); err == nil {
+	if value, err := component.GetRedis().Do(ctx, "GET", "DAY_ONE_BLOG"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://dayoneapp.com/blog/"
@@ -26,7 +27,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 		Tag:      []string{"其他"},
 		ImageUrl: "https://i0.wp.com/dayoneapp.com/wp-content/uploads/2021/11/favicon-32x32-1.png?fit=32%2C32&ssl=1",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx, apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		blogItemWrapper := docs.Find("div", "class", "container--inner")
 		blogItemList := blogItemWrapper.FindAll("div")
@@ -49,20 +50,20 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 
 			rssItem.Title = title
 			rssItem.Link = link
-			rssItem.Content = getFullContent(rssItem.Link)
+			rssItem.Content = getFullContent(ctx, rssItem.Link)
 			rssItems = append(rssItems, rssItem)
 		}
 
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "DAY_ONE_BLOG", rssStr)
-	g.Redis().DoVar("EXPIRE", "DAY_ONE_BLOG", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx, "SET", "DAY_ONE_BLOG", rssStr)
+	component.GetRedis().Do(ctx, "EXPIRE", "DAY_ONE_BLOG", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func getFullContent(url string) (content string) {
-	if resp := component.GetContent(url); resp != "" {
+func getFullContent(ctx context.Context, url string) (content string) {
+	if resp := component.GetContent(ctx, url); resp != "" {
 		docs := soup.HTMLParse(resp)
 		content = docs.Find("main").HTML()
 	}

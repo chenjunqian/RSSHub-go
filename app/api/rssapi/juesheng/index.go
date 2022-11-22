@@ -1,24 +1,24 @@
 package juesheng
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetIndex(req *ghttp.Request) {
-
+	var ctx context.Context = context.Background()
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getInfoLinks()[linkType]
 	cacheKey := "JUESHENG_INDEX_" + linkConfig.ChannelUrl
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := linkConfig.ChannelUrl
@@ -28,14 +28,14 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "决胜网是教育产业门户网站提供：教育门户新闻资讯、互联网+教育、在线教育、兴趣教育、在线职业教育、教育创业、教育信息化、教育创业报道等，找教育就上决胜网教育门户网站。",
 		ImageUrl:    "https://juesheng.com/s/img/favicon.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != ""{
+	if resp := component.GetContent(ctx,apiUrl); resp != ""{
 
-		rssItems := commonParser(resp)
+		rssItems := commonParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

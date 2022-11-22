@@ -1,21 +1,22 @@
 package idaily
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strconv"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
 
-	if value, err := g.Redis().DoVar("GET", "IDAILY_INDEX"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "IDAILY_INDEX"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -27,7 +28,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "iDaily 每日环球视野",
 		ImageUrl:    "https://dayoneapp.com/favicon-32x32.png?v=9277df7ae7503b6e383587ae0e7210ee",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJsonArray := respJson.Array()
 		rssItems := make([]dao.RSSItem, 0)
@@ -41,11 +42,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 				dataJson       *gjson.Json
 			)
 			dataJson = respJson.GetJson(strconv.Itoa(index))
-			link = dataJson.GetString("link_share")
-			time = dataJson.GetString("pubdate_timestamp")
-			title = dataJson.GetString("ui_sets.caption_subtitle")
-			coverImageLink = dataJson.GetString("cover_landscape")
-			content = dataJson.GetString("content")
+			link = dataJson.Get("link_share").String()
+			time = dataJson.Get("pubdate_timestamp").String()
+			title = dataJson.Get("ui_sets.caption_subtitle").String()
+			coverImageLink = dataJson.Get("cover_landscape").String()
+			content = dataJson.Get("content").String()
 			rssItem := dao.RSSItem{
 				Title:     title,
 				Link:      link,
@@ -58,7 +59,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "IDAILY_INDEX", rssStr)
-	g.Redis().DoVar("EXPIRE", "IDAILY_INDEX", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "IDAILY_INDEX", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "IDAILY_INDEX", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

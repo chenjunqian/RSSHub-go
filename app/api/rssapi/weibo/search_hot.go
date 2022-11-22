@@ -1,18 +1,20 @@
 package weibo
 
 import (
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
-	if value, err := g.Redis().DoVar("GET", "WEIBO_HOT"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "WEIBO_HOT"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -28,22 +30,22 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 		Description: "实时热点，每10分钟更新一次",
 		ImageUrl:    "https://h5.sinaimg.cn/m/weibo-lite/icon-default-192.png",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(apiUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, apiUrl); err == nil {
 		respJson := gjson.New(resp.ReadAllString())
 		dataJsonList := respJson.GetJsons("data.cards.0.card_group")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, dataJson := range dataJsonList {
 			rssItem := dao.RSSItem{}
-			rssItem.Title = dataJson.GetString("desc")
-			rssItem.Link = "https://m.weibo.cn/search?containerid=100103type%3D1%26q%3D" + dataJson.GetString("desc")
-			rssItem.Content = feed.GenerateContent(dataJson.GetString("desc"))
+			rssItem.Title = dataJson.Get("desc").String()
+			rssItem.Link = "https://m.weibo.cn/search?containerid=100103type%3D1%26q%3D" + dataJson.Get("desc").String()
+			rssItem.Content = feed.GenerateContent(dataJson.Get("desc").String())
 			rssItems = append(rssItems, rssItem)
 		}
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "WEIBO_HOT", rssStr)
-	g.Redis().DoVar("EXPIRE", "WEIBO_HOT", 60*10)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "WEIBO_HOT", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "WEIBO_HOT", 60*10)
+	req.Response.WriteXmlExit(rssStr)
 }

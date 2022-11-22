@@ -1,29 +1,21 @@
 package boot
 
 import (
-	_ "rsshub/packed"
-
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/os/genv"
+	"context"
+	"rsshub/app/component"
+	"rsshub/config"
 )
 
 func init() {
-	configEvn := genv.Get("GF_GCFG_FILE", "")
-	if configEvn != "" {
-		g.Cfg().SetFileName(configEvn)
-	}
-
-	s := g.Server()
-	g.Log().Stack(true)
-	s.SetErrorLogEnabled(true)
-	s.SetAccessLogEnabled(true)
+	component.InitLogger()
+	component.InitRedisClient()
 	setCookiesToRedis()
 }
 
 func setCookiesToRedis() {
-	cookiesMap := g.Cfg().GetMap("cookies")
-
+	ctx := context.Background()
+	cookiesMap := config.GetConfig().Get("cookies").Map()
 	for key := range cookiesMap {
-		g.Redis().DoVar("SET", key, cookiesMap[key])
+		component.GetRedis().Do(ctx, "SET", key, cookiesMap[key])
 	}
 }

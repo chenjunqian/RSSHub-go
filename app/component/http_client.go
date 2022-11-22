@@ -1,13 +1,14 @@
 package component
 
 import (
+	"context"
 	"time"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
 )
 
-func GetHttpClient() (client *ghttp.Client) {
+func GetHttpClient() (client *gclient.Client) {
 
 	client = g.Client()
 	client.SetTimeout(time.Second * 60)
@@ -15,32 +16,32 @@ func GetHttpClient() (client *ghttp.Client) {
 	return
 }
 
-func GetContent(link string) (resp string) {
+func GetContent(ctx context.Context, link string) (resp string) {
 	var (
-		client *ghttp.Client
+		client *gclient.Client
 	)
 	client = GetHttpClient()
-	resp = client.SetHeaderMap(getHeaders()).GetContent(link)
+	resp = client.SetHeaderMap(getHeaders()).GetContent(ctx, link)
 
 	return
 }
 
-func GetContentByMobile(link string) (resp string) {
+func GetContentByMobile(ctx context.Context, link string) (resp string) {
 	var (
-		client *ghttp.Client
+		client *gclient.Client
 	)
 	client = GetHttpClient()
-	resp = client.SetHeaderMap(getMobileHeader()).GetContent(link)
+	resp = client.SetHeaderMap(getMobileHeader()).GetContent(ctx, link)
 
 	return
 }
 
-func PostContentByMobile(link string, data ...interface{}) (resp string) {
+func PostContentByMobile(ctx context.Context, link string, data ...interface{}) (resp string) {
 	var (
-		client *ghttp.Client
+		client *gclient.Client
 	)
 	client = GetHttpClient()
-	resp = client.SetHeaderMap(getMobileHeader()).PostContent(link,data)
+	resp = client.SetHeaderMap(getMobileHeader()).PostContent(ctx, link, data)
 
 	return
 }

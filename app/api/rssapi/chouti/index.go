@@ -1,6 +1,7 @@
 package chouti
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
@@ -8,21 +9,22 @@ import (
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetIndex(req *ghttp.Request) {
 
+	var ctx context.Context = context.Background()
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "CHOUTI_" + linkConfig.LinkType
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -39,7 +41,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJsonList := respJson.GetJsons("data")
 		rssItems := make([]dao.RSSItem, 0)
@@ -52,12 +54,12 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 				link      string
 				content   string
 			)
-			title = dataJson.GetString("title")
-			imageLink = dataJson.GetString("img_url")
-			time = dataJson.GetString("createTime")
-			author = dataJson.GetString("submitted_user.nick")
-			link = dataJson.GetString("originalUrl")
-			content = parseIndexDetail(link)
+			title = dataJson.Get("title").String()
+			imageLink = dataJson.Get("img_url").String()
+			time = dataJson.Get("createTime").String()
+			author = dataJson.Get("submitted_user.nick").String()
+			link = dataJson.Get("originalUrl").String()
+			content = parseIndexDetail(ctx,link)
 			if content == "" {
 				content = imageLink
 			}
@@ -74,16 +76,16 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*3)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseIndexDetail(detailLink string) (detailData string) {
+func parseIndexDetail(ctx context.Context,detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailData); resp != "" {
+	if resp = component.GetContent(ctx,detailData); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -95,7 +97,7 @@ func parseIndexDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request chouti index article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request chouti index article detail failed, link  %s \n", detailLink)
 	}
 
 	return

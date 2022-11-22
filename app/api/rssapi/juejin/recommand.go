@@ -1,24 +1,25 @@
 package juejin
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetRecommand(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	var (
 		cacheKey string
 		apiUrl   string
 	)
 	cacheKey = "JUEJIN_RECOMMAND_HOT"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -35,18 +36,18 @@ func (ctl *controller) GetRecommand(req *ghttp.Request) {
 		"client_type": 2608,
 		"cursor":      0,
 	}
-	if resp := component.PostContentByMobile(apiUrl, payload); resp != "" {
-		rssItems := parseRecommand(resp)
+	if resp := component.PostContentByMobile(ctx, apiUrl, payload); resp != "" {
+		rssItems := parseRecommand(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseRecommand(respString string) (items []dao.RSSItem) {
+func parseRecommand(ctx context.Context, respString string) (items []dao.RSSItem) {
 	var (
 		jsonResp     *gjson.Json
 		jsonItemList []*gjson.Json
@@ -60,24 +61,24 @@ func parseRecommand(respString string) (items []dao.RSSItem) {
 		)
 
 		jsonItemInfo = jsonItem.GetJson("item_info")
-		if jsonItem.GetInt("item_type") == 2 {
+		if jsonItem.Get("item_type").Int() == 2 {
 			var articleInfo *gjson.Json
 			var articleBaseUrl = "https://juejin.im/post/"
 			articleInfo = jsonItemInfo.GetJson("article_info")
-			item.Title = articleInfo.GetString("title")
-			item.Thumbnail = articleInfo.GetString("cover_image")
-			item.Author = articleInfo.GetString("author_user_info.user_name")
-			item.Created = articleInfo.GetString("ctime")
-			item.Link = articleBaseUrl + articleInfo.GetString("article_id")
-			item.Content = feed.GenerateContent(articleInfo.GetString("brief_content"))
+			item.Title = articleInfo.Get("title").String()
+			item.Thumbnail = articleInfo.Get("cover_image").String()
+			item.Author = articleInfo.Get("author_user_info.user_name").String()
+			item.Created = articleInfo.Get("ctime").String()
+			item.Link = articleBaseUrl + articleInfo.Get("article_id").String()
+			item.Content = feed.GenerateContent(articleInfo.Get("brief_content").String())
 			items = append(items, item)
-		} else if jsonItem.GetInt("item_type") == 14 {
-			item.Title = jsonItemInfo.GetString("title")
-			item.Thumbnail = jsonItemInfo.GetString("picture")
-			item.Author = jsonItemInfo.GetString("author_name")
-			item.Created = jsonItemInfo.GetString("ctime")
-			item.Link = jsonItemInfo.GetString("url")
-			item.Content = feed.GenerateContent(jsonItemInfo.GetString("brief"))
+		} else if jsonItem.Get("item_type").Int() == 14 {
+			item.Title = jsonItemInfo.Get("title").String()
+			item.Thumbnail = jsonItemInfo.Get("picture").String()
+			item.Author = jsonItemInfo.Get("author_name").String()
+			item.Created = jsonItemInfo.Get("ctime").String()
+			item.Link = jsonItemInfo.Get("url").String()
+			item.Content = feed.GenerateContent(jsonItemInfo.Get("brief").String())
 			items = append(items, item)
 		}
 	}

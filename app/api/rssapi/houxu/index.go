@@ -1,22 +1,23 @@
 package houxu
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	cacheKey := "HOUXU_INDEX"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://houxu.app/api/1/bundle/index/"
@@ -27,7 +28,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "后续 · 有记忆的新闻，持续追踪热点新闻",
 		ImageUrl:    "https://assets-1256259474.cos.ap-shanghai.myqcloud.com/static/img/icon-180.jpg",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 
 		respJson := gjson.New(resp)
 		dataJsonArray := respJson.GetJsons("indexRecords.results")
@@ -40,11 +41,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 			var content string
 			var time string
 
-			title = dataJson.GetString("object.title")
-			link = fmt.Sprintf("https://houxu.app/lives/%s", dataJson.GetString("object.id"))
-			author = dataJson.GetString("creator.name")
-			content = dataJson.GetString("object.summary")
-			time = dataJson.GetString("object.news_update_at")
+			title = dataJson.Get("object.title").String()
+			link = fmt.Sprintf("https://houxu.app/lives/%s", dataJson.Get("object.id"))
+			author = dataJson.Get("creator.name").String()
+			content = dataJson.Get("object.summary").String()
+			time = dataJson.Get("object.news_update_at").String()
 			rssItem := dao.RSSItem{
 				Title:     title,
 				Link:      link,
@@ -59,7 +60,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

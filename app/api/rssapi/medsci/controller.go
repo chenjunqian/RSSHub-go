@@ -1,9 +1,11 @@
 package medsci
 
 import (
-	"github.com/anaskhan96/soup"
+	"context"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/anaskhan96/soup"
 )
 
 type Controller struct {
@@ -21,7 +23,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonParser(respString string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respDoc := soup.HTMLParse(respString)
 	articleList := respDoc.FindAll("div", "class", "item")
 

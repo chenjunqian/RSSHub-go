@@ -1,12 +1,13 @@
 package _199IT
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type controller struct {
@@ -14,7 +15,7 @@ type controller struct {
 
 var IT1999Controller = &controller{}
 
-func parseArticle(htmlStr string) []dao.RSSItem {
+func parseArticle(ctx context.Context,htmlStr string) []dao.RSSItem {
 	doc := soup.HTMLParse(htmlStr)
 	articleList := doc.FindAll("article")
 	rssItems := make([]dao.RSSItem, 0)
@@ -31,7 +32,7 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 		thumbnail = article.Find("img", "class", "attachment-post-thumbnail").Attrs()["src"]
 		time = article.Find("time", "class", "entry-date").Attrs()["datetime"]
 		link = article.Find("h2", "class", "entry-title").Find("a").Attrs()["href"]
-		detailData = parseDetail(link)
+		detailData = parseDetail(ctx, link)
 		description = feed.GenerateContent(detailData)
 		rssItem := dao.RSSItem{
 			Title:       title,
@@ -47,11 +48,11 @@ func parseArticle(htmlStr string) []dao.RSSItem {
 	return rssItems
 }
 
-func parseDetail(detailLink string) (detailData string) {
+func parseDetail(ctx context.Context,detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -60,7 +61,7 @@ func parseDetail(detailLink string) (detailData string) {
 		articleElem = docs.Find("article")
 		detailData = articleElem.HTML()
 	} else {
-		g.Log().Errorf("Request 199IT article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request 199IT article detail failed, link  %s \n", detailLink)
 	}
 
 	return

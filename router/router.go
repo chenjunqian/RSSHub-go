@@ -1,14 +1,32 @@
 package router
 
 import (
+	"flag"
+	"os"
+	"rsshub/config"
 	"rsshub/router/routers"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 func init() {
 	s := g.Server()
+	var (
+		env  string
+		port int
+	)
+	env = os.Getenv("env")
+	if env == "dev" {
+		port = config.GetConfig().Get("port").Int()
+	} else {
+    portStr := flag.String("port", "8081", "listen port")
+		flag.Parse()
+    port = gconv.Int(*portStr)
+	}
+  s.SetPort(port)
+	s.Group("/api", routers.WebRouter)
 	s.Group("/rss", func(group *ghttp.RouterGroup) {
 		group.Group("/zhihu", routers.ZhihubRouter)
 		group.Group("/bilibili", routers.BilibiliRouter)
@@ -56,7 +74,6 @@ func init() {
 		group.Group("/sspai", routers.SSPaiRouter)
 		group.Group("/juejin", routers.JuejinRouter)
 		group.Group("/oschina", routers.OSChinaRouter)
-		group.Group("/api", routers.WebRouter)
 		group.Group("/latextstudio", routers.LatextStudioRouter)
 		group.Group("/yanxishe", routers.YanXiSheRouter)
 		group.Group("/dockerone", routers.DockerOneRouter)

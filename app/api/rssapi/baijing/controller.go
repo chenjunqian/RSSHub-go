@@ -1,13 +1,14 @@
 package baijing
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type controller struct {
@@ -22,7 +23,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
+func commonHtmlParser(ctx context.Context,htmlStr string) (rssItems []dao.RSSItem) {
 	docs := soup.HTMLParse(htmlStr)
 	articleDocList := docs.FindAll("div", "class", "articleSingle")
 	for _, articleDoc := range articleDocList {
@@ -39,7 +40,7 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 		if !strings.Contains(link, "http") {
 			link = "https://www.baijingapp.com" + link
 		}
-		content = parseCommonDetail(link)
+		content = parseCommonDetail(ctx, link)
 		content = feed.GenerateContent(content)
 
 		rssItem := dao.RSSItem{
@@ -56,11 +57,11 @@ func commonHtmlParser(htmlStr string) (rssItems []dao.RSSItem) {
 	return
 }
 
-func parseCommonDetail(detailLink string) (detailData string) {
+func parseCommonDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -72,7 +73,7 @@ func parseCommonDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request baijing common article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request baijing common article detail failed, link  %s \n", detailLink)
 	}
 
 	return

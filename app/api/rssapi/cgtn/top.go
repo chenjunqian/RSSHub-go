@@ -1,20 +1,21 @@
 package cgtn
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetTop(req *ghttp.Request) {
 
-	if value, err := g.Redis().DoVar("GET", "CGTN_TOP"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "CGTN_TOP"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -25,7 +26,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Tag:      []string{"英文", "海外"},
 		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		topItems := docs.FindAll("div", "class", "top-news-item")
 		rssItems := make([]dao.RSSItem, 0)
@@ -41,7 +42,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 			title = contentHtml.Find("a").Text()
 			time = contentHtml.Find("a").Attrs()["data-time"]
 			link = contentHtml.Find("a").Attrs()["href"]
-			content = getMainContent(link)
+			content = getMainContent(ctx, link)
 
 			rssItem.Title = title
 			rssItem.Link = link
@@ -52,7 +53,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "36KR_NEWS_FLASHES", rssStr)
-	g.Redis().DoVar("EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "36KR_NEWS_FLASHES", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
+	req.Response.WriteXmlExit(rssStr)
 }

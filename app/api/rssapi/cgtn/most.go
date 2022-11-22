@@ -1,6 +1,7 @@
 package cgtn
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
@@ -8,17 +9,17 @@ import (
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetMostRead(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 
-	if value, err := g.Redis().DoVar("GET", "CGTN_MOST_"+linkType); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", "CGTN_MOST_"+linkType); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -29,7 +30,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 		Tag:      []string{"英文", "海外"},
 		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		itemWrapper := docs.Find("div", "id", linkType+"Items")
 		items := itemWrapper.FindAll("div", "class", "most-read-item-box")
@@ -48,7 +49,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 			time = item.Find("a").Attrs()["data-time"]
 			link = item.Find("a").Attrs()["href"]
 			cgContent = item.Find("div", "class", "cg-content").Text()
-			mainContent = getMainContent(link)
+			mainContent = getMainContent(ctx, link)
 			content = fmt.Sprintf("%s<br>%s", cgContent, mainContent)
 			content = feed.GenerateContent(content)
 			rssItem.Title = title
@@ -60,7 +61,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "36KR_NEWS_FLASHES", rssStr)
-	g.Redis().DoVar("EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "36KR_NEWS_FLASHES", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
+	req.Response.WriteXmlExit(rssStr)
 }

@@ -1,6 +1,7 @@
 package yanxishe
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
@@ -8,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/os/gtime"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type controller struct {
@@ -17,7 +18,7 @@ type controller struct {
 
 var Controller = &controller{}
 
-func parseIndex(respString string) (items []dao.RSSItem) {
+func parseIndex(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respDoc := soup.HTMLParse(respString)
 	articleListWarpper := respDoc.Find("div", "class", "lph-pageList")
 	articleList := articleListWarpper.FindAll("div", "class", "box")
@@ -38,7 +39,7 @@ func parseIndex(respString string) (items []dao.RSSItem) {
 				link = aTags[1].Attrs()["href"]
 			}
 
-			content = parseIndexDetail(link)
+			content = parseIndexDetail(ctx,link)
 		}
 
 		if wordDoc := article.Find("div", "class", "word"); wordDoc.Pointer != nil {
@@ -62,14 +63,14 @@ func parseIndex(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseIndexDetail(link string) (detailData string) {
-	respString := component.GetContent(link)
+func parseIndexDetail(ctx context.Context,link string) (detailData string) {
+	respString := component.GetContent(ctx,link)
 	respDoc := soup.HTMLParse(respString)
 	articleDoc := respDoc.Find("div", "class", "lph-article-comView")
 	if articleDoc.Pointer != nil {
 		detailData = articleDoc.HTML()
 	} else {
-		g.Log().Error(link)
+		g.Log().Error(ctx, link)
 	}
 
 	return

@@ -1,21 +1,22 @@
 package bishijie
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 
-	if value, err := g.Redis().DoVar("GET", "BISHIJIE_SHENDU"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "BISHIJIE_SHENDU"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "https://www.bishijie.com/shendu"
@@ -26,7 +27,7 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		Description: "币世界网-比特币等数字货币交易所导航、投资理财、快讯、深度、币圈、市场行情第一站。",
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		articleDocsList := docs.FindAll("div", "class", "articles-card")
 		rssItems := make([]dao.RSSItem, 0)
@@ -57,7 +58,7 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "BISHIJIE_SHENDU", rssStr)
-	g.Redis().DoVar("EXPIRE", "BISHIJIE_SHENDU", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "BISHIJIE_SHENDU", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "BISHIJIE_SHENDU", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

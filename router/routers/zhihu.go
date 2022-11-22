@@ -3,7 +3,7 @@ package routers
 import (
 	"rsshub/app/api/rssapi/zhihu"
 
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func ZhihubRouter(group *ghttp.RouterGroup) {

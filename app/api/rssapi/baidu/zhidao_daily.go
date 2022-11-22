@@ -1,20 +1,22 @@
 package baidu
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gcharset"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gcharset"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
-	if value, err := g.Redis().DoVar("GET", "BAIDU_ZHIDAO_DAILY"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "BAIDU_ZHIDAO_DAILY"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -26,7 +28,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 		Tag:         []string{"知识", "百科", "问答"},
 		ImageUrl:    "https://www.baidu.com/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		respString, _ := gcharset.Convert("UTF-8", "gbk", resp)
 		docs := soup.HTMLParse(respString)
 		itemList := docs.FindAll("li", "class", "clearfix")
@@ -47,7 +49,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 			}
 			link = contentDiv.Find("a").Attrs()["href"]
 			link = "https://zhidao.baidu.com/" + link
-			content = parseDetail(link)
+			content = parseDetail(ctx, link)
 			rssItem := dao.RSSItem{
 				Title:     title,
 				Link:      link,
@@ -60,16 +62,16 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "BAIDU_ZHIDAO_DAILY", rssStr)
-	g.Redis().DoVar("EXPIRE", "BAIDU_ZHIDAO_DAILY", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "BAIDU_ZHIDAO_DAILY", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "BAIDU_ZHIDAO_DAILY", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseDetail(detailLink string) (detailData string) {
+func parseDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -81,7 +83,7 @@ func parseDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request baidu article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request baidu article detail failed, link  %s \n", detailLink)
 	}
 
 	return

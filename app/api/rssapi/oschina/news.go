@@ -1,24 +1,26 @@
 package oschina
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetLatestNews(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	var (
 		cacheKey string
 		apiUrl   string
 	)
 	cacheKey = "OSCHINA_NEWS_LATEST"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -30,18 +32,18 @@ func (ctl *controller) GetLatestNews(req *ghttp.Request) {
 		ImageUrl:    "https://static.oschina.net/new-osc/img/favicon.ico",
 	}
 
-	if resp := component.GetContentByMobile(apiUrl); resp != "" {
-		rssItems := parseNews(resp)
+	if resp := component.GetContentByMobile(ctx, apiUrl); resp != "" {
+		rssItems := parseNews(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseNews(respString string) (items []dao.RSSItem) {
+func parseNews(ctx context.Context, respString string) (items []dao.RSSItem) {
 	var (
 		docs        soup.Root
 		articleList []soup.Root
@@ -59,17 +61,17 @@ func parseNews(respString string) (items []dao.RSSItem) {
 				item.Link = titleDoc.Attrs()["href"]
 			}
 		}
-		item.Content = feed.GenerateContent(parseNewsDetail(item.Link))
+		item.Content = feed.GenerateContent(parseNewsDetail(ctx, item.Link))
 		items = append(items, item)
 	}
 	return
 }
 
-func parseNewsDetail(detailLink string) (detailData string) {
+func parseNewsDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContentByMobile(detailLink); resp != "" {
+	if resp = component.GetContentByMobile(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -84,7 +86,7 @@ func parseNewsDetail(detailLink string) (detailData string) {
 		}
 
 	} else {
-		g.Log().Errorf("Request oschina news article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request oschina news article detail failed, link  %s \n", detailLink)
 	}
 
 	return

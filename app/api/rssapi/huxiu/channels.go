@@ -1,6 +1,7 @@
 package huxiu
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"rsshub/app/component"
@@ -8,22 +9,22 @@ import (
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/encoding/gurl"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetChannels(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getChannelInfoLinks()[linkType]
 
 	cacheKey := "HUXIU_CHANNELS_" + linkConfig.ChannelId
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := fmt.Sprintf("https://www.huxiu.com/channel/%s.html", linkConfig.ChannelId)
@@ -34,7 +35,7 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 		Description: "聚合优质的创新信息与人群，捕获精选|深度|犀利的商业科技资讯。在虎嗅，不错过互联网的每个重要时刻。",
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 
 		rssItems := make([]dao.RSSItem, 0)
 		reg := regexp.MustCompile(`window.__INITIAL_STATE__=(.*?);\(function\(\)`)
@@ -52,12 +53,12 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 			var content string
 			var time string
 
-			title = dataJson.GetString("title")
-			time = dataJson.GetString("dateline")
-			link = fmt.Sprintf("https://www.huxiu.com/article/%s.html", dataJson.GetString("aid"))
-			imageLink, _ = gurl.Decode(dataJson.GetString("pic_path"))
-			content = parseCommonDetail(link)
-			author = dataJson.GetString("user_info.username")
+			title = dataJson.Get("title").String()
+			time = dataJson.Get("dateline").String()
+			link = fmt.Sprintf("https://www.huxiu.com/article/%s.html", dataJson.Get("aid"))
+			imageLink, _ = gurl.Decode(dataJson.Get("pic_path").String())
+			content = parseCommonDetail(ctx, link)
+			author = dataJson.Get("user_info.username").String()
 
 			rssItem := dao.RSSItem{
 				Title:     title,
@@ -73,7 +74,7 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

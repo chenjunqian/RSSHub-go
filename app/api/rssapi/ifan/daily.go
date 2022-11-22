@@ -1,19 +1,20 @@
 package ifan
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetFlash(req *ghttp.Request) {
-	if value, err := g.Redis().DoVar("GET", "IFAN_DAILY"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "IFAN_DAILY"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -25,19 +26,19 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Description: "爱范每日早报",
 		ImageUrl:    "https://images.ifanr.cn/wp-content/themes/ifanr-5.0-pc/static/images/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 
 		respJson := gjson.New(resp)
 		itemJsonList := respJson.GetJsons("objects")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, itemJson := range itemJsonList {
 			rssItem := dao.RSSItem{}
-			title := itemJson.GetString("post_title")
-			author := itemJson.GetString("created_by.name")
-			link := itemJson.GetString("post_url")
-			time := itemJson.GetString("created_at")
-			imageLink := itemJson.GetString("post_cover_image")
-			content := parseCommonDetail(link)
+			title := itemJson.Get("post_title").String()
+			author := itemJson.Get("created_by.name").String()
+			link := itemJson.Get("post_url").String()
+			time := itemJson.Get("created_at").String()
+			imageLink := itemJson.Get("post_cover_image").String()
+			content := parseCommonDetail(ctx, link)
 			content = feed.GenerateContent(content)
 
 			rssItem.Title = title
@@ -52,7 +53,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "IFAN_DAILY", rssStr)
-	g.Redis().DoVar("EXPIRE", "IFAN_DAILY", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "IFAN_DAILY", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "IFAN_DAILY", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

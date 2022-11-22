@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 // JsonResponse 数据返回通用JSON数据结构
@@ -17,7 +17,7 @@ func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
 	if len(data) > 0 {
 		responseData = data[0]
 	}
-	_ = r.Response.WriteJson(JsonResponse{
+    r.Response.WriteJsonExit(JsonResponse{
 		Code:    code,
 		Message: message,
 		Data:    responseData,

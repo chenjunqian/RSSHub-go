@@ -1,27 +1,28 @@
 package dongqiudi
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetTopNews(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "DONGQIUDI_TOP_NEWS_" + linkConfig.ChannelId
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := fmt.Sprintf("https://api.dongqiudi.com/app/tabs/iphone/%s.json?mark=gif&version=576", linkConfig.ChannelId)
@@ -32,19 +33,19 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 		Description: "懂球帝|专业权威的足球网站",
 		ImageUrl:    "https://static1.dongqiudi.com/web-new/web/images/fav.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		articleJsonList := respJson.GetJsons("articles")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, articleJson := range articleJsonList {
-			title := articleJson.GetString("title")
-			link := articleJson.GetString("url")
+			title := articleJson.Get("title").String()
+			link := articleJson.Get("url").String()
 			if !strings.HasPrefix(link, "http") {
-				link = articleJson.GetString("share")
+				link = articleJson.Get("share").String()
 			}
-			imageLink := articleJson.GetString("thumb")
-			time := articleJson.GetString("published_at")
-			author := articleJson.GetString("author_classify")
+			imageLink := articleJson.Get("thumb").String()
+			time := articleJson.Get("published_at").String()
+			author := articleJson.Get("author_classify").String()
 			rssItem := dao.RSSItem{
 				Title:     title,
 				Link:      link,
@@ -59,7 +60,7 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*6)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*6)
+	req.Response.WriteXmlExit(rssStr)
 }

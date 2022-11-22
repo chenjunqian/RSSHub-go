@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/GuoShaoOrg/feeds"
-	"github.com/gogf/gf/os/gtime"
-	"github.com/gogf/gf/util/gconv"
+	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 func GenerateRSS(data dao.RSSFeed, rsshubLink string) string {

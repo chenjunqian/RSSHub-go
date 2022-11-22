@@ -1,23 +1,23 @@
 package _36kr
 
 import (
+	"context"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
-	userId := req.GetString("id")
-
-	if value, err := g.Redis().DoVar("GET", "36KR_USER_"+userId); err == nil {
+	userId := req.Get("id").String()
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "36KR_USER_"+userId); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -26,31 +26,31 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 		Link:     apiUrl,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		reg := regexp.MustCompile(`"authorDetailData":(.*?),"channel":`)
 		contentStr := reg.FindStringSubmatch(resp)
 		if len(contentStr) >= 1 {
 			contentData := gjson.New(contentStr[1])
 			itemListJson := contentData.GetJsons("authorFlowList.data.itemList")
-			authorName := contentData.GetString("authorInfo.data.userNick")
+			authorName := contentData.Get("authorInfo.data.userNick").String()
 			rssData.Author = authorName
 			rssData.Title = "36氪用户 - " + authorName
 			rssItems := make([]dao.RSSItem, 0)
 			for _, itemJson := range itemListJson {
-				widgetContent := itemJson.GetString("templateMaterial.widgetContent")
-				widgetImage := itemJson.GetString("templateMaterial.widgetImage")
+				widgetContent := itemJson.Get("templateMaterial.widgetContent").String()
+				widgetImage := itemJson.Get("templateMaterial.widgetImage").String()
 				content := feed.GenerateContent(widgetContent)
 				rssItem := dao.RSSItem{
-					Title:     itemJson.GetString("templateMaterial.widgetTitle"),
-					Created:   itemJson.GetString("templateMaterial.publishTime"),
+					Title:     itemJson.Get("templateMaterial.widgetTitle").String(),
+					Created:   itemJson.Get("templateMaterial.publishTime").String(),
 					Content:   content,
 					Thumbnail: widgetImage,
 				}
-				router := itemJson.GetString("route")
+				router := itemJson.Get("route").String()
 				if strings.Split(router, "?")[0] == "detail_video" {
-					rssItem.Link = "https://36kr.com/video/" + itemJson.GetString("itemId")
+					rssItem.Link = "https://36kr.com/video/" + itemJson.Get("itemId").String()
 				} else {
-					rssItem.Link = "https://36kr.com/p/" + itemJson.GetString("itemId")
+					rssItem.Link = "https://36kr.com/p/" + itemJson.Get("itemId").String()
 				}
 				rssItems = append(rssItems, rssItem)
 			}
@@ -59,7 +59,7 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "36KR_USER_"+userId, rssStr)
-	g.Redis().DoVar("EXPIRE", "36KR_USER_"+userId, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "36KR_USER_"+userId, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "36KR_USER_"+userId, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

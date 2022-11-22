@@ -4,7 +4,7 @@ import (
 	_ "rsshub/boot"
 	_ "rsshub/router"
 
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 func main() {

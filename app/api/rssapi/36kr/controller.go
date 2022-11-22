@@ -1,13 +1,14 @@
 package _36kr
 
 import (
+	"context"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type controller struct {
@@ -28,7 +29,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func parseNews(htmlStr string) []dao.RSSItem {
+func parseNews(ctx context.Context, htmlStr string) []dao.RSSItem {
 	rssItems := make([]dao.RSSItem, 0)
 	reg := regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
 	contentStrs := reg.FindStringSubmatch(htmlStr)
@@ -40,18 +41,18 @@ func parseNews(htmlStr string) []dao.RSSItem {
 	informationList := contentData.GetJsons("information.informationList.itemList")
 	for _, informationJson := range informationList {
 		rssItem := dao.RSSItem{
-			Title:   informationJson.GetString("templateMaterial.widgetTitle"),
-			Link:    "https://36kr.com/p/" + informationJson.GetString("itemId"),
-			Created: informationJson.GetString("templateMaterial.publishTime"),
+			Title:   informationJson.Get("templateMaterial.widgetTitle").String(),
+			Link:    "https://36kr.com/p/" + informationJson.Get("itemId").String(),
+			Created: informationJson.Get("templateMaterial.publishTime").String(),
 		}
 		var (
 			summary string
 			author  string
 			imgLink string
 		)
-		summary = parseDetail(rssItem.Link)
-		author = informationJson.GetString("templateMaterial.authorName")
-		imgLink = informationJson.GetString("templateMaterial.widgetImage")
+		summary = parseDetail(ctx, rssItem.Link)
+		author = informationJson.Get("templateMaterial.authorName").String()
+		imgLink = informationJson.Get("templateMaterial.widgetImage").String()
 		rssItem.Content = feed.GenerateContent(summary)
 		rssItem.Author = author
 		rssItem.Thumbnail = imgLink
@@ -62,11 +63,11 @@ func parseNews(htmlStr string) []dao.RSSItem {
 	return rssItems
 }
 
-func parseDetail(detailLink string) (detailData string) {
+func parseDetail(ctx context.Context,detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			reg             *regexp.Regexp
 			contentStrArray []string
@@ -75,15 +76,15 @@ func parseDetail(detailLink string) (detailData string) {
 		reg = regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
 		contentStrArray = reg.FindStringSubmatch(resp)
 		if len(contentStrArray) <= 1 {
-			g.Log().Errorf("Parse 36kr news detail failed, detail json data is no match rule, detail link is %s", detailLink)
+			g.Log().Errorf(ctx,"Parse 36kr news detail failed, detail json data is no match rule, detail link is %s", detailLink)
 			return
 		}
 		contentStr = contentStrArray[1]
 		contentData := gjson.New(contentStr)
 
-		detailData = contentData.GetString("articleDetail.articleDetailData.data.widgetContent")
+		detailData = contentData.Get("articleDetail.articleDetailData.data.widgetContent").String()
 	} else {
-		g.Log().Errorf("Request 36kr news detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request 36kr news detail failed, link  %s \n", detailLink)
 	}
 
 	return

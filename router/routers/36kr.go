@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
 	_36kr "rsshub/app/api/rssapi/36kr"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func Kr36Router(group *ghttp.RouterGroup) {

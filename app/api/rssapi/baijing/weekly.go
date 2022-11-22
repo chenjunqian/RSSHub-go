@@ -1,20 +1,21 @@
 package baijing
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetWeekly(req *ghttp.Request) {
 
-	if value, err := g.Redis().DoVar("GET", "BAIJING_WEEKLY"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "BAIJING_WEEKLY"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -26,7 +27,7 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 		Tag:         []string{"新闻"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		articleDocList := docs.FindAll("div", "id", "menuKuaixun")
 		rssItems := make([]dao.RSSItem, 0)
@@ -46,7 +47,7 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "BAIJING_WEEKLY", rssStr)
-	g.Redis().DoVar("EXPIRE", "BAIJING_WEEKLY", 60*60*8)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "BAIJING_WEEKLY", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "BAIJING_WEEKLY", 60*60*8)
+	req.Response.WriteXmlExit(rssStr)
 }

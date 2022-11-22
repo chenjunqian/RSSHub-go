@@ -1,13 +1,14 @@
 package sspai
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -25,7 +26,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonParser(respString string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respJson := gjson.New(respString)
 	articleList := respJson.GetJsons("data")
 	for _, article := range articleList {
@@ -36,12 +37,12 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("title")
-		imageLink = "https://cdn.sspai.com/" + article.GetString("banner")
-		author = article.GetString("author.nickname")
-		time = article.GetString("created_time")
-		link = "https://sspai.com/post/" + article.GetString("id")
-		content = parseCommonDetail(link)
+		title = article.Get("title").String()
+		imageLink = "https://cdn.sspai.com/" + article.Get("banner").String()
+		author = article.Get("author.nickname").String()
+		time = article.Get("created_time").String()
+		link = "https://sspai.com/post/" + article.Get("id").String()
+		content = parseCommonDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:     title,
@@ -56,11 +57,11 @@ func commonParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCommonDetail(detailLink string) (detailData string) {
+func parseCommonDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -76,7 +77,7 @@ func parseCommonDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request sspai index article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request sspai index article detail failed, link  %s \n", detailLink)
 	}
 
 	return

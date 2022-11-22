@@ -1,26 +1,28 @@
 package cyzone
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) GetNews(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "CYZONE_INDEX_" + linkType
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx, "GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	var apiUrl string
@@ -36,7 +38,7 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		Description: "创业,资本,股权融资,风险投资,VC,IPO,PE,私募,私募股权,上市,融资,天使投资,创业故事,创业项目,投资机构,互联网创业,创业平台",
 		ImageUrl:    "https://www.cyzone.cn/favicon.ico",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx, apiUrl); resp != "" {
 		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("div", "class", "article-item")
 		rssItems := make([]dao.RSSItem, 0)
@@ -54,7 +56,7 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 			if strings.HasPrefix(link, "//") {
 				link = "https:" + link
 			}
-			content = parseNewsDetail(link)
+			content = parseNewsDetail(ctx, link)
 			if timeDoc := dataDocs.Find("span", "class", "time"); timeDoc.Error == nil {
 				time = timeDoc.Attrs()["data-time"]
 			}
@@ -71,16 +73,16 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*3)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx, "SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx, "EXPIRE", cacheKey, 60*60*3)
+	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseNewsDetail(detailLink string) (detailData string) {
+func parseNewsDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -92,7 +94,7 @@ func parseNewsDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request cyzone news article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request cyzone news article detail failed, link  %s \n", detailLink)
 	}
 
 	return

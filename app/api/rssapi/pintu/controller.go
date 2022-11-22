@@ -1,6 +1,7 @@
 package pintu
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
@@ -8,8 +9,8 @@ import (
 	"strconv"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -28,7 +29,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func indexParser(respString string) (items []dao.RSSItem) {
+func indexParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respJson := gjson.New(respString)
 	arrayList := respJson.Array()
 	for index := 0; index < len(arrayList); index++ {
@@ -40,12 +41,12 @@ func indexParser(respString string) (items []dao.RSSItem) {
 		var time string
 
 		articleJson := respJson.GetJson(strconv.Itoa(index))
-		title = articleJson.GetString("title")
-		imageLink = articleJson.GetString("imgUrl")
-		time = articleJson.GetString("createTime")
-		content = articleJson.GetString("abstracts")
-		id := articleJson.GetString("id")
-		op := articleJson.GetString("op")
+		title = articleJson.Get("title").String()
+		imageLink = articleJson.Get("imgUrl").String()
+		time = articleJson.Get("createTime").String()
+		content = articleJson.Get("abstracts").String()
+		id := articleJson.Get("id")
+		op := articleJson.Get("op")
 		link = fmt.Sprintf("https://www.pintu360.com/a%s.html?%s", id, op)
 
 		rssItem := dao.RSSItem{
@@ -61,11 +62,11 @@ func indexParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseIndexDetail(detailLink string) (detailData string) {
+func parseIndexDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -78,7 +79,7 @@ func parseIndexDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request pintu index article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request pintu index article detail failed, link  %s \n", detailLink)
 	}
 
 	return

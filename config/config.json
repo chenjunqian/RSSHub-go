@@ -1,0 +1,18 @@
+{
+  "port": "8083",
+  "log": {
+    "logPath": "./logs",
+    "level": "LEVEL_ERRO"
+  },
+  "redis": {
+    "default": {
+      "url": "127.0.0.1:6379",
+      "db": 0,
+      "password": "123456"
+    }
+  },
+  "cookies": {
+    "zhihu": "",
+    "bilibili": ""
+  }
+}

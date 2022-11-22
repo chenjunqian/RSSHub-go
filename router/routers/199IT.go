@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
 	_199IT "rsshub/app/api/rssapi/199IT"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func IT199Router(group *ghttp.RouterGroup) {

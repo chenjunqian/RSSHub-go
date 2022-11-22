@@ -1,13 +1,14 @@
 package niaogenote
 
 import (
+	"context"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -25,7 +26,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func catParser(respString string) (items []dao.RSSItem) {
+func catParser(ctx context.Context,respString string) (items []dao.RSSItem) {
 	respDoc := soup.HTMLParse(respString)
 	articleList := respDoc.FindAll("div", "class", "articleBox")
 	baseUrl := "https://www.niaogebiji.com"
@@ -49,7 +50,7 @@ func catParser(respString string) (items []dao.RSSItem) {
 			link = baseUrl + imageATag.Attrs()["href"]
 		}
 
-		content = parseCatDetail(link)
+		content = parseCatDetail(ctx, link)
 
 		if timeTag := article.Find("span", "class", "writeTime"); timeTag.Error == nil {
 			time = timeTag.Text()
@@ -72,11 +73,11 @@ func catParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCatDetail(detailLink string) (detailData string) {
+func parseCatDetail(ctx context.Context,detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 
 		var (
 			docs        soup.Root
@@ -89,7 +90,7 @@ func parseCatDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request niaogebiji article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request niaogebiji article detail failed, link  %s \n", detailLink)
 	}
 
 	return

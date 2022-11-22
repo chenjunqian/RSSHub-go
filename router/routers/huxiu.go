@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/api/rssapi/huxiu"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func HuXiuRouter(group *ghttp.RouterGroup) {

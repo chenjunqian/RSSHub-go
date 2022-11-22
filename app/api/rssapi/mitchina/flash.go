@@ -1,18 +1,22 @@
 package mitchina
 
 import (
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetFlash(req *ghttp.Request) {
-	if value, err := g.Redis().DoVar("GET", "MIT_CHINA_FLASH"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "MIT_CHINA_FLASH"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -24,20 +28,20 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Tag:         []string{"科技"},
 		ImageUrl:    "https://www.mittrchina.com/logo.ico",
 	}
-	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {
-		defer func(resp *ghttp.ClientResponse) {
+	if resp, err := component.GetHttpClient().SetHeaderMap(getHeaders()).Post(ctx, apiUrl, map[string]string{"page": "1", "size": "10"}); err == nil {
+		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
 		respJson := gjson.New(resp.ReadAllString())
 		itemJsonList := respJson.GetJsons("data.items")
 		rssItems := make([]dao.RSSItem, 0)
 		for _, itemJson := range itemJsonList {
-			time := itemJson.GetString("push_time")
-			title := itemJson.GetString("name")
-			content := itemJson.GetString("content")
+			time := itemJson.Get("push_time").String()
+			title := itemJson.Get("name").String()
+			content := itemJson.Get("content").String()
 			rssItem := dao.RSSItem{
 				Title:   title,
 				Link:    "http://www.mittrchina.com/newsflash",
@@ -53,7 +57,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "MIT_CHINA_FLASH", rssStr)
-	g.Redis().DoVar("EXPIRE", "MIT_CHINA_FLASH", 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "MIT_CHINA_FLASH", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "MIT_CHINA_FLASH", 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

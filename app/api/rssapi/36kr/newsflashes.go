@@ -1,23 +1,23 @@
 package _36kr
 
 import (
+	"context"
 	"regexp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strings"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/encoding/gurl"
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/encoding/gurl"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
-
-	if value, err := g.Redis().DoVar("GET", "36KR_NEWS_FLASHES"); err == nil {
+	var ctx context.Context = context.Background()
+	if value, err := component.GetRedis().Do(ctx,"GET", "36KR_NEWS_FLASHES"); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 
@@ -27,7 +27,7 @@ func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
 		Link:     apiUrl,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 
 		reg := regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
 		contentStr := reg.FindStringSubmatch(resp)
@@ -38,13 +38,13 @@ func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
 			rssItems := make([]dao.RSSItem, 0)
 			for _, itemJson := range itemListJson {
 				rssItem := dao.RSSItem{
-					Title:   itemJson.GetString("templateMaterial.widgetTitle"),
-					Created: itemJson.GetString("templateMaterial.publishTime"),
-					Content: itemJson.GetString("templateMaterial.widgetContent"),
+					Title:   itemJson.Get("templateMaterial.widgetTitle").String(),
+					Created: itemJson.Get("templateMaterial.publishTime").String(),
+					Content: itemJson.Get("templateMaterial.widgetContent").String(),
 				}
-				sourceUrlRoute := itemJson.GetString("templateMaterial.sourceUrlRoute")
+				sourceUrlRoute := itemJson.Get("templateMaterial.sourceUrlRoute").String()
 				if sourceUrlRoute == "" {
-					sourceUrlRoute = "https://36kr.com/newsflashes/" + itemJson.GetString("itemId")
+					sourceUrlRoute = "https://36kr.com/newsflashes/" + itemJson.Get("itemId").String()
 				} else {
 					sourceUrlArr := strings.Split(sourceUrlRoute, "url=")
 					if len(sourceUrlArr) > 0 {
@@ -58,7 +58,7 @@ func (ctl *controller) Get36krNewsFlashes(req *ghttp.Request) {
 		}
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", "36KR_NEWS_FLASHES", rssStr)
-	g.Redis().DoVar("EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", "36KR_NEWS_FLASHES", rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
+	req.Response.WriteXmlExit(rssStr)
 }

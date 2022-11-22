@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/api/rssapi/niaogenote"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func NiaogeNoteRouter(group *ghttp.RouterGroup) {

@@ -1,12 +1,13 @@
 package ccg
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type controller struct {
@@ -27,7 +28,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func indexParser(respString string) (items []dao.RSSItem) {
+func indexParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respSoup := soup.HTMLParse(respString)
 	var articleList []soup.Root
 	if articleUl := respSoup.Find("ul", "class", "huodong-list"); articleUl.Error != nil {
@@ -59,7 +60,7 @@ func indexParser(respString string) (items []dao.RSSItem) {
 			link = linkHtml.Attrs()["href"]
 		}
 
-		content = parseIndexDetail(link)
+		content = parseIndexDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:     title,
@@ -74,11 +75,11 @@ func indexParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseIndexDetail(detailLink string) (detailData string) {
+func parseIndexDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailData); resp != "" {
+	if resp = component.GetContent(ctx, detailData); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -90,7 +91,7 @@ func parseIndexDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request 199IT article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request 199IT article detail failed, link  %s \n", detailLink)
 	}
 
 	return

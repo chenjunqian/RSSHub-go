@@ -1,10 +1,11 @@
 package infoq
 
 import (
+	"context"
 	"rsshub/app/component"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -17,11 +18,11 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func parseRecommendDetail(detailLink string) (detailData string) {
+func parseRecommendDetail(ctx context.Context,detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-    if resp = component.GetContent(detailLink); resp != "" {
+    if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -34,7 +35,7 @@ func parseRecommendDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request infoQ article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request infoQ article detail failed, link  %s \n", detailLink)
 	}
 
 	return

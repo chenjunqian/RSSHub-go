@@ -1,15 +1,16 @@
 package webapi
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	response "rsshub/middleware"
 	"strings"
+
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
 
-	routerArray := g.Server().GetRouterArray()
+	routerArray := g.Server().GetRoutes()
 	routerDataList := make([]RouterInfoData, 0)
 	if len(routerArray) > 0 {
 		for _, router := range routerArray {

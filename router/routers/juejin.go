@@ -3,7 +3,7 @@ package routers
 import (
 	"rsshub/app/api/rssapi/juejin"
 
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func JuejinRouter(group *ghttp.RouterGroup) {

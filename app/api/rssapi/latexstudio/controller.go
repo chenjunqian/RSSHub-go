@@ -1,6 +1,7 @@
 package latexstudio
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
@@ -14,7 +15,7 @@ type controller struct {
 
 var Controller = &controller{}
 
-func articleParser(respString string) (items []dao.RSSItem) {
+func articleParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respDoc := soup.HTMLParse(respString)
 	articleListWarpper := respDoc.Find("div", "class", "article-list")
 	articleList := articleListWarpper.FindAll("div", "class", "media")
@@ -34,7 +35,7 @@ func articleParser(respString string) (items []dao.RSSItem) {
 		if titleDoc := bodyDoc.Find("h3"); titleDoc.Pointer != nil {
 			title = titleDoc.Find("a").Text()
 			link = titleDoc.Find("a").Attrs()["href"]
-			content = articleDetailParser(link)
+			content = articleDetailParser(ctx, link)
 		}
 
 		if authorDoc := bodyDoc.Find("div", "class", "article-tag"); authorDoc.Pointer != nil {
@@ -58,8 +59,8 @@ func articleParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func articleDetailParser(link string) (detailData string) {
-	respString := component.GetContent(link)
+func articleDetailParser(ctx context.Context, link string) (detailData string) {
+	respString := component.GetContent(ctx,link)
 	respDoc := soup.HTMLParse(respString)
 	articleDoc := respDoc.Find("div", "class", "article-text")
 	detailData = articleDoc.HTML()

@@ -1,24 +1,26 @@
 package bilibili
 
 import (
+	"context"
 	"fmt"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	"strconv"
 
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
-	roomId := req.GetString("roomId")
+	var ctx context.Context = context.Background()
+	roomId := req.Get("roomId").String()
 	roomIdInt, _ := strconv.ParseInt(roomId, 10, 64)
 	if roomIdInt < 10000 {
-		roomId = getLiveIDFromShortID(roomId)
+		roomId = getLiveIDFromShortID(ctx,roomId)
 	}
 
-	name := getUsernameFromLiveID(roomId)
+	name := getUsernameFromLiveID(ctx,roomId)
 	rssData := dao.RSSFeed{}
 	rssData.Title = fmt.Sprintf("%s 直播间开播状态", name)
 	rssData.Link = "https://live.bilibili.com/" + roomId
@@ -28,20 +30,20 @@ func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/Room/get_info?room_id=%s&from=room", roomId)
 	header := getHeaders()
 	header["Referer"] = "https://live.bilibili.com/" + roomId
-	if resp := component.GetContent(apiUrl); resp != "" {
+	if resp := component.GetContent(ctx,apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJson := respJson.GetJson("data")
 
 		rssItem := dao.RSSItem{}
-		if dataJson.GetInt64("live_status") == 1 {
-			rssItem.Title = fmt.Sprintf("%s %s", dataJson.GetString("title"), dataJson.GetString("live_time"))
-			rssItem.Description = fmt.Sprintf("%s<br>%s", dataJson.GetString("title"), dataJson.GetString("description"))
-			rssItem.Created = dataJson.GetString("live_time")
+		if dataJson.Get("live_status").Int64() == 1 {
+			rssItem.Title = fmt.Sprintf("%s %s", dataJson.Get("title"), dataJson.Get("live_time"))
+			rssItem.Description = fmt.Sprintf("%s<br>%s", dataJson.Get("title"), dataJson.Get("description"))
+			rssItem.Created = dataJson.Get("live_time").String()
 			rssItem.Link = "https://live.bilibili.com/" + roomId
 			rssData.Items = []dao.RSSItem{rssItem}
 		}
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	_ = req.Response.WriteXmlExit(rssStr)
+	req.Response.WriteXmlExit(rssStr)
 }

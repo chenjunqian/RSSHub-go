@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/api/rssapi/dx2025"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func DX2025Router(group *ghttp.RouterGroup) {

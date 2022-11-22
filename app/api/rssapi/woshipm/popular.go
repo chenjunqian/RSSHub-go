@@ -1,20 +1,21 @@
 package woshipm
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetPopular(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 
 	cacheKey := "WOSHIPM_POPULAR"
-	if value, err := g.Redis().DoVar("GET", cacheKey); err == nil {
+	if value, err := component.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
 		if value.String() != "" {
-			_ = req.Response.WriteXmlExit(value.String())
+			req.Response.WriteXmlExit(value.String())
 		}
 	}
 	apiUrl := "http://www.woshipm.com/__api/v1/browser/popular"
@@ -26,14 +27,14 @@ func (ctl *Controller) GetPopular(req *ghttp.Request) {
 		ImageUrl:    "https://image.woshipm.com/favicon.ico",
 	}
 
-	if resp := component.GetContent(apiUrl); resp != ""{
-		rssItems := commonParser(resp)
+	if resp := component.GetContent(ctx,apiUrl); resp != ""{
+		rssItems := commonParser(ctx, resp)
 		rssData.Items = rssItems
 
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	g.Redis().DoVar("SET", cacheKey, rssStr)
-	g.Redis().DoVar("EXPIRE", cacheKey, 60*60*4)
-	_ = req.Response.WriteXmlExit(rssStr)
+	component.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
+	component.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*4)
+	req.Response.WriteXmlExit(rssStr)
 }

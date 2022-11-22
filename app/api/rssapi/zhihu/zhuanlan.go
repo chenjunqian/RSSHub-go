@@ -1,26 +1,29 @@
 package zhihu
 
 import (
+	"context"
 	"fmt"
-	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/net/ghttp"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
+
+	"github.com/anaskhan96/soup"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
+	var ctx context.Context = context.Background()
 	zhuanlanId := req.Get("id")
 	zhuanlanUrl := fmt.Sprintf("https://www.zhihu.com/api/v4/columns/%s/items", zhuanlanId)
 	headers := getHeaders()
 	headers["Referer"] = fmt.Sprintf("https://zhuanlan.zhihu.com/%s", zhuanlanId)
-	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(zhuanlanUrl); err == nil {
+	if resp, err := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, zhuanlanUrl); err == nil {
 		jsonResp := gjson.New(resp.ReadAllString())
-		respDataList := jsonResp.GetArray("data")
+		respDataList := jsonResp.Get("data").Strings()
 
 		infoUrl := fmt.Sprintf("https://zhuanlan.zhihu.com/%s", zhuanlanId)
-		infoResp, _ := component.GetHttpClient().SetHeaderMap(headers).Get(infoUrl)
+		infoResp, _ := component.GetHttpClient().SetHeaderMap(headers).Get(ctx, infoUrl)
 		doc := soup.HTMLParse(infoResp.ReadAllString())
 
 		feedTitle := doc.Find("div", "class", "css-zyehvu").Text()
@@ -32,8 +35,8 @@ func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
 
 		items := make([]dao.RSSItem, 0)
 		for index := range respDataList {
-			content := jsonResp.GetString(fmt.Sprintf("data.%d.content", index))
-			contentType := jsonResp.GetString(fmt.Sprintf("data.%d.type", index))
+			content := jsonResp.Get(fmt.Sprintf("data.%d.content", index)).String()
+			contentType := jsonResp.Get(fmt.Sprintf("data.%d.type", index)).String()
 
 			var itemTitle string
 			var itemLink string
@@ -41,17 +44,17 @@ func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
 			var itemCreated string
 			switch contentType {
 			case "answer":
-				itemTitle = jsonResp.GetString(fmt.Sprintf("data.%d.question.title", index))
-				itemAuthor = jsonResp.GetString(fmt.Sprintf("data.%d.question.author.name", index))
-				questionId := jsonResp.GetString(fmt.Sprintf("data.%d.question.id", index))
-				answerId := jsonResp.GetString(fmt.Sprintf("data.%d.id", index))
+				itemTitle = jsonResp.Get(fmt.Sprintf("data.%d.question.title", index)).String()
+				itemAuthor = jsonResp.Get(fmt.Sprintf("data.%d.question.author.name", index)).String()
+				questionId := jsonResp.Get(fmt.Sprintf("data.%d.question.id", index))
+				answerId := jsonResp.Get(fmt.Sprintf("data.%d.id", index))
 				itemLink = fmt.Sprintf("https://www.zhihu.com/question/%s/answer/%s", questionId, answerId)
-				itemCreated = jsonResp.GetString(fmt.Sprintf("data.%d.created", index))
+				itemCreated = jsonResp.Get(fmt.Sprintf("data.%d.created", index)).String()
 			case "article":
-				itemTitle = jsonResp.GetString(fmt.Sprintf("data.%d.title", index))
-				itemAuthor = jsonResp.GetString(fmt.Sprintf("data.%d.author.name", index))
-				itemLink = jsonResp.GetString(fmt.Sprintf("data.%d.link", index))
-				itemCreated = jsonResp.GetString(fmt.Sprintf("data.%d.created", index))
+				itemTitle = jsonResp.Get(fmt.Sprintf("data.%d.title", index)).String()
+				itemAuthor = jsonResp.Get(fmt.Sprintf("data.%d.author.name", index)).String()
+				itemLink = jsonResp.Get(fmt.Sprintf("data.%d.link", index)).String()
+				itemCreated = jsonResp.Get(fmt.Sprintf("data.%d.created", index)).String()
 			}
 
 			rssItem := dao.RSSItem{
@@ -66,6 +69,6 @@ func (ctl *Controller) GetZhuanlan(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		_ = req.Response.WriteXmlExit(rssStr)
+		req.Response.WriteXmlExit(rssStr)
 	}
 }

@@ -1,13 +1,14 @@
 package woshipm
 
 import (
+	"context"
 	"rsshub/app/component"
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 
 	"github.com/anaskhan96/soup"
-	"github.com/gogf/gf/encoding/gjson"
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
 )
 
 type Controller struct {
@@ -25,7 +26,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonParser(respString string) (items []dao.RSSItem) {
+func commonParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respJson := gjson.New(respString)
 	arrayList := respJson.GetJsons("payload")
 	for _, article := range arrayList {
@@ -36,12 +37,12 @@ func commonParser(respString string) (items []dao.RSSItem) {
 		var content string
 		var time string
 
-		title = article.GetString("title")
-		imageLink = article.GetString("image")
-		link = article.GetString("permalink")
-		time = article.GetString("date")
-		author = article.GetString("author.name")
-		content = parseCommonDetail(link)
+		title = article.Get("title").String()
+		imageLink = article.Get("image").String()
+		link = article.Get("permalink").String()
+		time = article.Get("date").String()
+		author = article.Get("author.name").String()
+		content = parseCommonDetail(ctx, link)
 
 		rssItem := dao.RSSItem{
 			Title:     title,
@@ -56,11 +57,11 @@ func commonParser(respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCommonDetail(detailLink string) (detailData string) {
+func parseCommonDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = component.GetContent(detailLink); resp != "" {
+	if resp = component.GetContent(ctx,detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -75,7 +76,7 @@ func parseCommonDetail(detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf("Request woshipm index article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx,"Request woshipm index article detail failed, link  %s \n", detailLink)
 	}
 
 	return
