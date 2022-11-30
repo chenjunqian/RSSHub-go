@@ -9,7 +9,7 @@ kill -9 `cat pidfile.txt`
 
 rm pidfile.txt
 
-nohup ./rsshub & echo $! > pidfile.txt
+nohup ./rsshub -port 8083 & echo $! > pidfile.txt
 
 echo "end"
 
