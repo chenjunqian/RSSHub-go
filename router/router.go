@@ -21,7 +21,7 @@ func init() {
 	if env == "dev" {
 		port = config.GetConfig().Get("port").Int()
 	} else {
-    portStr := flag.String("port", "8081", "listen port")
+    portStr := flag.String("port", "8083", "listen port")
 		flag.Parse()
     port = gconv.Int(*portStr)
 	}
