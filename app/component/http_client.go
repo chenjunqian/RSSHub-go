@@ -21,8 +21,14 @@ func GetContent(ctx context.Context, link string) (resp string) {
 		client *gclient.Client
 	)
 	client = GetHttpClient()
-	resp = client.SetHeaderMap(getHeaders()).GetContent(ctx, link)
+	r, err := client.SetHeaderMap(getHeaders()).Get(ctx, link)
+	defer r.Close()
+	if err != nil {
+		logger.Error(ctx, err)
+		return
+	}
 
+	resp = r.ReadAllString()
 	return
 }
 
