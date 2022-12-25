@@ -10,23 +10,39 @@ import (
 //go:embed *
 var ConfigFS embed.FS
 
+var ConfigJson *gjson.Json
+
 func GetConfig() *gjson.Json {
 	var (
-		env       string
-		configStr []byte
-		err       error
+		env         string
+		embedConfig string
+		configStr   []byte
+		err         error
 	)
+	if !ConfigJson.IsNil() {
+		return ConfigJson
+	}
 	env = os.Getenv("env")
-	if env == "dev" {
-		configStr, err = ConfigFS.ReadFile("config.dev.json")
+	embedConfig = os.Getenv("embedConfig")
+	if embedConfig == "true" {
+		if env == "dev" {
+			configStr, err = ConfigFS.ReadFile("config.dev.json")
+		} else {
+			configStr, err = ConfigFS.ReadFile("config.json")
+		}
 	} else {
-		configStr, err = ConfigFS.ReadFile("config.json")
-  }
+		if env == "dev" {
+			ConfigJson, err = gjson.Load("./config/config.dev.json")
+		} else {
+			ConfigJson, err = gjson.Load("./config/config.json")
+		}
+		return ConfigJson
+	}
 
 	if err != nil {
 		panic(err)
 	}
 
-	configJson := gjson.New(configStr)
-	return configJson
+	ConfigJson = gjson.New(configStr)
+	return ConfigJson
 }
