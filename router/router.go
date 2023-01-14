@@ -26,7 +26,8 @@ func init() {
     port = gconv.Int(*portStr)
 	}
   s.SetPort(port)
-	s.Group("/api", routers.WebRouter)
+	s.Group("/", routers.WebRouter)
+	s.Group("/api", routers.APIRouter)
 	s.Group("/rss", func(group *ghttp.RouterGroup) {
 		group.Group("/zhihu", routers.ZhihubRouter)
 		group.Group("/bilibili", routers.BilibiliRouter)

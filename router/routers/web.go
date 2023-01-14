@@ -6,7 +6,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 )
 
-func WebRouter(group *ghttp.RouterGroup) {
+func APIRouter(group *ghttp.RouterGroup) {
 	group.Group("/v1", func(group *ghttp.RouterGroup) {
 		//group.Middleware(middleware.AuthToken)
 		webController := new(webapi.Controller)
@@ -15,4 +15,9 @@ func WebRouter(group *ghttp.RouterGroup) {
 			group.GET("/feed/info/list", webController.GetAllFeedChannelInfoList)
 		})
 	})
+}
+
+func WebRouter(group *ghttp.RouterGroup) {
+	webController := new(webapi.Controller)
+  group.GET("/", webController.IndexTpl)
 }

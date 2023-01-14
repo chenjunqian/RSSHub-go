@@ -4,12 +4,31 @@ import (
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	response "rsshub/middleware"
+	"rsshub/template"
 	"strings"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"golang.org/x/net/context"
 )
+
+
+func (ctl *Controller) IndexTpl(req *ghttp.Request)  {
+  var (
+    tplContent []byte
+    err error
+  )
+
+  tplContent, err = template.Templates.ReadFile("index.html")
+  if err != nil {
+    req.Response.WriteTplContent("500")
+  } else {
+    req.Response.WriteTplContent(string(tplContent), g.Map{
+
+    })
+  }
+
+}
 
 func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
 
@@ -33,10 +52,10 @@ func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
 
 func (ctl *Controller) GetAllFeedChannelInfoList(req *ghttp.Request) {
 
-  var feedChannelInfoList []dao.RSSFeed
-  var ctx context.Context = context.TODO()
+	var feedChannelInfoList []dao.RSSFeed
+	var ctx context.Context = context.TODO()
 
-  feedChannelInfoList = feed.GetAllChannelInfoList(ctx)
+	feedChannelInfoList = feed.GetAllChannelInfoList(ctx)
 
 	response.JsonExit(req, 0, "success", feedChannelInfoList)
 }
