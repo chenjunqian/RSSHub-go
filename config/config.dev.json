@@ -11,6 +11,16 @@
       "password": "123456"
     }
   },
+  "database": {
+    "debug": true,
+    "type": "mysql",
+    "mysql": {
+      "dbName": "rsshubdb",
+      "user": "rsshub",
+      "password": "qazxsw",
+      "url": "127.0.0.1"
+    }
+  },
   "cookies": {
     "zhihu": "",
     "bilibili": ""
