@@ -7,8 +7,10 @@ import (
 )
 
 func init() {
+  var ctx context.Context = context.TODO()
 	component.InitLogger()
 	component.InitRedisClient()
+  component.InitDatabase(ctx)
 	setCookiesToRedis()
 }
 

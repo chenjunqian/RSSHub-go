@@ -12,6 +12,7 @@ func WebRouter(group *ghttp.RouterGroup) {
 		webController := new(webapi.Controller)
 		group.Group("", func(group *ghttp.RouterGroup) {
 			group.GET("/routers", webController.GetAllRssResource)
+			group.GET("/feed/info/list", webController.GetAllFeedChannelInfoList)
 		})
 	})
 }

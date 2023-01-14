@@ -1,11 +1,14 @@
 package webapi
 
 import (
+	"rsshub/app/dao"
+	"rsshub/app/service/feed"
 	response "rsshub/middleware"
 	"strings"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"golang.org/x/net/context"
 )
 
 func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
@@ -26,4 +29,14 @@ func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
 	}
 
 	response.JsonExit(req, 0, "success", routerDataList)
+}
+
+func (ctl *Controller) GetAllFeedChannelInfoList(req *ghttp.Request) {
+
+  var feedChannelInfoList []dao.RSSFeed
+  var ctx context.Context = context.TODO()
+
+  feedChannelInfoList = feed.GetAllChannelInfoList(ctx)
+
+	response.JsonExit(req, 0, "success", feedChannelInfoList)
 }

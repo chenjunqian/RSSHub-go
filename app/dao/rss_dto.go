@@ -3,6 +3,7 @@ package dao
 type RSSFeed struct {
 	Title       string
 	Link        string
+	RSSLink     string
 	Description string
 	Author      string
 	Created     string
