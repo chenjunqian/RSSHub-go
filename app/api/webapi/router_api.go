@@ -12,16 +12,11 @@ import (
 )
 
 
-func (ctl *Controller) IndexTpl(req *ghttp.Request)  {
-  var (
-    err error
-  )
-
-  if err != nil {
-    req.Response.WriteTplContent("500")
-  } else {
-    req.Response.WriteTpl("index.html",g.Map{})
-  }
+func (ctl *Controller) IndexTpl(req *ghttp.Request)  {  
+    
+    req.Response.WriteTpl("home.html",g.Map{
+      "name": "RSS Go",
+    })
 
 }
 
