@@ -11,6 +11,7 @@ func main() {
   s := g.Server()
   s.SetIndexFolder(true)
   s.SetServerRoot("./template")
+  s.AddStaticPath("/static","./template/static")
   g.View().SetPath("./template")
   s.Run()
 }
