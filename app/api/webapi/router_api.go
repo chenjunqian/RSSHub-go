@@ -4,7 +4,6 @@ import (
 	"rsshub/app/dao"
 	"rsshub/app/service/feed"
 	response "rsshub/middleware"
-	"rsshub/template"
 	"strings"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -15,17 +14,13 @@ import (
 
 func (ctl *Controller) IndexTpl(req *ghttp.Request)  {
   var (
-    tplContent []byte
     err error
   )
 
-  tplContent, err = template.Templates.ReadFile("index.html")
   if err != nil {
     req.Response.WriteTplContent("500")
   } else {
-    req.Response.WriteTplContent(string(tplContent), g.Map{
-
-    })
+    req.Response.WriteTpl("index.html",g.Map{})
   }
 
 }

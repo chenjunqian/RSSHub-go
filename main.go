@@ -8,5 +8,9 @@ import (
 )
 
 func main() {
-	g.Server().Run()
+  s := g.Server()
+  s.SetIndexFolder(true)
+  s.SetServerRoot("./template")
+  g.View().SetPath("./template")
+  s.Run()
 }
