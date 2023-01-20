@@ -5,9 +5,9 @@ import (
 )
 
 type JsonResponse struct {
-  Code    int         `json:"code"`    // ((0: Success, 1: Error, >1: Error Code))
-	Message string      `json:"message"` 
-	Data    interface{} `json:"data"`    
+	Code    int         `json:"code"` // ((0: Success, 1: Error, >1: Error Code))
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
@@ -15,7 +15,7 @@ func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
 	if len(data) > 0 {
 		responseData = data[0]
 	}
-    r.Response.WriteJsonExit(JsonResponse{
+	r.Response.WriteJsonExit(JsonResponse{
 		Code:    code,
 		Message: message,
 		Data:    responseData,
