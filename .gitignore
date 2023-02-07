@@ -3,3 +3,4 @@ __debug_bin
 go.sum
 .idea/
 rsshub
+logs/

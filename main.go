@@ -1,17 +1,13 @@
 package main
 
 import (
-	_ "rsshub/boot"
-	_ "rsshub/router"
+	_ "rsshub/internal/packed"
 
-	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
+
+	"rsshub/internal/cmd"
 )
 
 func main() {
-  s := g.Server()
-  s.SetIndexFolder(true)
-  s.SetServerRoot("./template")
-  s.AddStaticPath("/static","./template/static")
-  g.View().SetPath("./template")
-  s.Run()
+	cmd.Main.Run(gctx.New())
 }
