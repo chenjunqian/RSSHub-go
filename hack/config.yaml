@@ -1,4 +1,12 @@
-
 # CLI tool, only in development environment.
 # https://goframe.org/pages/viewpage.action?pageId=3673173
 gfcli:
+  build:
+    name: "rsshub"
+    arch: "all"
+    system: "all"
+    mod: "none"
+    packSrc: "resource,manifest"
+    version: "v1.0.0"
+    output: "./bin"
+    extra: ""
