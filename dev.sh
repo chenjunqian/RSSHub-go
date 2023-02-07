@@ -1,3 +1,1 @@
-export env="dev"
-
-go run main.go
+gf run main.go
