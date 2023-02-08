@@ -1,5 +1,6 @@
 server:
   address: ":8083"
+  serverRoot: "resource/public"
 
 logger:
   path: "./logs/"

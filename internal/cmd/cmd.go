@@ -16,6 +16,7 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
+      s.SetIndexFolder(true)
 			s.Group("/", routers.WebRouter)
 			s.Group("/api", routers.APIRouter)
 			s.Group("/rss", func(group *ghttp.RouterGroup) {
