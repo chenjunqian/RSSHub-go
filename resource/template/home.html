@@ -10,24 +10,39 @@
 
 <body style="margin: 0; display:inherit;">
   <div class="header">
-    <div class="header-logo-wrap">
-      <img class="header-logo" src="./resource/image/logo.png" alt="logo">
-      <div class="header-logo-title">
-        RSS Go
+    <div class="center-header">
+      <div class="header-logo-wrap">
+        <img class="header-logo" src="./resource/image/logo.png" alt="logo">
+        <div class="header-logo-title">
+          RSS Go
+        </div>
+      </div>
+      <div class="header-component-wrap">
+        <a class="header-component-github" href="https://github.com/GuoShaoOrg/RSSHub-go" target="_blank">
+          <img class="header-component-github-logo" src="./resource/image/github-log.png" alt="">
+        </a>
       </div>
     </div>
-    <div class="header-component-wrap">
-      <a class="header-component-github" href="https://github.com/GuoShaoOrg/RSSHub-go" target="_blank">
-        <img class="header-component-github-logo" src="./resource/image/github-log.png" alt="">
-      </a>
+  </div>
+  <div class="content-wraper">
+    <div class="content-div">
+      This is {{.name}} Home Page!
     </div>
   </div>
-  This is {{.name}} Home Page!
 </body>
 
 <style>
   .header {
     width: 100%;
+    height: 60px;
+    background-color: transparent;
+    justify-content: center;
+    display: flex;
+  }
+
+  .center-header {
+    width: 100%;
+    max-width: 800px;
     height: 60px;
     background-color: transparent;
     justify-content: center;
@@ -41,17 +56,16 @@
   }
 
   .header-logo {
-    margin-left: 30px;
-    height: 40px;
-    width: 40px;
-    margin-top: 10px;
+    height: 30px;
+    width: 30px;
+    margin-top: 15px;
   }
 
   .header-logo-title {
     color: rgb(249 115 22);
-    font-size: 40px;
+    font-size: 20px;
     margin-left: 10px;
-    margin-top: 5px;
+    margin-top: 18px;
   }
 
   .header-component-wrap {
@@ -63,10 +77,21 @@
   .header-component-github {}
 
   .header-component-github-logo {
-    margin-right: 30px;
-    height: 40px;
-    width: 40px;
-    margin-top: 10px;
+    height: 30px;
+    width: 30px;
+    margin-top: 15px;
+  }
+
+  .content-wraper {
+    width: 100%;
+    background-color: transparent;
+    justify-content: center;
+    display: flex;
+  }
+
+  .content-div {
+    width: 100%;
+    max-width: 800px;
   }
 </style>
 
