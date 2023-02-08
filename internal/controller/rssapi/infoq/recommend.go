@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/anaskhan96/soup"
@@ -12,7 +13,7 @@ import (
 
 func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "INFOQ_RECOMMEND"); err == nil {
+	if value, err := cache.GetCache(ctx, "INFOQ_RECOMMEND"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -49,7 +50,6 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "INFOQ_RECOMMEND", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "INFOQ_RECOMMEND", 60*60*4)
+	cache.SetCache(ctx,"INFOQ_RECOMMEND", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

@@ -6,6 +6,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strings"
 
@@ -16,7 +17,7 @@ import (
 func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 	userId := req.Get("id").String()
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "36KR_USER_"+userId); err == nil {
+	if value, err := cache.GetCache(ctx, "36KR_USER_"+userId); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -60,7 +61,6 @@ func (ctl *controller) Get36krUserNews(req *ghttp.Request) {
 
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "36KR_USER_"+userId, rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "36KR_USER_"+userId, 60*60*4)
+	cache.SetCache(ctx,"36KR_USER_"+userId, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

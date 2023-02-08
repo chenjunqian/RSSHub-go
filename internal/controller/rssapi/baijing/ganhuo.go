@@ -5,6 +5,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -12,7 +13,7 @@ import (
 
 func (ctl *controller) GetGanHuo(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "BAIJING_GANHUO"); err == nil {
+	if value, err := cache.GetCache(ctx, "BAIJING_GANHUO"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -32,7 +33,6 @@ func (ctl *controller) GetGanHuo(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "BAIJING_GANHUO", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "BAIJING_GANHUO", 60*60*4)
+	cache.SetCache(ctx,"BAIJING_GANHUO", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

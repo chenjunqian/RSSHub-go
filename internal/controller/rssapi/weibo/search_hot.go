@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -12,7 +13,7 @@ import (
 
 func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "WEIBO_HOT"); err == nil {
+	if value, err := cache.GetCache(ctx, "WEIBO_HOT"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -45,7 +46,6 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "WEIBO_HOT", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "WEIBO_HOT", 60*10)
+	cache.SetCache(ctx,"WEIBO_HOT", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

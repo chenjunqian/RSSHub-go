@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -12,7 +13,7 @@ import (
 
 func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "IFAN_DAILY"); err == nil {
+	if value, err := cache.GetCache(ctx, "IFAN_DAILY"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -53,7 +54,6 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "IFAN_DAILY", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "IFAN_DAILY", 60*60*4)
+	cache.SetCache(ctx,"IFAN_DAILY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

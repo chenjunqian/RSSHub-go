@@ -5,6 +5,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/anaskhan96/soup"
@@ -14,7 +15,7 @@ import (
 func (ctl *controller) GetTop(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	cacheKey := "CHOUTI_TOP"
-	if value, err := service.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
+	if value, err := cache.GetCache(ctx, cacheKey); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -71,7 +72,6 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*3)
+	cache.SetCache(ctx,cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

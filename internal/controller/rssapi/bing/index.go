@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -13,7 +14,7 @@ import (
 
 func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "BING_DAILY_IMG"); err == nil {
+	if value, err := cache.GetCache(ctx, "BING_DAILY_IMG"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -44,7 +45,6 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "BING_DAILY_IMG", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "BING_DAILY_IMG", 60*60*6)
+	cache.SetCache(ctx,"BING_DAILY_IMG", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

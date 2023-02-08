@@ -5,6 +5,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -12,7 +13,7 @@ import (
 
 func (ctl *controller) GetDataReport(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "BAIJING_DATA_REPORT"); err == nil {
+	if value, err := cache.GetCache(ctx, "BAIJING_DATA_REPORT"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -32,7 +33,6 @@ func (ctl *controller) GetDataReport(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "BAIJING_DATA_REPORT", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "BAIJING_DATA_REPORT", 60*60*4)
+	cache.SetCache(ctx,"BAIJING_DATA_REPORT", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

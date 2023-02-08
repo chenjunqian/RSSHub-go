@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
 )
@@ -28,7 +29,7 @@ func getCookieMap(ctx context.Context) map[string]string {
 func getUsernameFromUserId(ctx context.Context, id string) string {
 	redisKey := "BILI_USERNAME_FROM_ID_" + id
 	var username string
-	if value, err := service.GetRedis().Do(ctx, "GET", redisKey); err == nil {
+	if value, err := cache.GetCache(ctx, redisKey); err == nil {
 		if value.String() != "" {
 			username = value.String()
 		}
@@ -38,8 +39,7 @@ func getUsernameFromUserId(ctx context.Context, id string) string {
 	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		username = jsonResp.Get("data.name").String()
-		service.GetRedis().Do(ctx, "SET", redisKey)
-		service.GetRedis().Do(ctx, "EXPIRE", redisKey, 60*60*8)
+		cache.GetCache(ctx, redisKey)
 	}
 
 	return username
@@ -48,7 +48,7 @@ func getUsernameFromUserId(ctx context.Context, id string) string {
 func getLiveIDFromShortID(ctx context.Context, id string) string {
 	redisKey := "BILI_LIVE_ID_FROM_SHORT_ID_" + id
 	var liveID string
-	if value, err := service.GetRedis().Do(ctx, "GET", redisKey); err == nil {
+	if value, err := cache.GetCache(ctx, redisKey); err == nil {
 		if value.String() != "" {
 			liveID = value.String()
 			return liveID
@@ -59,8 +59,7 @@ func getLiveIDFromShortID(ctx context.Context, id string) string {
 	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		liveID = respJson.Get("data.room_id").String()
-		service.GetRedis().Do(ctx, "SET", redisKey, liveID)
-		service.GetRedis().Do(ctx, "EXPIRE", redisKey, 60*60*24)
+		cache.SetCache(ctx, redisKey, liveID)
 	}
 
 	return liveID
@@ -69,7 +68,7 @@ func getLiveIDFromShortID(ctx context.Context, id string) string {
 func getUsernameFromLiveID(ctx context.Context, id string) string {
 	redisKey := "BILI_USERNAME_FROM_SHORT_ID_" + id
 	var username string
-	if value, err := service.GetRedis().Do(ctx, "GET", redisKey); err == nil {
+	if value, err := cache.GetCache(ctx, redisKey); err == nil {
 		if value.String() != "" {
 			username = value.String()
 			return username
@@ -80,8 +79,7 @@ func getUsernameFromLiveID(ctx context.Context, id string) string {
 	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		username = respJson.Get("data.info.uname").String()
-		service.GetRedis().Do(ctx, "SET", redisKey, username)
-		service.GetRedis().Do(ctx, "EXPIRE", redisKey, 60*60*24)
+		cache.SetCache(ctx, redisKey, username)
 	}
 	return username
 }

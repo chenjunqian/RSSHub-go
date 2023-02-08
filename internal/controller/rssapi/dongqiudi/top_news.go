@@ -6,6 +6,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strings"
 
@@ -21,7 +22,7 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "DONGQIUDI_TOP_NEWS_" + linkConfig.ChannelId
-	if value, err := service.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
+	if value, err := cache.GetCache(ctx, cacheKey); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -61,7 +62,6 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*6)
+	cache.SetCache(ctx,cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

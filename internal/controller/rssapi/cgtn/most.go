@@ -6,6 +6,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strings"
 
@@ -18,7 +19,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 	routeArray := strings.Split(req.Router.Uri, "/")
 	linkType := routeArray[len(routeArray)-1]
 
-	if value, err := service.GetRedis().Do(ctx,"GET", "CGTN_MOST_"+linkType); err == nil {
+	if value, err := cache.GetCache(ctx, "CGTN_MOST_"+linkType); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -62,7 +63,6 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "36KR_NEWS_FLASHES", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "36KR_NEWS_FLASHES", 60*60*1)
+	cache.SetCache(ctx,"36KR_NEWS_FLASHES", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

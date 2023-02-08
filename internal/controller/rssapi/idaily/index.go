@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strconv"
 
@@ -14,7 +15,7 @@ import (
 func (ctl *Controller) GetIndex(req *ghttp.Request) {
 
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "IDAILY_INDEX"); err == nil {
+	if value, err := cache.GetCache(ctx, "IDAILY_INDEX"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -59,7 +60,6 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "IDAILY_INDEX", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "IDAILY_INDEX", 60*60*4)
+	cache.SetCache(ctx,"IDAILY_INDEX", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

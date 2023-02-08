@@ -7,6 +7,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -18,7 +19,7 @@ import (
 func (ctl *Controller) GetDaily(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 
-	if value, err := service.GetRedis().Do(ctx,"GET", "ZHIHU_DAILY"); err == nil {
+	if value, err := cache.GetCache(ctx, "ZHIHU_DAILY"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -58,7 +59,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 			}
 			storyId := jsonResp.Get(fmt.Sprintf("stories.%d.id", index))
 			key := fmt.Sprintf("ZHIHU_DAILY_%s", storyId)
-			value, _ := service.GetRedis().Do(ctx,"GET", key)
+			value, _ := cache.GetCache(ctx, key)
 			if value.String() != "" {
 				// 如果缓存里有就使用缓存内容
 				feedItem.Description = value.String()
@@ -81,8 +82,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		service.GetRedis().Do(ctx,"SET", "ZHIHU_DAILY", rssStr)
-		service.GetRedis().Do(ctx,"EXPIRE", "ZHIHU_DAILY", 60*60*1)
+		cache.SetCache(ctx,"ZHIHU_DAILY", rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

@@ -7,6 +7,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -19,7 +20,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	sectionId := req.Get("id")
 	redisKey := fmt.Sprintf("ZHIHU_DAILY_SECTION_%s", sectionId)
-	if value, err := service.GetRedis().Do(ctx,"GET", redisKey); err == nil {
+	if value, err := cache.GetCache(ctx, redisKey); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -67,8 +68,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		service.GetRedis().Do(ctx,"SET", redisKey, rssStr)
-		service.GetRedis().Do(ctx,"EXPIRE", redisKey, 60*60*6)
+		cache.SetCache(ctx,redisKey, rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

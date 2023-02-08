@@ -5,6 +5,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -15,7 +16,7 @@ import (
 func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	redisKey := "ZHIHU_PIN_DAILY"
-	if value, err := service.GetRedis().Do(ctx, "GET", redisKey); err == nil {
+	if value, err := cache.GetCache(ctx, redisKey); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -36,8 +37,7 @@ func (ctl *Controller) GetZhihuPinDaily(req *ghttp.Request) {
 		rssData.Items = getPinRSSItems(resp.ReadAllString())
 		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		service.GetRedis().Do(ctx, "SET", redisKey, rssStr)
-		service.GetRedis().Do(ctx, "EXPIRE", redisKey, 60*60*6)
+		cache.SetCache(ctx, redisKey, rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

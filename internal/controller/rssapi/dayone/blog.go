@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strings"
 	"time"
@@ -15,7 +16,7 @@ import (
 func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 
-	if value, err := service.GetRedis().Do(ctx, "GET", "DAY_ONE_BLOG"); err == nil {
+	if value, err := cache.GetCache(ctx,"DAY_ONE_BLOG"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -57,8 +58,7 @@ func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx, "SET", "DAY_ONE_BLOG", rssStr)
-	service.GetRedis().Do(ctx, "EXPIRE", "DAY_ONE_BLOG", 60*60*4)
+	cache.SetCache(ctx, "DAY_ONE_BLOG", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }
 

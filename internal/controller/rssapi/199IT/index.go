@@ -5,6 +5,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -12,7 +13,7 @@ import (
 
 func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "199IT_INDEX"); err == nil {
+	if value, err := cache.GetCache(ctx, "199IT_INDEX"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -32,7 +33,6 @@ func (ctl *controller) Get199ITIndex(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "199IT_INDEX", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "199IT_INDEX", 60*10)
+	cache.SetCache(ctx,"199IT_INDEX", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strings"
 
@@ -14,7 +15,7 @@ import (
 func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "BISHIJIE_SHENDU"); err == nil {
+	if value, err := cache.GetCache(ctx, "BISHIJIE_SHENDU"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -58,7 +59,6 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "BISHIJIE_SHENDU", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "BISHIJIE_SHENDU", 60*60*4)
+	cache.SetCache(ctx,"BISHIJIE_SHENDU", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

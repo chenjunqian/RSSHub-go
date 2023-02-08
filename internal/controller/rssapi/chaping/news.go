@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 	"strings"
 
@@ -19,7 +20,7 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 	linkConfig := getNewsLinks()[linkType]
 
 	cacheKey := "CHAPING_NEWS_" + linkConfig.Caty
-	if value, err := service.GetRedis().Do(ctx,"GET", cacheKey); err == nil {
+	if value, err := cache.GetCache(ctx, cacheKey); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -58,7 +59,6 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", cacheKey, rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", cacheKey, 60*60*3)
+	cache.SetCache(ctx,cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

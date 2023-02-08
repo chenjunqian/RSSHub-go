@@ -5,6 +5,7 @@ import (
 
 	"rsshub/internal/dao"
 	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"rsshub/internal/service/feed"
 
 	"github.com/anaskhan96/soup"
@@ -14,7 +15,7 @@ import (
 func (ctl *controller) GetWeekly(req *ghttp.Request) {
 
 	var ctx context.Context = context.Background()
-	if value, err := service.GetRedis().Do(ctx,"GET", "BAIJING_WEEKLY"); err == nil {
+	if value, err := cache.GetCache(ctx, "BAIJING_WEEKLY"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}
@@ -48,7 +49,6 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	service.GetRedis().Do(ctx,"SET", "BAIJING_WEEKLY", rssStr)
-	service.GetRedis().Do(ctx,"EXPIRE", "BAIJING_WEEKLY", 60*60*8)
+	cache.SetCache(ctx,"BAIJING_WEEKLY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

@@ -1,4 +1,4 @@
-package service
+package cache
 
 import (
 	"github.com/gogf/gf/v2/database/gredis"
@@ -7,7 +7,7 @@ import (
 
 var redisClient *gredis.Redis
 
-func InitRedisClient() {
+func initRedisClient() {
 	redisClient = g.Redis()
 }
 
