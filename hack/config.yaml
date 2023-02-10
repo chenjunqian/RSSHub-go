@@ -3,10 +3,10 @@
 gfcli:
   build:
     name: "rsshub"
-    arch: "all"
-    system: "all"
+    arch: "amd64,arm"
+    system: "linux,darwin,windows"
+    path: "./bin"
     mod: "none"
     packSrc: "resource,manifest"
     version: "v1.0.0"
-    output: "./bin"
     extra: ""

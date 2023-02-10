@@ -1,1 +1,1 @@
-gf build
+gf build -y
