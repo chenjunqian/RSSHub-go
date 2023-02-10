@@ -35,7 +35,7 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 		Description: "懂球帝|专业权威的足球网站",
 		ImageUrl:    "https://static1.dongqiudi.com/web-new/web/images/fav.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		articleJsonList := respJson.GetJsons("articles")
 		rssItems := make([]dao.RSSItem, 0)
@@ -62,6 +62,6 @@ func (ctl *Controller) GetTopNews(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

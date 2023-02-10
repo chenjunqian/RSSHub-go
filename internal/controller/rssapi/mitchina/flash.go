@@ -58,6 +58,6 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"MIT_CHINA_FLASH", rssStr)
+	cache.SetCache(ctx, "MIT_CHINA_FLASH", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

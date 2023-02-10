@@ -11,7 +11,7 @@ func (ctl *Controller) GetRSSSource(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	apiUrl := "https://rss.cnbeta.com/"
 
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		req.Response.WriteXmlExit(resp)
 	}
 }

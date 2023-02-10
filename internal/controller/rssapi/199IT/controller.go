@@ -16,7 +16,7 @@ type controller struct {
 
 var IT1999Controller = &controller{}
 
-func parseArticle(ctx context.Context,htmlStr string) []dao.RSSItem {
+func parseArticle(ctx context.Context, htmlStr string) []dao.RSSItem {
 	doc := soup.HTMLParse(htmlStr)
 	articleList := doc.FindAll("article")
 	rssItems := make([]dao.RSSItem, 0)
@@ -49,11 +49,11 @@ func parseArticle(ctx context.Context,htmlStr string) []dao.RSSItem {
 	return rssItems
 }
 
-func parseDetail(ctx context.Context,detailLink string) (detailData string) {
+func parseDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -62,7 +62,7 @@ func parseDetail(ctx context.Context,detailLink string) (detailData string) {
 		articleElem = docs.Find("article")
 		detailData = articleElem.HTML()
 	} else {
-		g.Log().Errorf(ctx,"Request 199IT article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request 199IT article detail failed, link  %s \n", detailLink)
 	}
 
 	return

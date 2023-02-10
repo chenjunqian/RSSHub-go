@@ -64,11 +64,11 @@ func parseNews(ctx context.Context, htmlStr string) []dao.RSSItem {
 	return rssItems
 }
 
-func parseDetail(ctx context.Context,detailLink string) (detailData string) {
+func parseDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 		var (
 			reg             *regexp.Regexp
 			contentStrArray []string
@@ -77,7 +77,7 @@ func parseDetail(ctx context.Context,detailLink string) (detailData string) {
 		reg = regexp.MustCompile(`<script>window\.initialState=(.*?)<\/script>`)
 		contentStrArray = reg.FindStringSubmatch(resp)
 		if len(contentStrArray) <= 1 {
-			g.Log().Errorf(ctx,"Parse 36kr news detail failed, detail json data is no match rule, detail link is %s", detailLink)
+			g.Log().Errorf(ctx, "Parse 36kr news detail failed, detail json data is no match rule, detail link is %s", detailLink)
 			return
 		}
 		contentStr = contentStrArray[1]
@@ -85,7 +85,7 @@ func parseDetail(ctx context.Context,detailLink string) (detailData string) {
 
 		detailData = contentData.Get("articleDetail.articleDetailData.data.widgetContent").String()
 	} else {
-		g.Log().Errorf(ctx,"Request 36kr news detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request 36kr news detail failed, link  %s \n", detailLink)
 	}
 
 	return

@@ -23,8 +23,8 @@ func initDefaulCache() {
 func SetCache(ctx context.Context, key, value string) {
 
 	if redisClient != nil {
-		redisClient.Do(ctx,"SET", key, value)
-		redisClient.Do(ctx,"EXPIRE", key, 60*60*3)
+		redisClient.Do(ctx, "SET", key, value)
+		redisClient.Do(ctx, "EXPIRE", key, 60*60*3)
 	} else {
 		if defaultCache == nil {
 			initDefaulCache()

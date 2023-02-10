@@ -5,8 +5,6 @@ import (
 	"testing"
 )
 
-
-
 func TestGetContent(t *testing.T) {
 	resp := GetContent(context.TODO(), "https://www.baidu.com/")
 	if resp == "" {

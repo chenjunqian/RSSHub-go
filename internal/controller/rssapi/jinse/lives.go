@@ -27,13 +27,13 @@ func (ctl *Controller) GetLives(req *ghttp.Request) {
 		Description: "金色财经是集行业新闻、资讯、行情、数据等一站式区块链产业服务平台，我们追求及时、全面、专业、准确的资讯与数据，致力于为区块链创业者以及数字货币投资者提供最好的产品和服务。",
 		ImageUrl:    "https://www.jinse.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != ""{
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		rssItems := livesParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

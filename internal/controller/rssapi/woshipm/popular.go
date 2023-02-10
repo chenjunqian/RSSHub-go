@@ -29,13 +29,13 @@ func (ctl *Controller) GetPopular(req *ghttp.Request) {
 		ImageUrl:    "https://image.woshipm.com/favicon.ico",
 	}
 
-	if resp := service.GetContent(ctx,apiUrl); resp != ""{
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := commonParser(ctx, resp)
 		rssData.Items = rssItems
 
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

@@ -26,7 +26,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func catParser(ctx context.Context,respString string) (items []dao.RSSItem) {
+func catParser(ctx context.Context, respString string) (items []dao.RSSItem) {
 	respDoc := soup.HTMLParse(respString)
 	articleList := respDoc.FindAll("div", "class", "articleBox")
 	baseUrl := "https://www.niaogebiji.com"
@@ -73,11 +73,11 @@ func catParser(ctx context.Context,respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseCatDetail(ctx context.Context,detailLink string) (detailData string) {
+func parseCatDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 
 		var (
 			docs        soup.Root
@@ -90,7 +90,7 @@ func parseCatDetail(ctx context.Context,detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request niaogebiji article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request niaogebiji article detail failed, link  %s \n", detailLink)
 	}
 
 	return

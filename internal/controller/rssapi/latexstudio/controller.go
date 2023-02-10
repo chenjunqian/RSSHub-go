@@ -60,7 +60,7 @@ func articleParser(ctx context.Context, respString string) (items []dao.RSSItem)
 }
 
 func articleDetailParser(ctx context.Context, link string) (detailData string) {
-	respString := service.GetContent(ctx,link)
+	respString := service.GetContent(ctx, link)
 	respDoc := soup.HTMLParse(respString)
 	articleDoc := respDoc.Find("div", "class", "article-text")
 	detailData = articleDoc.HTML()

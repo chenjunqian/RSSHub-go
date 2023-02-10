@@ -29,7 +29,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Description: "币世界网-比特币等数字货币交易所导航、投资理财、快讯、深度、币圈、市场行情第一站。",
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		newsContainer := docs.Find("ul", "class", "newscontainer")
 		dataListDocs := newsContainer.FindAll("li")
@@ -66,6 +66,6 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BISHIJIE_FLASH", rssStr)
+	cache.SetCache(ctx, "BISHIJIE_FLASH", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

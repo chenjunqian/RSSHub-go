@@ -39,7 +39,7 @@ func (ctl *controller) GetLatestNews(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }
 
@@ -86,7 +86,7 @@ func parseNewsDetail(ctx context.Context, detailLink string) (detailData string)
 		}
 
 	} else {
-		g.Log().Errorf(ctx,"Request oschina news article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request oschina news article detail failed, link  %s \n", detailLink)
 	}
 
 	return

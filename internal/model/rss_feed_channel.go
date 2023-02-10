@@ -1,6 +1,5 @@
 package model
 
-
 type RssFeedChannel struct {
 	Id          string `gorm:"column:id;primaryKey"   json:"id"`
 	Title       string `gorm:"column:title"        json:"title"`

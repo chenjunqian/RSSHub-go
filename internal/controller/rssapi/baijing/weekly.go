@@ -29,7 +29,7 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 		Tag:         []string{"新闻"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		articleDocList := docs.FindAll("div", "id", "menuKuaixun")
 		rssItems := make([]dao.RSSItem, 0)
@@ -49,6 +49,6 @@ func (ctl *controller) GetWeekly(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BAIJING_WEEKLY", rssStr)
+	cache.SetCache(ctx, "BAIJING_WEEKLY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

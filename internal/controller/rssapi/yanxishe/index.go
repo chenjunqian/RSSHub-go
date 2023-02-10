@@ -27,12 +27,12 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "雷峰网成立于2011年,秉承“关注智能与未来”的宗旨,持续对全球前沿技术趋势与产品动态进行深入调研与解读,是国内具有代表性的实力型科技新媒体与信息服务平台.",
 		ImageUrl:    "https://api.yanxishe.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := parseIndex(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

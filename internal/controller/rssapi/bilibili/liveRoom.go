@@ -18,10 +18,10 @@ func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
 	roomId := req.Get("roomId").String()
 	roomIdInt, _ := strconv.ParseInt(roomId, 10, 64)
 	if roomIdInt < 10000 {
-		roomId = getLiveIDFromShortID(ctx,roomId)
+		roomId = getLiveIDFromShortID(ctx, roomId)
 	}
 
-	name := getUsernameFromLiveID(ctx,roomId)
+	name := getUsernameFromLiveID(ctx, roomId)
 	rssData := dao.RSSFeed{}
 	rssData.Title = fmt.Sprintf("%s 直播间开播状态", name)
 	rssData.Link = "https://live.bilibili.com/" + roomId
@@ -31,7 +31,7 @@ func (ctl *Controller) GetLinkRoom(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/Room/get_info?room_id=%s&from=room", roomId)
 	header := getHeaders()
 	header["Referer"] = "https://live.bilibili.com/" + roomId
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJson := respJson.GetJson("data")
 

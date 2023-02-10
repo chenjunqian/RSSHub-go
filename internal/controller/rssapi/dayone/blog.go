@@ -16,7 +16,7 @@ import (
 func (ctl *Controller) GetMostRead(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 
-	if value, err := cache.GetCache(ctx,"DAY_ONE_BLOG"); err == nil {
+	if value, err := cache.GetCache(ctx, "DAY_ONE_BLOG"); err == nil {
 		if value.String() != "" {
 			req.Response.WriteXmlExit(value.String())
 		}

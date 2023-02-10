@@ -27,7 +27,7 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	rssData.Link = "https://cn.bing.com/"
 	rssData.Tag = []string{"壁纸", "图片"}
 	rssData.ImageUrl = "https://cn.bing.com/sa/simg/favicon-2x.ico"
-	if statusResp := service.GetContent(ctx,apiUrl); statusResp != "" {
+	if statusResp := service.GetContent(ctx, apiUrl); statusResp != "" {
 		respJson := gjson.New(statusResp)
 		imageListJson := respJson.GetJsons("images")
 		rssItems := make([]dao.RSSItem, 0)
@@ -45,6 +45,6 @@ func (ctl *Controller) GetDailyImage(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BING_DAILY_IMG", rssStr)
+	cache.SetCache(ctx, "BING_DAILY_IMG", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

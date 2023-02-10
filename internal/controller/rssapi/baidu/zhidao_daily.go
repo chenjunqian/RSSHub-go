@@ -29,7 +29,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 		Tag:         []string{"知识", "百科", "问答"},
 		ImageUrl:    "https://www.baidu.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respString, _ := gcharset.Convert("UTF-8", "gbk", resp)
 		docs := soup.HTMLParse(respString)
 		itemList := docs.FindAll("li", "class", "clearfix")
@@ -63,7 +63,7 @@ func (ctl *controller) GetZhiDaoDaily(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BAIDU_ZHIDAO_DAILY", rssStr)
+	cache.SetCache(ctx, "BAIDU_ZHIDAO_DAILY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }
 
@@ -71,7 +71,7 @@ func parseDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -83,7 +83,7 @@ func parseDetail(ctx context.Context, detailLink string) (detailData string) {
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request baidu article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request baidu article detail failed, link  %s \n", detailLink)
 	}
 
 	return

@@ -11,12 +11,11 @@ import (
 	"golang.org/x/net/context"
 )
 
+func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 
-func (ctl *Controller) IndexTpl(req *ghttp.Request)  {  
-    
-    req.Response.WriteTpl("home.html",g.Map{
-      "name": "RSS Go",
-    })
+	req.Response.WriteTpl("home.html", g.Map{
+		"name": "RSS Go",
+	})
 
 }
 

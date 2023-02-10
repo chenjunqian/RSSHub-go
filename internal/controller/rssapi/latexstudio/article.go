@@ -27,12 +27,12 @@ func (ctl *controller) GetArticle(req *ghttp.Request) {
 		Description: "介绍 LaTeX 的知识和资源分享平台",
 		ImageUrl:    "https://www.latexstudio.net/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := articleParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

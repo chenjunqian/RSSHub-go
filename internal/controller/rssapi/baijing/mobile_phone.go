@@ -27,12 +27,12 @@ func (ctl *controller) GetMobilePhone(req *ghttp.Request) {
 		Tag:         []string{"手机", "移动互联网"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := commonHtmlParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BAIJING_MOBILE_PHONE", rssStr)
+	cache.SetCache(ctx, "BAIJING_MOBILE_PHONE", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

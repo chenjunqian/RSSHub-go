@@ -29,7 +29,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "后续 · 有记忆的新闻，持续追踪热点新闻",
 		ImageUrl:    "https://assets-1256259474.cos.ap-shanghai.myqcloud.com/static/img/icon-180.jpg",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		respJson := gjson.New(resp)
 		dataJsonArray := respJson.GetJsons("indexRecords.results")
@@ -61,6 +61,6 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

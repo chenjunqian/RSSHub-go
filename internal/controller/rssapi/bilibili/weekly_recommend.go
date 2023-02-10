@@ -31,14 +31,14 @@ func (ctl *Controller) GetWeeklyRecommend(req *ghttp.Request) {
 	rssData.Title = "B站每周必看"
 	rssData.Link = "https://www.bilibili.com/h5/weekly-recommend"
 	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-	if statusResp := service.GetContent(ctx,apiUrl); statusResp != "" {
+	if statusResp := service.GetContent(ctx, apiUrl); statusResp != "" {
 		statusDataJson := gjson.New(statusResp)
 		weeklyNumber := statusDataJson.Get("data.0.number").String()
 		weeklyName := statusDataJson.Get("data.0.name").String()
 
 		latestApiUrl := "https://app.bilibili.com/x/v2/show/popular/selected?type=weekly_selected&number=" + weeklyNumber
 		header["Referer"] = fmt.Sprintf("https://www.bilibili.com/h5/weekly-recommend?num=%s&navhide=1", weeklyName)
-		if latestResp := service.GetContent(ctx,latestApiUrl); latestResp != "" {
+		if latestResp := service.GetContent(ctx, latestApiUrl); latestResp != "" {
 			latestRespJson := gjson.New(latestResp)
 			dataJsonList := latestRespJson.GetJsons("data.list")
 
@@ -66,6 +66,6 @@ func (ctl *Controller) GetWeeklyRecommend(req *ghttp.Request) {
 
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BILIBILI_WEEKLY", rssStr)
+	cache.SetCache(ctx, "BILIBILI_WEEKLY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

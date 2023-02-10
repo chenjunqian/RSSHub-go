@@ -43,7 +43,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJsonList := respJson.GetJsons("data")
 		rssItems := make([]dao.RSSItem, 0)
@@ -61,7 +61,7 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 			time = dataJson.Get("createTime").String()
 			author = dataJson.Get("submitted_user.nick").String()
 			link = dataJson.Get("originalUrl").String()
-			content = parseIndexDetail(ctx,link)
+			content = parseIndexDetail(ctx, link)
 			if content == "" {
 				content = imageLink
 			}
@@ -78,15 +78,15 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }
 
-func parseIndexDetail(ctx context.Context,detailLink string) (detailData string) {
+func parseIndexDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailData); resp != "" {
+	if resp = service.GetContent(ctx, detailData); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -98,7 +98,7 @@ func parseIndexDetail(ctx context.Context,detailLink string) (detailData string)
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request chouti index article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request chouti index article detail failed, link  %s \n", detailLink)
 	}
 
 	return

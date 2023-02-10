@@ -33,7 +33,7 @@ func (ctl *Controller) GetLinkNews(req *ghttp.Request) {
 	apiUrl := fmt.Sprintf("https://api.vc.bilibili.com/news/v1/notice/list?platform=pc&product=%s&category=all&page_no=1&page_size=20", product)
 	header := getHeaders()
 	header["Referer"] = "https://link.bilibili.com/p/eden/news"
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		rssData.Title = fmt.Sprintf("bilibili %s公告", productTitle)
 		rssData.Link = fmt.Sprintf("https://link.bilibili.com/p/eden/news#/?tab=%s&tag=all&page_no=1", product)

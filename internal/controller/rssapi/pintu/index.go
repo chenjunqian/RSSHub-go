@@ -52,11 +52,11 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 				g.Log().Error(ctx, err)
 			}
 		}(resp)
-		rssItems := indexParser(ctx,resp.ReadAllString())
+		rssItems := indexParser(ctx, resp.ReadAllString())
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

@@ -16,12 +16,12 @@ import (
 func (ctl *Controller) GetUserArticle(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	userId := req.Get("id").String()
-	username := getUsernameFromUserId(ctx,userId)
+	username := getUsernameFromUserId(ctx, userId)
 
 	apiUrl := fmt.Sprintf("https://api.bilibili.com/x/space/article?mid=%s&pn=1&ps=10&sort=publish_time&jsonp=jsonp", userId)
 	header := getHeaders()
 	header["Referer"] = "https://space.bilibili.com/" + userId
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		articleJsons := jsonResp.GetJsons("data.articles")
 

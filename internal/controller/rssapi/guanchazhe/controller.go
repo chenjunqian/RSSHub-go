@@ -28,7 +28,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func indexParser(ctx context.Context,htmlStr string) (items []dao.RSSItem) {
+func indexParser(ctx context.Context, htmlStr string) (items []dao.RSSItem) {
 	docs := soup.HTMLParse(htmlStr)
 	baseUrl := "https://www.guancha.cn"
 	imgList := docs.FindAll("ul", "class", "img-List")
@@ -135,7 +135,7 @@ func parseCommonDetail(ctx context.Context, detailLink string) (detailData strin
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -148,7 +148,7 @@ func parseCommonDetail(ctx context.Context, detailLink string) (detailData strin
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request guanchazhe article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request guanchazhe article detail failed, link  %s \n", detailLink)
 	}
 
 	return

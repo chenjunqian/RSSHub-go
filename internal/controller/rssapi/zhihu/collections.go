@@ -12,7 +12,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 )
 
-func (ctl *Controller) GetCollections(req *ghttp.Request) {  
+func (ctl *Controller) GetCollections(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	colletionId := req.Get("id")
 	collectionGetUrl := fmt.Sprintf("https://www.zhihu.com/collection/%s", colletionId)

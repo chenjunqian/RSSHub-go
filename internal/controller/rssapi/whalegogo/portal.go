@@ -34,13 +34,13 @@ func (ctl *Controller) GetIPortal(req *ghttp.Request) {
 		Description: "我们是一帮在传统汽车门户、汽车杂志战斗过数年的老司机，关于车与理想生活的种种，我们有很多思考，现在用一个全新的网站和 APP，将车型快讯、试驾体验、行业深度、生活方式等原创内容，用简洁的设计与排版呈现在你的面前。",
 		ImageUrl:    "https://api.whalegogo.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != ""{
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		rssItems := portalParser(resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

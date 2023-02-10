@@ -27,7 +27,7 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 		Tag:         []string{"汽车"},
 		ImageUrl:    "https://static001.infoq.cn/static/infoq/template/img/logo-fasdkjfasdf.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		docs := soup.HTMLParse(resp)
 		itemList := docs.FindAll("div", "class", "item-main")
@@ -50,6 +50,6 @@ func (ctl *Controller) GetRecommend(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"INFOQ_RECOMMEND", rssStr)
+	cache.SetCache(ctx, "INFOQ_RECOMMEND", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

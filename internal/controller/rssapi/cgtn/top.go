@@ -28,7 +28,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Tag:      []string{"英文", "海外"},
 		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		topItems := docs.FindAll("div", "class", "top-news-item")
 		rssItems := make([]dao.RSSItem, 0)
@@ -55,6 +55,6 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"36KR_NEWS_FLASHES", rssStr)
+	cache.SetCache(ctx, "36KR_NEWS_FLASHES", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

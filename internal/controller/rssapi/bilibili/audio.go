@@ -33,7 +33,7 @@ func (ctl *Controller) GetUserAudio(req *ghttp.Request) {
 	}
 
 	apiUrl := fmt.Sprintf("https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=%s&pn=1&ps=100", userId)
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		dataJsons := jsonResp.GetJsons("data.data")
 

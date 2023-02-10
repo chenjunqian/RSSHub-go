@@ -27,11 +27,11 @@ func (ctl *controller) Get199ITCategoryReport(req *ghttp.Request) {
 		ImageUrl:    "https://www.199it.com/favicon.ico",
 		Description: "互联网数据资讯网-研究报告-199IT",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := parseArticle(ctx, resp)
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"199IT_CATEGORY_REPORT", rssStr)
+	cache.SetCache(ctx, "199IT_CATEGORY_REPORT", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

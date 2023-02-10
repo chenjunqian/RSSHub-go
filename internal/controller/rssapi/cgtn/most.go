@@ -32,7 +32,7 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 		Tag:      []string{"英文", "海外"},
 		ImageUrl: "https://ui.cgtn.com/static/ng/resource/images/logo_title.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		itemWrapper := docs.Find("div", "id", linkType+"Items")
 		items := itemWrapper.FindAll("div", "class", "most-read-item-box")
@@ -63,6 +63,6 @@ func (ctl *controller) GetMostRead(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"36KR_NEWS_FLASHES", rssStr)
+	cache.SetCache(ctx, "36KR_NEWS_FLASHES", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

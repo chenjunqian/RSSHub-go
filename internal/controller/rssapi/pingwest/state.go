@@ -34,14 +34,14 @@ func (ctl *Controller) GetState(req *ghttp.Request) {
 		ImageUrl:    "https://cdn.pingwest.com/static/pingwest-logo-cn.jpg",
 	}
 
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		rssItems := stateParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }
 
@@ -109,7 +109,7 @@ func parseStateDetail(ctx context.Context, detailLink string) (detailData string
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request pingwest article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request pingwest article detail failed, link  %s \n", detailLink)
 	}
 
 	return

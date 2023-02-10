@@ -29,7 +29,7 @@ func (ctl *Controller) GetAppVersion(req *ghttp.Request) {
 
 	rootUrl := "https://app.bilibili.com"
 	apiUrl := fmt.Sprintf("%s/x/v2/version?mobi_app=%s", rootUrl, id)
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		respDataList := jsonResp.GetJsons("data")
 

@@ -27,7 +27,7 @@ func (ctl *Controller) GetAnswers(req *ghttp.Request) {
 		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(ctx,err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())

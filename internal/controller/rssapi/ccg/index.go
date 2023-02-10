@@ -33,12 +33,12 @@ func (ctl *controller) GetIndex(req *ghttp.Request) {
 		ImageUrl:    "http://www.ccg.org.cn/favicon.ico",
 	}
 
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
-		rssItems := indexParser(ctx,resp)
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
+		rssItems := indexParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

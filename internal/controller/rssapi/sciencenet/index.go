@@ -32,13 +32,13 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "科学网博客-构建全球华人科学博客圈",
 		ImageUrl:    "https://blog.sciencenet.cn/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != ""{
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		rssItems := commonParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

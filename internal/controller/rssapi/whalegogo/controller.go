@@ -24,7 +24,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func indexParser(ctx context.Context,jsonString string) (items []dao.RSSItem) {
+func indexParser(ctx context.Context, jsonString string) (items []dao.RSSItem) {
 	respJson := gjson.New(jsonString)
 	articleList := respJson.GetJsons("response.items.item")
 

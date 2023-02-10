@@ -27,12 +27,12 @@ func (ctl *controller) GetRecommand(req *ghttp.Request) {
 		Description: "DockOne.io,为技术人员提供最专业的Cloud Native交流平台。",
 		ImageUrl:    "http://weekly.dockone.io/static/css/default/img/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := parseRecommand(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

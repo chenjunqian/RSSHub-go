@@ -18,11 +18,11 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func parseRecommendDetail(ctx context.Context,detailLink string) (detailData string) {
+func parseRecommendDetail(ctx context.Context, detailLink string) (detailData string) {
 	var (
 		resp string
 	)
-    if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -35,7 +35,7 @@ func parseRecommendDetail(ctx context.Context,detailLink string) (detailData str
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request infoQ article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request infoQ article detail failed, link  %s \n", detailLink)
 	}
 
 	return

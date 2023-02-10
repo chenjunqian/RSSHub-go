@@ -21,7 +21,7 @@ func (ctl *Controller) GetZhihuPinPeople(req *ghttp.Request) {
 
 	url := fmt.Sprintf("https://api.zhihu.com/pins/%s/moments?limit=10&offset=0", peopleId)
 	headers := getHeaders()
-	if resp, err := service.GetHttpClient().SetHeaderMap(headers).Get(ctx,url); err == nil {
+	if resp, err := service.GetHttpClient().SetHeaderMap(headers).Get(ctx, url); err == nil {
 		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {

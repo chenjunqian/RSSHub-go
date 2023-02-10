@@ -29,7 +29,7 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		Description: "抽屉新热榜，汇聚每日搞笑段子、热门图片、有趣新闻。它将微博、门户、社区、bbs、社交网站等海量内容聚合在一起，通过用户推荐生成最热榜单。看抽屉新热榜，每日热门、有趣资讯尽收眼底",
 		ImageUrl:    "https://m.chouti.com/static/image/favicon.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respDocs := soup.HTMLParse(resp)
 		dataDocsList := respDocs.FindAll("div", "class", "link-area")
 		rssItems := make([]dao.RSSItem, 0)
@@ -72,6 +72,6 @@ func (ctl *controller) GetTop(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

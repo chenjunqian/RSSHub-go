@@ -24,7 +24,7 @@ func getHeaders() map[string]string {
 	return headers
 }
 
-func commonHtmlParser(ctx context.Context,htmlStr string) (rssItems []dao.RSSItem) {
+func commonHtmlParser(ctx context.Context, htmlStr string) (rssItems []dao.RSSItem) {
 	docs := soup.HTMLParse(htmlStr)
 	articleDocList := docs.FindAll("div", "class", "articleSingle")
 	for _, articleDoc := range articleDocList {
@@ -62,7 +62,7 @@ func parseCommonDetail(ctx context.Context, detailLink string) (detailData strin
 	var (
 		resp string
 	)
-	if resp = service.GetContent(ctx,detailLink); resp != "" {
+	if resp = service.GetContent(ctx, detailLink); resp != "" {
 		var (
 			docs        soup.Root
 			articleElem soup.Root
@@ -74,7 +74,7 @@ func parseCommonDetail(ctx context.Context, detailLink string) (detailData strin
 		detailData = articleElem.HTML()
 
 	} else {
-		g.Log().Errorf(ctx,"Request baijing common article detail failed, link  %s \n", detailLink)
+		g.Log().Errorf(ctx, "Request baijing common article detail failed, link  %s \n", detailLink)
 	}
 
 	return

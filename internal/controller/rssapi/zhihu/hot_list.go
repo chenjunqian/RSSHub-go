@@ -67,7 +67,7 @@ func (ctl *Controller) GetZhihuHostList(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		cache.SetCache(ctx,redisKey, rssStr)
+		cache.SetCache(ctx, redisKey, rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

@@ -4,4 +4,3 @@ type controller struct {
 }
 
 var Controller = &controller{}
-

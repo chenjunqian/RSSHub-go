@@ -37,7 +37,7 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 		Description: "聚合优质的创新信息与人群，捕获精选|深度|犀利的商业科技资讯。在虎嗅，不错过互联网的每个重要时刻。",
 		ImageUrl:    "https://www.huxiu.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		rssItems := make([]dao.RSSItem, 0)
 		reg := regexp.MustCompile(`window.__INITIAL_STATE__=(.*?);\(function\(\)`)
@@ -76,6 +76,6 @@ func (ctl *Controller) GetChannels(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

@@ -24,14 +24,14 @@ func InitDatabase(ctx context.Context) {
 
 func setMySQLConfig(ctx context.Context) {
 	var (
-		err         error
-		dbConfig    gorm.Config
-		dsn         string
-		user        *gvar.Var
-		password    *gvar.Var
-		url         *gvar.Var
-		dbName      *gvar.Var
-		env         string
+		err      error
+		dbConfig gorm.Config
+		dsn      string
+		user     *gvar.Var
+		password *gvar.Var
+		url      *gvar.Var
+		dbName   *gvar.Var
+		env      string
 	)
 
 	user, _ = g.Cfg().Get(ctx, "database.mysql.user")

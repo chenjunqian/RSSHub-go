@@ -48,11 +48,11 @@ func (ctl *Controller) GetCategoryNews(req *ghttp.Request) {
 		Tag:         []string{"其他"},
 		ImageUrl:    "https://www.dx2025.com/wp-content/uploads/2020/04/cropped-east_west_think_tank_800x800-32x32.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssData.Items = commonParser(ctx, resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

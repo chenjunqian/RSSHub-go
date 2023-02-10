@@ -34,7 +34,7 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		Description: "新媒体「差评」站在科技领域，以专业的角度和诙谐的语言，为订阅者呈现高质量的图文和视频内容",
 		ImageUrl:    "https://chaping.cn/public/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,currentUrl); resp != "" {
+	if resp := service.GetContent(ctx, currentUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJsonList := respJson.GetJsons("data")
 		rssItems := make([]dao.RSSItem, 0)
@@ -59,6 +59,6 @@ func (ctl *controller) GetNews(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

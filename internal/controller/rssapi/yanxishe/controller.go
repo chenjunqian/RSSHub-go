@@ -39,7 +39,7 @@ func parseIndex(ctx context.Context, respString string) (items []dao.RSSItem) {
 				link = aTags[1].Attrs()["href"]
 			}
 
-			content = parseIndexDetail(ctx,link)
+			content = parseIndexDetail(ctx, link)
 		}
 
 		if wordDoc := article.Find("div", "class", "word"); wordDoc.Pointer != nil {
@@ -63,8 +63,8 @@ func parseIndex(ctx context.Context, respString string) (items []dao.RSSItem) {
 	return
 }
 
-func parseIndexDetail(ctx context.Context,link string) (detailData string) {
-	respString := service.GetContent(ctx,link)
+func parseIndexDetail(ctx context.Context, link string) (detailData string) {
+	respString := service.GetContent(ctx, link)
 	respDoc := soup.HTMLParse(respString)
 	articleDoc := respDoc.Find("div", "class", "lph-article-comView")
 	if articleDoc.Pointer != nil {

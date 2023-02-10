@@ -32,7 +32,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 		defer func(resp *gclient.Response) {
 			err := resp.Close()
 			if err != nil {
-				g.Log().Error(ctx ,err)
+				g.Log().Error(ctx, err)
 			}
 		}(resp)
 		jsonResp := gjson.New(resp.ReadAllString())
@@ -82,7 +82,7 @@ func (ctl *Controller) GetDaily(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		cache.SetCache(ctx,"ZHIHU_DAILY", rssStr)
+		cache.SetCache(ctx, "ZHIHU_DAILY", rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

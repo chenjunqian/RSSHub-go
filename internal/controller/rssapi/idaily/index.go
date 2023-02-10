@@ -29,7 +29,7 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "iDaily 每日环球视野",
 		ImageUrl:    "https://dayoneapp.com/favicon-32x32.png?v=9277df7ae7503b6e383587ae0e7210ee",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		dataJsonArray := respJson.Array()
 		rssItems := make([]dao.RSSItem, 0)
@@ -60,6 +60,6 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"IDAILY_INDEX", rssStr)
+	cache.SetCache(ctx, "IDAILY_INDEX", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

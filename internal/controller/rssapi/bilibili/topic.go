@@ -19,7 +19,7 @@ func (ctl *Controller) GetTopic(req *ghttp.Request) {
 	header := getHeaders()
 	header["Referer"] = fmt.Sprintf("https://www.bilibili.com/tag/%s/feed", topicName)
 	rssData := dao.RSSFeed{}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		respJson := gjson.New(resp)
 		cardJsonList := respJson.GetJsons("data.cards")
 

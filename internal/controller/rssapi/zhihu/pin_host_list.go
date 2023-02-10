@@ -37,7 +37,7 @@ func (ctl *Controller) GetZhihuPinHotList(req *ghttp.Request) {
 		rssData.Items = getPinRSSItems(resp.ReadAllString())
 		rssData.ImageUrl = "https://pic4.zhimg.com/80/v2-88158afcff1e7f4b8b00a1ba81171b61_720w.png"
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		cache.SetCache(ctx,redisKey, rssStr)
+		cache.SetCache(ctx, redisKey, rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

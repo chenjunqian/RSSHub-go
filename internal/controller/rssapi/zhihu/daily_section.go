@@ -57,7 +57,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 				jsonItemResp := gjson.New(itemResp.ReadAllString())
 				content := jsonItemResp.Get("body").String()
 				reg := regexp.MustCompile(`<div class="meta">([\s\S]*?)<\/div>`)
-				content = reg.ReplaceAllString(content, `<strong>${1}</strong>`) 
+				content = reg.ReplaceAllString(content, `<strong>${1}</strong>`)
 				reg = regexp.MustCompile(`<\/?h2.*?>`)
 				content = reg.ReplaceAllString(content, "")
 				feedItem.Description = content
@@ -68,7 +68,7 @@ func (ctl *Controller) GetZhihuDailySection(req *ghttp.Request) {
 
 		rssData.Items = items
 		rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-		cache.SetCache(ctx,redisKey, rssStr)
+		cache.SetCache(ctx, redisKey, rssStr)
 		req.Response.WriteXmlExit(rssStr)
 	}
 }

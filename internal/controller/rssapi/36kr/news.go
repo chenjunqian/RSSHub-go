@@ -30,11 +30,11 @@ func (ctl *controller) Get36krNews(req *ghttp.Request) {
 		Tag:      linkConfig.Tags,
 		ImageUrl: "https://static.36krcdn.com/36kr-web/static/ic_default_100_56@2x.ec858a2a.png",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := parseNews(ctx, resp)
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"36KR_NEWS_"+linkConfig.Link, rssStr)
+	cache.SetCache(ctx, "36KR_NEWS_"+linkConfig.Link, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

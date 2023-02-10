@@ -29,7 +29,7 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 		Description: "观察者网，致力于荟萃中外思想者精华，鼓励青年学人探索，建中西文化交流平台，为崛起中的精英提供决策参考。",
 		ImageUrl:    "https://i.guancha.cn/images/favorite.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		docs := soup.HTMLParse(resp)
 		articleDocList := docs.Find("ul", "class", "headline-list").FindAll("li")
@@ -66,6 +66,6 @@ func (ctl *Controller) GetHeadLine(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

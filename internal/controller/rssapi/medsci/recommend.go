@@ -32,12 +32,12 @@ func (ctl *Controller) GetIndex(req *ghttp.Request) {
 		Description: "MedSci(梅斯医学)致力于医疗质量的改善，从事临床研究服务、数据管理、医学统计、临床培训、继续教育等支持，促进临床医生职业发展和医疗智慧化。",
 		ImageUrl:    "https://cache1.medsci.cn/images/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != ""{
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := commonParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

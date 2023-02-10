@@ -46,6 +46,6 @@ func (ctl *Controller) GetSearchHot(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"WEIBO_HOT", rssStr)
+	cache.SetCache(ctx, "WEIBO_HOT", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

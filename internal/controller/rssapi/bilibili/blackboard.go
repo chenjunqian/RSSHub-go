@@ -24,7 +24,7 @@ func (ctl *Controller) GetBlackboard(req *ghttp.Request) {
 	rssData.Link = "https://www.bilibili.com/blackboard/topic_list.html#/"
 	rssData.Description = "bilibili 话题列表"
 	rssData.ImageUrl = "https://www.bilibili.com/favicon.ico"
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		dataJsonList := jsonResp.GetJsons("data.list")
 		items := make([]dao.RSSItem, 0)

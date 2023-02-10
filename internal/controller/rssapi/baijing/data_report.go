@@ -27,12 +27,12 @@ func (ctl *controller) GetDataReport(req *ghttp.Request) {
 		Tag:         []string{"财经", "科技", "数据"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := commonHtmlParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BAIJING_DATA_REPORT", rssStr)
+	cache.SetCache(ctx, "BAIJING_DATA_REPORT", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

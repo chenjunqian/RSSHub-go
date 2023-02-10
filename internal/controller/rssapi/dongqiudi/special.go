@@ -33,11 +33,11 @@ func (ctl *Controller) GetSpecial(req *ghttp.Request) {
 		Description: "懂球帝专题|专业权威的足球网站",
 		ImageUrl:    "https://static1.dongqiudi.com/web-new/web/images/fav.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssData.Items = commonParser(resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

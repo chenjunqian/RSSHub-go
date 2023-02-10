@@ -27,12 +27,12 @@ func (ctl *controller) GetZhuanlan(req *ghttp.Request) {
 		Tag:         []string{"新闻"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := commonHtmlParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BAIJING_ZHUANLAN", rssStr)
+	cache.SetCache(ctx, "BAIJING_ZHUANLAN", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

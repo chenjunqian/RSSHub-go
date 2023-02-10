@@ -15,12 +15,12 @@ import (
 func (ctl *Controller) GetUserVideo(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	id := req.Get("id").String()
-	username := getUsernameFromUserId(ctx,id)
+	username := getUsernameFromUserId(ctx, id)
 	apiUrl := fmt.Sprintf("https://api.bilibili.com/x/space/arc/search?mid=%s&ps=10&tid=0&pn=1&order=pubdate&jsonp=jsonp", id)
 	header := getHeaders()
 	header["Referer"] = fmt.Sprintf("https://space.bilibili.com/%s/", id)
 	rssData := dao.RSSFeed{}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		dataJson := gjson.New(resp)
 		rssData.Title = username + " 的 bilibili 空间"
 		rssData.Link = "https://space.bilibili.com/" + id

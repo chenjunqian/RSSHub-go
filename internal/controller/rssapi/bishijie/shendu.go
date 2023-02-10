@@ -28,7 +28,7 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		Description: "币世界网-比特币等数字货币交易所导航、投资理财、快讯、深度、币圈、市场行情第一站。",
 		ImageUrl:    "https://www.bishijie.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		docs := soup.HTMLParse(resp)
 		articleDocsList := docs.FindAll("div", "class", "articles-card")
 		rssItems := make([]dao.RSSItem, 0)
@@ -59,6 +59,6 @@ func (ctl *Controller) GetShenDu(req *ghttp.Request) {
 		rssData.Items = rssItems
 	}
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BISHIJIE_SHENDU", rssStr)
+	cache.SetCache(ctx, "BISHIJIE_SHENDU", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

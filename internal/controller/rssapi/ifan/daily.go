@@ -27,7 +27,7 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 		Description: "爱范每日早报",
 		ImageUrl:    "https://images.ifanr.cn/wp-content/themes/ifanr-5.0-pc/static/images/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 
 		respJson := gjson.New(resp)
 		itemJsonList := respJson.GetJsons("objects")
@@ -54,6 +54,6 @@ func (ctl *Controller) GetFlash(req *ghttp.Request) {
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"IFAN_DAILY", rssStr)
+	cache.SetCache(ctx, "IFAN_DAILY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

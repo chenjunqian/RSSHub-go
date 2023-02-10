@@ -38,7 +38,7 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 	apiUrl := "https://api.live.bilibili.com/room/v1/Area/getList"
 	header := getHeaders()
 	header["Referer"] = "https://link.bilibili.com/p/center/index"
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		jsonResp := gjson.New(resp)
 		dataJsonList := jsonResp.GetJsons("data")
 
@@ -72,7 +72,7 @@ func (ctl *Controller) GetLinvArea(req *ghttp.Request) {
 
 		rssItems := make([]dao.RSSItem, 0)
 		areaApiUrl := fmt.Sprintf("https://api.live.bilibili.com/room/v1/area/getRoomList?area_id=%s&sort_type=%s&page_size=30&page_no=1", areaId, order)
-		if areaResp := service.GetContent(ctx,areaApiUrl); resp != "" {
+		if areaResp := service.GetContent(ctx, areaApiUrl); resp != "" {
 			areaJsonResp := gjson.New(areaResp)
 			dataJsonList := areaJsonResp.GetJsons("data")
 

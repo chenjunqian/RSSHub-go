@@ -17,7 +17,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	mediaId := req.Get("id").String()
 	apiUrl := "https://www.bilibili.com/bangumi/media/md" + mediaId
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		reg := regexp.MustCompile(`window\.__INITIAL_STATE__=([\s\S]+);\(function\(\)`)
 		contentStrs := reg.FindStringSubmatch(resp)
 		if len(contentStrs) <= 1 {
@@ -30,7 +30,7 @@ func (ctl *Controller) GetBangumi(req *ghttp.Request) {
 		rssData := dao.RSSFeed{}
 		items := make([]dao.RSSItem, 0)
 		seasonUrl := "https://api.bilibili.com/pgc/web/season/section?season_id=" + seasonId
-		if seasonResp := service.GetContent(ctx,seasonUrl); resp != "" {
+		if seasonResp := service.GetContent(ctx, seasonUrl); resp != "" {
 			seasonJsonResp := gjson.New(seasonResp)
 			seasonData := seasonJsonResp.GetJson("result")
 

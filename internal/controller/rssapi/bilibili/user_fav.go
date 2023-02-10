@@ -15,12 +15,12 @@ import (
 func (ctl *Controller) GetUserFav(req *ghttp.Request) {
 	var ctx context.Context = context.Background()
 	id := req.Get("id").String()
-	username := getUsernameFromUserId(ctx,id)
+	username := getUsernameFromUserId(ctx, id)
 	apiUrl := fmt.Sprintf("https://api.bilibili.com/x/v2/fav/video?vmid=%s&ps=30&tid=0&keyword=&pn=1&order=fav_time", id)
 	header := getHeaders()
 	header["Referer"] = fmt.Sprintf("https://space.bilibili.com/%s/#/favlist", id)
 	rssData := dao.RSSFeed{}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		dataJson := gjson.New(resp)
 		rssData.Title = username + " 的 bilibili 收藏夹"
 		rssData.Link = fmt.Sprintf("https://space.bilibili.com/%s/#/favlist", id)

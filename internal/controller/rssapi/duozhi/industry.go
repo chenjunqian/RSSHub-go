@@ -31,11 +31,11 @@ func (ctl *Controller) GetIndustryNews(req *ghttp.Request) {
 		Description: "多知网 - 独立商业视角 新锐教育观察",
 		ImageUrl:    "http://www.duozhi.com/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssData.Items = commonParser(ctx, resp)
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,cacheKey, rssStr)
+	cache.SetCache(ctx, cacheKey, rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }

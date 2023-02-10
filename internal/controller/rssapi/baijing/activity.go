@@ -27,12 +27,12 @@ func (ctl *controller) GetActivity(req *ghttp.Request) {
 		Tag:         []string{"互联网", "开发者", "科技", "社区"},
 		ImageUrl:    "https://www.baijingapp.com/static/css/default/img/favicon.ico",
 	}
-	if resp := service.GetContent(ctx,apiUrl); resp != "" {
+	if resp := service.GetContent(ctx, apiUrl); resp != "" {
 		rssItems := commonHtmlParser(ctx, resp)
 		rssData.Items = rssItems
 	}
 
 	rssStr := feed.GenerateRSS(rssData, req.Router.Uri)
-	cache.SetCache(ctx,"BAIJING_ACTIVITY", rssStr)
+	cache.SetCache(ctx, "BAIJING_ACTIVITY", rssStr)
 	req.Response.WriteXmlExit(rssStr)
 }
