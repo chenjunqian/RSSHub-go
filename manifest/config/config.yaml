@@ -1,6 +1,7 @@
 server:
   address: ":8083"
   serverRoot: "resource/public"
+  dumpRouterMap: false
 
 logger:
   path: "./logs/"
