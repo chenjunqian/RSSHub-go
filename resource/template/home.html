@@ -6,93 +6,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="./resource/image/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body style="margin: 0; display:inherit;">
-  <div class="header">
-    <div class="center-header">
-      <div class="header-logo-wrap">
-        <img class="header-logo" src="./resource/image/logo.png" alt="logo">
-        <div class="header-logo-title">
-          RSS Go
-        </div>
+  <div class="flex justify-center mt-2">
+    <div class="w-full max-w-6xl flex">
+      <div class="flex justify-start w-1/3">
+        <img src="/resource/image/logo.png" alt="" class="w-10 h-10">
+        <div class="text-orange-500 leading-10 text-2xl mx-2.5">RSS Go</div>
       </div>
-      <div class="header-component-wrap">
-        <a class="header-component-github" href="https://github.com/GuoShaoOrg/RSSHub-go" target="_blank">
-          <img class="header-component-github-logo" src="./resource/image/github-log.png" alt="">
-        </a>
+
+      <div class="flex justify-end w-2/3">
+        <img src="/resource/image/github-log.png" alt="" class="w-10 h-10">
       </div>
-    </div>
-  </div>
-  <div class="content-wraper">
-    <div class="content-div">
-      This is {{.name}} Home Page!
     </div>
   </div>
 </body>
-
-<style>
-  .header {
-    width: 100%;
-    height: 60px;
-    background-color: transparent;
-    justify-content: center;
-    display: flex;
-  }
-
-  .center-header {
-    width: 100%;
-    max-width: 800px;
-    height: 60px;
-    background-color: transparent;
-    justify-content: center;
-    display: flex;
-  }
-
-  .header-logo-wrap {
-    width: 30%;
-    display: flex;
-    justify-content: start;
-  }
-
-  .header-logo {
-    height: 30px;
-    width: 30px;
-    margin-top: 15px;
-  }
-
-  .header-logo-title {
-    color: rgb(249 115 22);
-    font-size: 20px;
-    margin-left: 10px;
-    margin-top: 18px;
-  }
-
-  .header-component-wrap {
-    width: 70%;
-    display: flex;
-    justify-content: end;
-  }
-
-  .header-component-github {}
-
-  .header-component-github-logo {
-    height: 30px;
-    width: 30px;
-    margin-top: 15px;
-  }
-
-  .content-wraper {
-    width: 100%;
-    background-color: transparent;
-    justify-content: center;
-    display: flex;
-  }
-
-  .content-div {
-    width: 100%;
-    max-width: 800px;
-  }
-</style>
-
-</html>
