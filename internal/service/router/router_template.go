@@ -11,13 +11,18 @@ import (
 
 var (
 	routerCatRootDir = "resource/public/html/router_catagory/"
+	routerCatagoryList []CatagoryDirInfo
 )
 
 func InitRouterTemplateInfo(ctx context.Context) {
-
+	routerCatagoryList = getAllCatagoryList(ctx)
 }
 
-func GetAllCatagoryList(ctx context.Context) []CatagoryDirInfo {
+func GetRouterCatagoryList() []CatagoryDirInfo {
+	return routerCatagoryList
+}
+
+func getAllCatagoryList(ctx context.Context) []CatagoryDirInfo {
 	var (
 		catDirs     []*gres.File
 		catDirInfos []CatagoryDirInfo

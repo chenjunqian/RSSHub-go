@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/cmd/routers"
 	"rsshub/internal/service/cache"
+	routerService "rsshub/internal/service/router"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -18,6 +19,7 @@ var (
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
 			cache.InitCache(ctx)
+			routerService.InitRouterTemplateInfo(ctx)
 			s.SetIndexFolder(true)
 			s.Group("/", routers.WebRouter)
 			s.Group("/api", routers.APIRouter)

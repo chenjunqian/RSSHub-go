@@ -16,7 +16,7 @@ func TestGetAllCatagoryList(t *testing.T) {
 		ctx            = gctx.New()
 		catDirNameList []CatagoryDirInfo
 	)
-	catDirNameList = GetAllCatagoryList(ctx)
+	catDirNameList = getAllCatagoryList(ctx)
 	if len(catDirNameList) == 0 {
 		t.Fatal("Get catagory directory list failed")
 	}
