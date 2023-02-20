@@ -45,36 +45,3 @@ func TestSetGetCache(t *testing.T) {
 	})
 
 }
-
-func TestGetRouterInfoCache(t *testing.T) {
-	gtest.C(t, func(t *gtest.T) {
-		var (
-			ctx       = gctx.New()
-			key       string
-			value     []RouterCategoryInfo
-			valueItem RouterCategoryInfo
-		)
-		InitCache(ctx)
-		key = "test_key"
-		value = make([]RouterCategoryInfo, 0)
-		valueItem = RouterCategoryInfo{
-			Router:   "test_router",
-			Category: "test_catagory",
-		}
-		value = append(value, valueItem)
-		SetRouterInfoCache(ctx, key, value)
-		cacheV, err := GetRouterInfoCache(ctx, key)
-		if err != nil {	
-			t.Fatal("get router catagory from cache failed: ", err)
-		}
-
-		if cacheV == nil {
-			t.Fatal("the value get from cache is nil")
-		}
-
-		if len(cacheV) == 0 {
-			t.Fatal("the router catagorey list from cache length is 0")
-		}
-	})
-
-}

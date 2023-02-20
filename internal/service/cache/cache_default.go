@@ -6,7 +6,6 @@ import (
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/database/gredis"
 	"github.com/gogf/gf/v2/os/gcache"
-	"github.com/gogf/gf/v2/util/gconv"
 )
 
 var defaultCache *gcache.Cache
@@ -44,18 +43,4 @@ func SetCache(ctx context.Context, key, value string) {
 
 func GetCache(ctx context.Context, key string) (*gvar.Var, error) {
 	return defaultCache.Get(ctx, key)
-}
-
-func SetRouterInfoCache(ctx context.Context, key string, routerInfoList []RouterCategoryInfo) {
-	defaultCache.Set(ctx, key, routerInfoList, 0)
-}
-
-func GetRouterInfoCache(ctx context.Context, key string) ([]RouterCategoryInfo, error) {
-	var catagoryList []RouterCategoryInfo
-	cacheV, err := defaultCache.Get(ctx, key)
-	if err != nil {
-		return nil, err
-	}
-	err = gconv.Structs(cacheV, &catagoryList)
-	return catagoryList, err
 }
