@@ -4,17 +4,54 @@ import (
 	"rsshub/internal/dao"
 	"rsshub/internal/service/feed"
 	response "rsshub/internal/service/middleware"
+	routerService "rsshub/internal/service/router"
 	"strings"
 
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gctx"
 	"golang.org/x/net/context"
 )
 
 func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 
+	var (
+		routerCatInfoList []routerService.CatagoryDirInfo
+	)
+
+	routerCatInfoList = routerService.GetRouterCatagoryList()
+	g.Log().Info(gctx.New(), gjson.New(routerCatInfoList))
+
 	req.Response.WriteTpl("home.html", g.Map{
-		"name": "RSS Go",
+		"name":              "RSS Go",
+		"routerCatNameList": routerCatInfoList,
+	})
+
+}
+
+func (ctl *Controller) IndexWithParamTpl(req *ghttp.Request) {
+
+	var (
+		routerCatInfoList    []routerService.CatagoryDirInfo
+		subRouterCatInfoList []routerService.SubCatagoryDirInfo
+		routerDir            string
+	)
+
+	routerDir = req.Get("router_dir").String()
+	routerCatInfoList = routerService.GetRouterCatagoryList()
+
+	for _, routerCatInfo := range routerCatInfoList {
+		if routerDir == routerCatInfo.DirName {
+			subRouterCatInfoList = routerCatInfo.SubCatagoryList
+		}
+	}
+
+	req.Response.WriteTpl("home.html", g.Map{
+		"name":                 "RSS Go",
+		"routerCatNameList":    routerCatInfoList,
+		"routerCatInfoList":    routerCatInfoList,
+		"subRouterCatInfoList": subRouterCatInfoList,
 	})
 
 }

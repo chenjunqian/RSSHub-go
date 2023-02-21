@@ -20,4 +20,5 @@ func APIRouter(group *ghttp.RouterGroup) {
 func WebRouter(group *ghttp.RouterGroup) {
 	webController := new(webapi.Controller)
 	group.GET("/", webController.IndexTpl)
+    group.GET("/:router_dir", webController.IndexWithParamTpl)
 }
