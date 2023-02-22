@@ -8,6 +8,11 @@
     <link rel="icon" type="image/x-icon" href="./resource/image/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .collapse {
+            visibility: visible !important;
+        }
+    </style>
 </head>
 
 <body style="margin: 0; display:inherit;">
@@ -40,12 +45,29 @@
         </div>
         <div class="drawer-side">
             <label for="routers-drawer" class="drawer-overlay"></label>
-            <ul class="menu p-4 w-80 bg-base-100">
-                {{range $index, $routerDirInfo := .routerCatNameList}}
-                <li>
-                    <div class="ml-2">{{$routerDirInfo.Name}}</div>
-                    <div class="ml-4">{{$routerDirInfo.Name}}</div>
-                </li>
+            <ul class="menu p-4 w-180 bg-base-100">
+                {{range $index, $routerDirInfo := .routerCatInfoList}}
+                {{if $routerDirInfo.CollapseOpen}}
+                <div tabindex="{{$index}}" class="collapse collapse-open">
+                    <div class="collapse-title">
+                        {{ $routerDirInfo.Name }}
+                    </div>
+                    {{range $i, $subRouterDirInfo := $routerDirInfo.SubCatagoryList}}
+                    <div class="collapse-content ml-4">
+                        {{$subRouterDirInfo.Name}}
+                    </div>
+                    {{end}}
+                </div>
+                {{else}}
+                <div tabindex="{{$index}}" class="collapse">
+                    <div class="collapse-title">
+                        {{ $routerDirInfo.Name }}
+                    </div>
+                    <div class="collapse-content ml-4">
+                        I have collapse-open class
+                    </div>
+                </div>
+                {{end}}
                 {{end}}
             </ul>
         </div>

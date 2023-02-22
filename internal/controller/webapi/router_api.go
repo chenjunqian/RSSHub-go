@@ -33,25 +33,23 @@ func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 func (ctl *Controller) IndexWithParamTpl(req *ghttp.Request) {
 
 	var (
-		routerCatInfoList    []routerService.CatagoryDirInfo
-		subRouterCatInfoList []routerService.SubCatagoryDirInfo
-		routerDir            string
+		routerCatInfoList []routerService.CatagoryDirInfo
+		routerDir string
 	)
 
 	routerDir = req.Get("router_dir").String()
 	routerCatInfoList = routerService.GetRouterCatagoryList()
 
-	for _, routerCatInfo := range routerCatInfoList {
+	for index, routerCatInfo := range routerCatInfoList {
 		if routerDir == routerCatInfo.DirName {
-			subRouterCatInfoList = routerCatInfo.SubCatagoryList
+            routerCatInfoList[index].CollapseOpen = true
 		}
 	}
 
 	req.Response.WriteTpl("home.html", g.Map{
-		"name":                 "RSS Go",
-		"routerCatNameList":    routerCatInfoList,
-		"routerCatInfoList":    routerCatInfoList,
-		"subRouterCatInfoList": subRouterCatInfoList,
+		"name":              "RSS Go",
+		"router_dir":        routerDir,
+		"routerCatInfoList": routerCatInfoList,
 	})
 
 }
