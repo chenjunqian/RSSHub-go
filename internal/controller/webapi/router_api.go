@@ -34,7 +34,7 @@ func (ctl *Controller) IndexWithParamTpl(req *ghttp.Request) {
 
 	var (
 		routerCatInfoList []routerService.CatagoryDirInfo
-		routerDir string
+		routerDir         string
 	)
 
 	routerDir = req.Get("router_dir").String()
@@ -42,7 +42,7 @@ func (ctl *Controller) IndexWithParamTpl(req *ghttp.Request) {
 
 	for index, routerCatInfo := range routerCatInfoList {
 		if routerDir == routerCatInfo.DirName {
-            routerCatInfoList[index].CollapseOpen = true
+			routerCatInfoList[index].CollapseOpen = true
 		}
 	}
 
