@@ -6,11 +6,11 @@ FROM loads/alpine:3.8
 
 ENV WORKDIR                 /app
 # ADD resource                $WORKDIR/
-ADD ./bin/linux_amd64/rssgo $WORKDIR/rssgo
-RUN chmod +x $WORKDIR/rssgo
+ADD ./bin/linux_amd64/rsshub $WORKDIR/rsshub
+RUN chmod +x $WORKDIR/rsshub
 
 ###############################################################################
 #                                   START
 ###############################################################################
 WORKDIR $WORKDIR
-CMD ./rssgo
+CMD ./rsshub
