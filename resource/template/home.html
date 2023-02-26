@@ -48,10 +48,10 @@
             <ul class="menu p-4 w-180 bg-base-100">
                 {{range $index, $routerDirInfo := .routerCatInfoList}}
                 {{if $routerDirInfo.CollapseOpen}}
-                <div tabindex="{{$index}}" class="collapse collapse-open">
-                    <div class="collapse-title">
+                <div tabindex="{{$index}}" class="collapse collapse-open" >
+                    <a class="collapse-title" href="/{{$routerDirInfo.DirName}}">
                         {{ $routerDirInfo.Name }}
-                    </div>
+                    </a>
                     {{range $i, $subRouterDirInfo := $routerDirInfo.SubCatagoryList}}
                     <div class="collapse-content ml-4">
                         {{$subRouterDirInfo.Name}}
@@ -59,14 +59,11 @@
                     {{end}}
                 </div>
                 {{else}}
-                <div tabindex="{{$index}}" class="collapse">
+                <a tabindex="{{$index}}" class="collapse" href="/{{$routerDirInfo.DirName}}">
                     <div class="collapse-title">
                         {{ $routerDirInfo.Name }}
                     </div>
-                    <div class="collapse-content ml-4">
-                        I have collapse-open class
-                    </div>
-                </div>
+                </a>
                 {{end}}
                 {{end}}
             </ul>
