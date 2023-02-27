@@ -10,4 +10,16 @@ type CatagoryDirInfo struct {
 type SubCatagoryDirInfo struct {
 	SubCatagoryDirName string
 	Name               string
+	SubCatagoryHtml    string
+}
+
+type SubCatagoryMetaInfo struct {
+	Name    string
+	Routers []SubCatagoryRouterDetail
+}
+
+type SubCatagoryRouterDetail struct {
+	Name   string
+	Router string
+	Link   string
 }

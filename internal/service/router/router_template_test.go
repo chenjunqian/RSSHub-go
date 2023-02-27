@@ -37,11 +37,40 @@ func Test_splitCatDirName(t *testing.T) {
 
 func Test_getSubCatInfoList(t *testing.T) {
 	var (
-		catDirName = "new_media"	
+		catDirName        = "new_media"
 		subCatDirInfoList []SubCatagoryDirInfo
 	)
 	subCatDirInfoList = getSubCatInfoList(routerCatRootDir + catDirName)
 	if len(subCatDirInfoList) == 0 {
 		t.Fatal("Get sub catagory info failed")
+	}
+}
+
+func Test_getSubCatRouterMetaInfo(t *testing.T) {
+	var (
+		ctx               = gctx.New()
+		subMetaDetailPath = routerCatRootDir + "new_media/36kr/meta.json"
+		subMetaInfo       SubCatagoryMetaInfo
+	)
+
+	subMetaInfo = getSubCatRouterMetaInfo(ctx, subMetaDetailPath)
+	if subMetaInfo.Name == "" || len(subMetaInfo.Routers) == 0 {
+		t.Fatal("Get sub-catagory router meta info failed")
+	}
+}
+
+func Test_genSubCatHtml(t *testing.T) {
+
+	var (
+		ctx               = gctx.New()
+		routerHtml        string
+		subMetaDetailPath = routerCatRootDir + "new_media/36kr/meta.json"
+		subMetaInfo       SubCatagoryMetaInfo
+	)
+
+	subMetaInfo = getSubCatRouterMetaInfo(ctx, subMetaDetailPath)
+	routerHtml = genSubCatHtml(ctx, subMetaInfo.Routers)
+	if routerHtml == "" {
+		t.Fatal("Failed to generate router html.")
 	}
 }
