@@ -1,0 +1,9 @@
+<div>
+    <div class="text-xl">{{.Name}}</div>
+    <div class="divider"></div>
+    {{range $index, $item := .routers}}
+    <div>{{$item.Name}}</div>
+    <div>{{$item.Router}}</div>
+    <div>{{$item.Link}}</div>
+    {{end}}
+</div>

@@ -53,9 +53,9 @@
                         {{ $routerDirInfo.Name }}
                     </a>
                     {{range $i, $subRouterDirInfo := $routerDirInfo.SubCatagoryList}}
-                    <div class="collapse-content ml-4">
+                    <a class="collapse-content ml-4" href="#{{$subRouterDirInfo.SubCatagoryDirName}}">
                         {{$subRouterDirInfo.Name}}
-                    </div>
+                    <a/>
                     {{end}}
                 </div>
                 {{else}}

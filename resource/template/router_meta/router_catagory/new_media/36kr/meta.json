@@ -1,0 +1,80 @@
+{
+    "name": "36kr",
+    "routers" : [
+        {
+            "router" : "/rss/36kr/news/latets",
+            "name": "最新资讯",
+            "link": "https://36kr.com/information/web_news/latest"
+        },
+        {
+            "router" : "/rss/36kr/news/recommend",
+            "name": "推荐",
+            "link": "https://36kr.com/information/web_recommand"
+        },
+        {
+            "router" : "/rss/36kr/news/contact",
+            "name": "创投",
+            "link": "https://36kr.com/information/contact"
+        },
+        {
+            "router" : "/rss/36kr/news/ccs",
+            "name": "中概股",
+            "link": "https://36kr.com/information/css"
+        },
+        {
+            "router" : "/rss/36kr/news/travel",
+            "name": "汽车",
+            "link": "https://36kr.com/information/travle"
+        },
+        {
+            "router" : "/rss/36kr/news/technology",
+            "name": "科技",
+            "link": "https://36kr.com/information/technology"
+        },
+        {
+            "router" : "/rss/36kr/news/enterprisesevice",
+            "name": "企服",
+            "link": "https://36kr.com/information/enterpriseservice"
+        },
+        {
+            "router" : "/rss/36kr/news/banking",
+            "name": "金融",
+            "link": "https://36kr.com/information/banking"
+        },
+        {
+            "router" : "/rss/36kr/news/life",
+            "name": "生活",
+            "link": "https://36kr.com/information/life"
+        },
+        {
+            "router" : "/rss/36kr/news/innovation",
+            "name": "创新",
+            "link": "https://36kr.com/information/innovation"
+        },
+        {
+            "router" : "/rss/36kr/news/estate",
+            "name": "房产",
+            "link": "https://36kr.com/information/estate"
+        },
+        {
+            "router" : "/rss/36kr/news/workplace",
+            "name": "职场",
+            "link": "https://36kr.com/information/workplace"
+        },
+        {
+            "router" : "/rss/36kr/news/other",
+            "name": "其他",
+            "link": "https://36kr.com/information/other"
+        },
+        {
+            "router" : "/rss/36kr/news/flashes",
+            "name": "快讯",
+            "link": "https://36kr.com/newsflashes"
+        },
+        {
+            "router" : "/rss/36kr/user/:id",
+            "name": "汽车",
+            "link": "https://36kr.com/user/:userId"
+        }
+    ]
+}
