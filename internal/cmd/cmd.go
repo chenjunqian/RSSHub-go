@@ -18,8 +18,7 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
-			cache.InitCache(ctx)
-			routerService.InitRouterTemplateInfo(ctx)
+			initComponents(ctx)
 			s.SetIndexFolder(true)
 			s.Group("/", routers.WebRouter)
 			s.Group("/api", routers.APIRouter)
@@ -79,3 +78,8 @@ var (
 		},
 	}
 )
+
+func initComponents(ctx context.Context) {
+	cache.InitCache(ctx)
+	routerService.InitRouterTemplateInfo(ctx)
+}
