@@ -22,7 +22,7 @@ func getHeaders() map[string]string {
 }
 
 func getCookieMap(ctx context.Context) map[string]string {
-	cookieMap := service.GetSiteCookies(ctx, "bilibili")
+	cookieMap := cache.GetSiteCookies(ctx, "bilibili")
 	return cookieMap
 }
 

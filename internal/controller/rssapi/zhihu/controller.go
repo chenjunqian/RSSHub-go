@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"rsshub/internal/dao"
-	"rsshub/internal/service"
+	"rsshub/internal/service/cache"
 	"time"
 
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -24,7 +24,7 @@ func getHeaders() map[string]string {
 }
 
 func getCookieMap(ctx context.Context) map[string]string {
-	cookieMap := service.GetSiteCookies(ctx, "zhihu")
+	cookieMap := cache.GetSiteCookies(ctx, "zhihu")
 	return cookieMap
 }
 
