@@ -5,3 +5,4 @@ go.sum
 .idea/
 rsshub
 logs/
+bin/
