@@ -4,7 +4,6 @@ import (
 	"context"
 	"rsshub/internal/cmd/routers"
 	"rsshub/internal/service/cache"
-	routerService "rsshub/internal/service/router"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -81,5 +80,4 @@ var (
 
 func initComponents(ctx context.Context) {
 	cache.InitCache(ctx)
-	routerService.InitRouterTemplateInfo(ctx)
 }

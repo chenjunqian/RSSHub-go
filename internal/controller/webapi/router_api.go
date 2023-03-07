@@ -4,7 +4,6 @@ import (
 	"rsshub/internal/dao"
 	"rsshub/internal/service/feed"
 	response "rsshub/internal/service/middleware"
-	routerService "rsshub/internal/service/router"
 	"strings"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -14,43 +13,9 @@ import (
 
 func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 
-	var (
-		routerCatInfoList []routerService.CatagoryDirInfo
-	)
-
-	routerCatInfoList = routerService.GetRouterCatagoryList()
-
-	req.Response.WriteTpl("home.html", g.Map{
-		"name":              "RSS Go",
-		"routerCatInfoList": routerCatInfoList,
-	})
-
 }
 
 func (ctl *Controller) IndexWithParamTpl(req *ghttp.Request) {
-
-	var (
-		routerCatInfoList []routerService.CatagoryDirInfo
-		routerDir         string
-	)
-
-	routerDir = req.Get("router_dir").String()
-	routerCatInfoList = routerService.GetRouterCatagoryList()
-
-	for index, routerCatInfo := range routerCatInfoList {
-		if routerDir == routerCatInfo.DirName {
-			routerCatInfoList[index].CollapseOpen = true
-		} else {
-			routerCatInfoList[index].CollapseOpen = false
-        }
-	}
-
-	req.Response.WriteTpl("home.html", g.Map{
-		"name":              "RSS Go",
-		"router_dir":        routerDir,
-		"routerCatInfoList": routerCatInfoList,
-	})
-
 }
 
 func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
