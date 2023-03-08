@@ -27,6 +27,9 @@ database:
     url: "127.0.0.1"
     dbName: "rsshub"
 
+rsshub:
+  baseUrl: "http://127.0.0.1:8083"
+
 cookies:
   zhihu: "this=is;zhihu=cookies"
   bilibili: "this=is;zhihu=cookies"

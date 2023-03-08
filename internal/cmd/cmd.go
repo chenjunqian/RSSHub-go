@@ -3,6 +3,8 @@ package cmd
 import (
 	"context"
 	"rsshub/internal/cmd/routers"
+	"rsshub/internal/jobs"
+	"rsshub/internal/service"
 	"rsshub/internal/service/cache"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -17,7 +19,6 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
-			initComponents(ctx)
 			s.SetIndexFolder(true)
 			s.Group("/", routers.WebRouter)
 			s.Group("/api", routers.APIRouter)
@@ -72,6 +73,7 @@ var (
 				group.Group("/yanxishe", routers.YanXiSheRouter)
 				group.Group("/dockerone", routers.DockerOneRouter)
 			})
+			initComponents(ctx)
 			s.Run()
 			return nil
 		},
@@ -80,4 +82,6 @@ var (
 
 func initComponents(ctx context.Context) {
 	cache.InitCache(ctx)
+	service.InitDatabase(ctx)
+	jobs.RegisterJob()
 }
