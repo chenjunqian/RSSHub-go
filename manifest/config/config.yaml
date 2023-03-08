@@ -22,10 +22,10 @@ redis:
 database:
   type: "mysql"
   mysql:
-    user: "rsshubdb"
+    user: "rsshub"
     password: "qazxsw"
     url: "127.0.0.1"
-    dbName: "rsshub"
+    dbName: "rsshubdb"
 
 rsshub:
   baseUrl: "http://127.0.0.1:8083"
