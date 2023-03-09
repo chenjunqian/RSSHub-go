@@ -37,7 +37,7 @@
         <div class="navbar-end">
             <div class="w-3/5 flex justify-center">
                 <div class="form-control w-5/6 max-w-2xl">
-                    <input type="text" placeholder="Search" class="input input-bordered" />
+                    <input type="text" placeholder="搜索更多Feed" class="input input-bordered" />
                 </div>
             </div>
             <button class="btn btn-square btn-ghost">
@@ -53,18 +53,19 @@
             <div class="w-full flex justify-center">
                 <div class="max-w-xl w-3/5">
                     {{range $index, $item := .latestFeedItemList}}
-                    <div class="card w-full bg-base-100 shadow-xl image-full mt-6">
+                    <div class="card glass card-compact w-full bg-base-100 shadow-xl mt-6">
                         {{if $item.HasThumbnail}}
                         <figure><img src="{{$item.Thumbnail}}" alt="Thumbnail" class="object-cover w-full h-full"/></figure>
                         {{else}}
                         {{end}}
                         <a class="card-body" href="{{$item.RssLink}}" target="_blank">
                             <h2 class="card-title">{{$item.Title}}</h2>
-                            <h3>{{$item.ChannelTitle}}</h3>
-                            <p>{{$item.Author}} - {{$item.Date}}</p>
+                            <p class="font-bold">{{$item.ChannelTitle}}</p>
+                            <p>{{$item.Author}}</p>
+                            <p>{{$item.Date}}</p>
                             <div class="card-actions justify-end">
                             </div>
-                        <a/>
+                        </a>
                     </div>
                     {{end}}
                 </div>
