@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"rsshub/internal/cmd/routers"
+	"rsshub/internal/jobs"
 	"rsshub/internal/service"
 	"rsshub/internal/service/cache"
 
@@ -82,5 +83,5 @@ var (
 func initComponents(ctx context.Context) {
 	cache.InitCache(ctx)
 	service.InitDatabase(ctx)
-	// jobs.RegisterJob()
+	jobs.RegisterJob()
 }
