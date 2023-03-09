@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"time"
 
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/database/gredis"
@@ -38,7 +39,7 @@ func initDefaulCache() {
 }
 
 func SetCache(ctx context.Context, key, value string) {
-	defaultCache.Set(ctx, key, value, 60*60*3)
+	defaultCache.Set(ctx, key, value, 60*60*3 * time.Second)
 }
 
 func GetCache(ctx context.Context, key string) (*gvar.Var, error) {
