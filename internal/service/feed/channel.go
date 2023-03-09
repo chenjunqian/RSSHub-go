@@ -4,6 +4,7 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/model"
+	"rsshub/internal/model/dto"
 	"rsshub/internal/service"
 	"strconv"
 	"strings"
@@ -23,6 +24,9 @@ func GetAllChannelInfoList(ctx context.Context) (feedChannelList []dao.RSSFeed) 
 
 	feedChannelList = make([]dao.RSSFeed, 0)
 	var feedChannelModeList []model.RssFeedChannel = make([]model.RssFeedChannel, 0)
+	if service.GetDatabase() == nil {
+		return
+	}
 	if err := service.GetDatabase().Table("rss_feed_channel rfc").
 		Select("rfc.*").
 		Order("rfc.title asc").
@@ -132,6 +136,9 @@ func assembleFeedChannlAndItem(ctx context.Context, feed *gofeed.Feed, rsshubLin
 }
 
 func storeFeedChannelAndItems(ctx context.Context, feedChannelModel model.RssFeedChannel, feedItemModeList []model.RssFeedItem) error {
+	if service.GetDatabase() == nil {
+		return nil
+	}
 	err := service.GetDatabase().Transaction(func(tx *gorm.DB) error {
 		var err error
 
@@ -168,6 +175,65 @@ func getDescriptionThumbnail(htmlStr string) (thumbnail string) {
 	firstImgDoc := docs.Find("img")
 	if firstImgDoc.Pointer != nil {
 		thumbnail = firstImgDoc.Attrs()["src"]
+	}
+
+	return
+}
+
+func GetLatestFeedItem(ctx context.Context, start, size int) (rssFeedItemDtoList []dto.RssFeedItem) {
+	var (
+		itemList []model.RssFeedItem
+	)
+	if err := service.GetDatabase().Table("rss_feed_item rfi").
+		Select(model.RFIWithoutContentFieldSql + ", rfc.rss_link as rssLink, rfc.title as channelTitle, rfc.image_url as channelImageUrl").
+		Joins("inner join rss_feed_channel rfc on rfi.channel_id=rfc.id").
+		Group("rfc.id").
+		Order("rfi.input_date desc").
+		Limit(size).
+		Offset(start).
+		Find(&itemList).Error; err != nil {
+		g.Log().Error(ctx, err)
+	}
+
+	rssFeedItemDtoList = make([]dto.RssFeedItem, 0)
+
+	for i := 0; i < len(itemList); i++ {
+		var (
+			rssFeedItemDto dto.RssFeedItem
+			item           model.RssFeedItem
+		)
+		item = itemList[i]
+		rssFeedItemDto = dto.RssFeedItem{
+			Id:              item.Id,
+			ChannelId:       item.ChannelId,
+			Title:           item.Title,
+			Description:     item.Description,
+			Content:         item.Content,
+			Link:            item.Link,
+			RssLink:         item.RssLink,
+			Author:          item.Author,
+			Thumbnail:       item.Thumbnail,
+			ChannelImageUrl: item.ChannelImageUrl,
+			ChannelTitle:    item.ChannelTitle,
+			Count:           1000,
+		}
+		if item.Date == nil {
+			rssFeedItemDto.Date = item.InputDate.Format("Y-m-d")
+		} else {
+			rssFeedItemDto.Date = item.Date.Format("Y-m-d")
+		}
+
+		if item.Content == "" {
+			rssFeedItemDto.Content = item.Description
+		}
+
+		if rssFeedItemDto.Thumbnail == "" {
+			rssFeedItemDto.HasThumbnail = false
+		} else {
+			rssFeedItemDto.HasThumbnail = true
+		}
+
+		rssFeedItemDtoList = append(rssFeedItemDtoList, rssFeedItemDto)
 	}
 
 	return

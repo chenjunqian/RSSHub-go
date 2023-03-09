@@ -18,7 +18,7 @@
 <body style="margin: 0; display:inherit;">
     <!-- nav header -->
     <div class="navbar bg-base-100">
-        <div class="flex-none lg:hidden">
+        <!-- <div class="flex-none lg:hidden">
             <label for="routers-drawer" class="btn btn-square btn-ghost">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     class="inline-block w-5 h-5 stroke-current">
@@ -26,48 +26,49 @@
                     </path>
                 </svg>
                 <label />
+        </div> -->
+        <div class="navbar-start">
+            <div class="flex-1 ml-6">
+                <a class="normal-case text-xl lg:ml-6">RSS Go</a>
+            </div>
         </div>
-        <div class="flex-1">
-            <a class="normal-case text-xl lg:ml-6">RSS Go</a>
+        <div class="navbar-center">
         </div>
-        <div class="flex-none">
+        <div class="navbar-end">
+            <div class="w-3/5 flex justify-center">
+                <div class="form-control w-5/6 max-w-2xl">
+                    <input type="text" placeholder="Search" class="input input-bordered" />
+                </div>
+            </div>
             <button class="btn btn-square btn-ghost">
                 <img src="/resource/image/github-log.png" alt="" class="w-10 h-10">
             </button>
         </div>
     </div>
-    <!-- router drawer -->
-    <div class="drawer drawer-mobile">
-        <input id="routers-drawer" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col items-center justify-center">
 
-            <!-- Page content here -->
-        </div>
-        <div class="drawer-side">
-            <label for="routers-drawer" class="drawer-overlay"></label>
-            <ul class="menu p-4 w-180 bg-base-100">
-                {{range $index, $routerDirInfo := .routerCatInfoList}}
-                {{if $routerDirInfo.CollapseOpen}}
-                <div tabindex="{{$index}}" class="collapse collapse-open" >
-                    <a class="collapse-title" href="/{{$routerDirInfo.DirName}}">
-                        {{ $routerDirInfo.Name }}
-                    </a>
-                    {{range $i, $subRouterDirInfo := $routerDirInfo.SubCatagoryList}}
-                    <a class="collapse-content ml-4" href="#{{$subRouterDirInfo.SubCatagoryDirName}}">
-                        {{$subRouterDirInfo.Name}}
-                    <a/>
+    <!-- content -->
+    <div class="flex justify-center">
+        <div class="w-full ml-6 mr-6">
+            <!-- feed item list -->
+            <div class="w-full flex justify-center">
+                <div class="max-w-xl w-3/5">
+                    {{range $index, $item := .latestFeedItemList}}
+                    <div class="card w-full bg-base-100 shadow-xl image-full mt-6">
+                        {{if $item.HasThumbnail}}
+                        <figure><img src="{{$item.Thumbnail}}" alt="Thumbnail" class="object-cover w-full h-full"/></figure>
+                        {{else}}
+                        {{end}}
+                        <a class="card-body" href="{{$item.RssLink}}" target="_blank">
+                            <h2 class="card-title">{{$item.Title}}</h2>
+                            <h3>{{$item.ChannelTitle}}</h3>
+                            <p>{{$item.Author}} - {{$item.Date}}</p>
+                            <div class="card-actions justify-end">
+                            </div>
+                        <a/>
+                    </div>
                     {{end}}
                 </div>
-                {{else}}
-                <a tabindex="{{$index}}" class="collapse" href="/{{$routerDirInfo.DirName}}">
-                    <div class="collapse-title">
-                        {{ $routerDirInfo.Name }}
-                    </div>
-                </a>
-                {{end}}
-                {{end}}
-            </ul>
+            </div>
         </div>
     </div>
-
 </body>
