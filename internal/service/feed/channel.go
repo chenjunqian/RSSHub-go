@@ -4,7 +4,6 @@ import (
 	"context"
 	"rsshub/internal/dao"
 	"rsshub/internal/model"
-	"rsshub/internal/model/dto"
 	"rsshub/internal/service"
 	"strconv"
 	"strings"
@@ -180,7 +179,7 @@ func getDescriptionThumbnail(htmlStr string) (thumbnail string) {
 	return
 }
 
-func GetLatestFeedItem(ctx context.Context, start, size int) (rssFeedItemDtoList []dto.RssFeedItem) {
+func GetLatestFeedItem(ctx context.Context, start, size int) (rssFeedItemDtoList []dao.RssFeedItem) {
 	var (
 		itemList []model.RssFeedItem
 	)
@@ -195,15 +194,15 @@ func GetLatestFeedItem(ctx context.Context, start, size int) (rssFeedItemDtoList
 		g.Log().Error(ctx, err)
 	}
 
-	rssFeedItemDtoList = make([]dto.RssFeedItem, 0)
+	rssFeedItemDtoList = make([]dao.RssFeedItem, 0)
 
 	for i := 0; i < len(itemList); i++ {
 		var (
-			rssFeedItemDto dto.RssFeedItem
+			rssFeedItemDto dao.RssFeedItem
 			item           model.RssFeedItem
 		)
 		item = itemList[i]
-		rssFeedItemDto = dto.RssFeedItem{
+		rssFeedItemDto = dao.RssFeedItem{
 			Id:              item.Id,
 			ChannelId:       item.ChannelId,
 			Title:           item.Title,

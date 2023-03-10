@@ -21,3 +21,30 @@ type RSSItem struct {
 	Created     string
 	Thumbnail   string
 }
+
+type RssFeedItem struct {
+	Id              string
+	ChannelId       string
+	Title           string
+	Description     string
+	Link            string
+	RssLink         string
+	Date            string
+	Author          string
+	Thumbnail       string
+	Content         string
+	ChannelImageUrl string
+	ChannelTitle    string
+	Count           int
+	HasThumbnail    bool
+}
+
+type RssFeedChannel struct {
+	Id          string
+	Title       string
+	ChannelDesc string
+	ImageUrl    string
+	Link        string
+	RssLink     string
+	Items       []RssFeedItem
+}
