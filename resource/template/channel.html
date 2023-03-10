@@ -49,11 +49,14 @@
                         <p class="text-xl font-extrabold">{{.channelInfo.Title}}</p>
                     </div>
                     <div class="w-full flex justify-center mt-2">
+                        <p class="text-base">{{.channelInfo.ChannelDesc}}</p>
+                    </div>
+                    <div class="w-full flex justify-center mt-2">
                         <p class="text-base">文章数: {{.channelInfo.Count}}</p>
                     </div>
                     <div class="w-full flex justify-center mt-2">
-                        <a class="text-base mr-4" href="{{.channelInfo.Link}}" target="_blank">源链接</a>
-                        <a class="text-base" href="{{.channelInfo.RssLink}}" target="_blank">RSS</a>
+                        <a class="text-base underline mr-4" href="{{.channelInfo.Link}}" target="_blank">源链接</a>
+                        <a class="text-base underline" href="{{.channelInfo.RssLink}}" target="_blank">RSS</a>
                     </div>
                 </div>
             </div>
@@ -68,7 +71,7 @@
                         </figure>
                         {{else}}
                         {{end}}
-                        <a class="card-body" href="{{$item.Link}}" target="_blank">
+                        <a class="card-body" href="/f/i/{{$item.Id}}" target="_blank">
                             <h2 class="card-title">{{$item.Title}}</h2>
                             <p class="font-bold">{{$item.ChannelTitle}}</p>
                             <p>{{$item.Author}}</p>

@@ -3,17 +3,17 @@ package model
 import "github.com/gogf/gf/v2/os/gtime"
 
 type RssFeedItem struct {
-	Id              string      `gorm:"column:id,primary"  json:"id"`          //
-	ChannelId       string      `gorm:"column:channel_id"  json:"channelId"`   //
-	Title           string      `gorm:"column:title"       json:"title"`       //
-	Description     string      `gorm:"column:description" json:"description"` //
-	Link            string      `gorm:"column:link"        json:"link"`        //
-	RssLink         string      `gorm:"column:rssLink"     json:"rssLink"`     //
-	Date            *gtime.Time `gorm:"column:date"        json:"date"`        //
-	Author          string      `gorm:"column:author"      json:"author"`      //
-	InputDate       *gtime.Time `gorm:"column:input_date"  json:"inputDate"`   //
-	Thumbnail       string      `gorm:"column:thumbnail"   json:"thumbnail"`   //
-	Content         string      `gorm:"column:content"     json:"content"`     //
+	Id              string      `gorm:"column:id"`
+	ChannelId       string      `gorm:"column:channel_id"`
+	Title           string      `gorm:"column:title"`
+	Description     string      `gorm:"column:description"`
+	Link            string      `gorm:"column:link"`
+	RssLink         string      `gorm:"column:rssLink"`
+	Date            *gtime.Time `gorm:"column:date"`
+	Author          string      `gorm:"column:author"`
+	InputDate       *gtime.Time `gorm:"column:input_date"`
+	Thumbnail       string      `gorm:"column:thumbnail"`
+	Content         string      `gorm:"column:content"`
 	ChannelImageUrl string      `gorm:"column:channelImageUrl"`
 	ChannelTitle    string      `gorm:"column:channelTitle"`
 }
@@ -23,5 +23,5 @@ func (RssFeedItem) TableName() string {
 }
 
 var (
-	RFIWithoutContentFieldSql = "rfi.id, rfi.channel_id, rfi.title, rfi.description, rfi.link, rfi.date, rfi.author, rfi.input_date, rfi.thumbnail"
+	RFIWithoutContentFieldSql = "rfi.id, rfi.channel_id, rfi.title, rfi.description, rfi.content, rfi.link, rfi.date, rfi.author, rfi.input_date, rfi.thumbnail"
 )

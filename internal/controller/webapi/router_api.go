@@ -37,6 +37,20 @@ func (ctl *Controller) FeedChannelDetail(req *ghttp.Request) {
 	})
 }
 
+func (ctl *Controller) FeedItemDetail(req *ghttp.Request) {
+	var (
+		itemInfo dao.RssFeedItem
+		itemId   string
+	)
+
+	itemId = req.Get("id").String()
+	itemInfo = feedService.GetFeedItemByItemId(req.Context(), itemId)
+	req.Response.WriteTpl("item.html", g.Map{
+		"name":     "RSS Go",
+		"itemInfo": itemInfo,
+	})
+}
+
 func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
 
 	routerDataList := feedService.GetAllDefinedRouters(gctx.New())

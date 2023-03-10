@@ -14,6 +14,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/mmcdole/gofeed"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -259,16 +260,8 @@ func GetChannelInfoByChannelId(ctx context.Context, channelId string) (feedInfo 
 		Count(&count); result.Error != nil {
 		g.Log().Error(ctx, result.Error)
 	}
-
-	feedInfo = dao.RssFeedChannel{
-		Id:          feedChannelInfo.Id,
-		Title:       feedChannelInfo.Title,
-		ChannelDesc: feedChannelInfo.ChannelDesc,
-		ImageUrl:    feedChannelInfo.ImageUrl,
-		Link:        feedChannelInfo.Link,
-		RssLink:     feedChannelInfo.RssLink,
-		Count:       int(count),
-	}
+	gconv.Struct(feedChannelInfo, &feedInfo)
+	feedInfo.Count = int(count)
 
 	if err := service.GetDatabase().Table("rss_feed_item rfi").
 		Select(model.RFIWithoutContentFieldSql+", rfc.rss_link as rssLink, rfc.title as channelTitle, rfc.image_url as channelImageUrl").
@@ -285,18 +278,7 @@ func GetChannelInfoByChannelId(ctx context.Context, channelId string) (feedInfo 
 		var (
 			feedItemDao dao.RssFeedItem
 		)
-		feedItemDao = dao.RssFeedItem{
-			Id:              item.Id,
-			Title:           item.Title,
-			ChannelId:       item.ChannelId,
-			Description:     item.Description,
-			Link:            item.Link,
-			RssLink:         item.RssLink,
-			Author:          item.Author,
-			Thumbnail:       item.Thumbnail,
-			ChannelImageUrl: item.ChannelImageUrl,
-			ChannelTitle:    item.ChannelTitle,
-		}
+		gconv.Struct(item, &feedItemDao)
 		if item.Date == nil {
 			feedItemDao.Date = item.Date.Format("Y-m-d")
 		} else {
