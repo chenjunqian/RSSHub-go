@@ -2,17 +2,13 @@
 <html lang="en">
 
 <head>
-    <title>RSS Go</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="./resource/image/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .collapse {
-            visibility: visible !important;
-        }
-    </style>
+    <title>RSS Go - {{.channelInfo.Title}}</title>
 </head>
 
 <body style="margin: 0; display:inherit;">
@@ -37,13 +33,34 @@
         </div>
     </div>
 
-    <!-- content -->
     <div class="flex justify-center">
         <div class="w-full ml-6 mr-6">
-            <!-- feed item list -->
+            <!-- feed channel info -->
+            <div class="flex justify-center">
+                <div class="md:w-full lg:w-4/5 xl:w-4/5 max-w-xl">
+                    <div class="w-full flex justify-center mt-6">
+                        <div class="avatar">
+                            <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img src="{{.channelInfo.ImageUrl}}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center mt-6">
+                        <p class="text-xl font-extrabold">{{.channelInfo.Title}}</p>
+                    </div>
+                    <div class="w-full flex justify-center mt-2">
+                        <p class="text-base">文章数: {{.channelInfo.Count}}</p>
+                    </div>
+                    <div class="w-full flex justify-center mt-2">
+                        <a class="text-base mr-4" href="{{.channelInfo.Link}}" target="_blank">源链接</a>
+                        <a class="text-base" href="{{.channelInfo.RssLink}}" target="_blank">RSS</a>
+                    </div>
+                </div>
+            </div>
+            <!-- feed channel item list -->
             <div class="w-full flex justify-center">
                 <div class="md:w-full lg:w-3/5 xl:w-3/5 max-w-xl">
-                    {{range $index, $item := .latestFeedItemList}}
+                    {{range $index, $item := .channelInfo.Items}}
                     <div class="card glass card-compact w-full bg-base-100 shadow-xl mt-6">
                         {{if $item.HasThumbnail}}
                         <figure>
@@ -51,7 +68,7 @@
                         </figure>
                         {{else}}
                         {{end}}
-                        <a class="card-body" href="/f/c/{{$item.ChannelId}}" target="_blank">
+                        <a class="card-body" href="{{$item.Link}}" target="_blank">
                             <h2 class="card-title">{{$item.Title}}</h2>
                             <p class="font-bold">{{$item.ChannelTitle}}</p>
                             <p>{{$item.Author}}</p>
@@ -66,3 +83,5 @@
         </div>
     </div>
 </body>
+
+</html>

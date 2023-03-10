@@ -237,3 +237,82 @@ func GetLatestFeedItem(ctx context.Context, start, size int) (rssFeedItemDtoList
 
 	return
 }
+
+func GetChannelInfoByChannelId(ctx context.Context, channelId string) (feedInfo dao.RssFeedChannel) {
+	var (
+		feedChannelInfo model.RssFeedChannel
+		feedItemList    []model.RssFeedItem
+		feedItemDaoList []dao.RssFeedItem
+	)
+	if err := service.GetDatabase().Table("rss_feed_channel rfc").
+		Joins("left join user_sub_channel usc on usc.channel_id=rfc.id ").
+		Select("rfc.*, usc.status as sub").
+		Where("rfc.id", channelId).
+		Find(&feedChannelInfo).Error; err != nil {
+		g.Log().Error(ctx, err)
+		return
+	}
+
+	var count int64
+	if result := service.GetDatabase().Table("rss_feed_item rfi").
+		Where("rfi.channel_id=?", channelId).
+		Count(&count); result.Error != nil {
+		g.Log().Error(ctx, result.Error)
+	}
+
+	feedInfo = dao.RssFeedChannel{
+		Id:          feedChannelInfo.Id,
+		Title:       feedChannelInfo.Title,
+		ChannelDesc: feedChannelInfo.ChannelDesc,
+		ImageUrl:    feedChannelInfo.ImageUrl,
+		Link:        feedChannelInfo.Link,
+		RssLink:     feedChannelInfo.RssLink,
+		Count:       int(count),
+	}
+
+	if err := service.GetDatabase().Table("rss_feed_item rfi").
+		Select(model.RFIWithoutContentFieldSql+", rfc.rss_link as rssLink, rfc.title as channelTitle, rfc.image_url as channelImageUrl").
+		Joins("left join rss_feed_channel rfc on rfi.channel_id=rfc.id").
+		Where("rfi.channel_id", channelId).
+		Order("rfi.input_date desc").
+		Limit(10).
+		Offset(0).
+		Find(&feedItemList).Error; err != nil {
+		g.Log().Error(ctx, err)
+	}
+
+	for _, item := range feedItemList {
+		var (
+			feedItemDao dao.RssFeedItem
+		)
+		feedItemDao = dao.RssFeedItem{
+			Id:              item.Id,
+			Title:           item.Title,
+			ChannelId:       item.ChannelId,
+			Description:     item.Description,
+			Link:            item.Link,
+			RssLink:         item.RssLink,
+			Author:          item.Author,
+			Thumbnail:       item.Thumbnail,
+			ChannelImageUrl: item.ChannelImageUrl,
+			ChannelTitle:    item.ChannelTitle,
+		}
+		if item.Date == nil {
+			feedItemDao.Date = item.Date.Format("Y-m-d")
+		} else {
+			feedItemDao.Date = item.InputDate.Format("y-m-d")
+		}
+
+		if item.Thumbnail == "" {
+			feedItemDao.HasThumbnail = false
+		} else {
+			feedItemDao.HasThumbnail = true
+		}
+
+		feedItemDaoList = append(feedItemDaoList, feedItemDao)
+	}
+
+	feedInfo.Items = feedItemDaoList
+
+	return
+}

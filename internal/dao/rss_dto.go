@@ -47,4 +47,5 @@ type RssFeedChannel struct {
 	Link        string
 	RssLink     string
 	Items       []RssFeedItem
+	Count       int
 }

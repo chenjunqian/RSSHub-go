@@ -2,22 +2,20 @@ package webapi
 
 import (
 	"rsshub/internal/dao"
-	"rsshub/internal/model/dto"
 	feedService "rsshub/internal/service/feed"
 	response "rsshub/internal/service/middleware"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gctx"
-	"golang.org/x/net/context"
 )
 
 func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 	var (
-		latestFeedItemList []dto.RssFeedItem
+		latestFeedItemList []dao.RssFeedItem
 	)
 
-	latestFeedItemList = feedService.GetLatestFeedItem(gctx.New(), 0, 10)
+	latestFeedItemList = feedService.GetLatestFeedItem(req.Context(), 0, 10)
 
 	req.Response.WriteTpl("home.html", g.Map{
 		"name":               "RSS Go",
@@ -25,7 +23,18 @@ func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 	})
 }
 
-func (ctl *Controller) IndexWithParamTpl(req *ghttp.Request) {
+func (ctl *Controller) FeedChannelDetail(req *ghttp.Request) {
+	var (
+		channelInfo dao.RssFeedChannel
+		channelId   string
+	)
+
+	channelId = req.Get("id").String()
+	channelInfo = feedService.GetChannelInfoByChannelId(req.Context(), channelId)
+	req.Response.WriteTpl("channel.html", g.Map{
+		"name":        "RSS Go",
+		"channelInfo": channelInfo,
+	})
 }
 
 func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
@@ -37,9 +46,8 @@ func (ctl *Controller) GetAllRssResource(req *ghttp.Request) {
 func (ctl *Controller) GetAllFeedChannelInfoList(req *ghttp.Request) {
 
 	var feedChannelInfoList []dao.RSSFeed
-	var ctx context.Context = context.TODO()
 
-	feedChannelInfoList = feedService.GetAllChannelInfoList(ctx)
+	feedChannelInfoList = feedService.GetAllChannelInfoList(req.Context())
 
 	response.JsonExit(req, 0, "success", feedChannelInfoList)
 }
