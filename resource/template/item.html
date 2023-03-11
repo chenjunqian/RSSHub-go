@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="./resource/image/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/resource/image/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -42,7 +42,7 @@
                 {{.itemInfo.Title}}
             </div>
             <div class="flex justify-center text-base mt-2">
-                作者: {{.itemInfo.Author}}&nbsp;&nbsp;{{.itemInfo.ChannelTitle}}&nbsp;&nbsp;{{.itemInfo.Date}}
+                作者: {{.itemInfo.Author}}&nbsp;&nbsp; <a class="underline" href="/f/c/{{.itemInfo.ChannelId}}">{{.itemInfo.ChannelTitle}}</a>&nbsp;&nbsp;{{.itemInfo.Date}}
             </div>
             <div class="flex justify-center text-base mt-2">
             </div>
