@@ -28,7 +28,8 @@
         <div class="navbar-center">
             <div class="w-70 sm:w-96 md:w-96 lg:w-96 xl:w-96 flex justify-center">
                 <div class="form-control w-full max-w-2xl">
-                    <input id="searchInput" type="text" placeholder="搜索更多Feed" class="input input-bordered" />
+                    <input id="searchInput" type="text" placeholder="搜索更多Feed" value="{{.searchKeyword}}"
+                        class="input input-bordered" />
                 </div>
             </div>
         </div>
@@ -71,9 +72,37 @@
                     {{end}}
                 </div>
             </div>
+            <div class="flex justify-center mt-6">
+                <div class="btn-group">
+                    <button class="btn" id="prePageBtn">«</button>
+                    <button class="btn">第{{.currentPage}}页</button>
+                    <button class="btn" id="nextPageBtn">»</button>
+                </div>
+            </div>
         </div>
     </div>
 
 </body>
+<script>
+    $(function () {
+        let currentPage = parseInt('{{.currentPage}}')
+        let totalPage = parseInt('{{.totalPage}}')
+        let nextPage = currentPage + 1
+        let prePage = currentPage - 1
+        let keyword = '{{.searchKeyword}}'
+        $('#nextPageBtn').click(function (event) {
+            if (currentPage >= totalPage) {
+                return
+            }
+            window.location.href = "/s/" + keyword + "/" + nextPage;
+        });
+        $('#prePageBtn').click(function (event) {
+            if (currentPage == 1) {
+                return
+            }
+            window.location.href = "/s/" + keyword + "/" + prePage;
+        });
+    });
+</script>
 
 </html>

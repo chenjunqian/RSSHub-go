@@ -28,15 +28,22 @@ func (ctl *Controller) SearchFeedItems(req *ghttp.Request) {
 		feedItemList  []dao.RssFeedItem
 		searchKeyword string
 		start         int
+		totalPage     int
+		count         int
 	)
 
 	searchKeyword = req.Get("keyword").String()
 	start = req.Get("start").Int()
 	feedItemList = feedService.SearchFeedItem(req.Context(), searchKeyword, start, 0)
+	if len(feedItemList) > 0 {
+		count = feedItemList[0].Count
+		totalPage = count / 10
+	}
 	req.Response.WriteTpl("search.html", g.Map{
 		"name":          "RSS Go",
 		"searchKeyword": searchKeyword,
 		"currentPage":   start,
+		"totalPage":     totalPage,
 		"feedItems":     feedItemList,
 	})
 }
