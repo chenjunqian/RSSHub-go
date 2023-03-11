@@ -20,6 +20,7 @@ func APIRouter(group *ghttp.RouterGroup) {
 func WebRouter(group *ghttp.RouterGroup) {
 	webController := new(webapi.Controller)
 	group.GET("/", webController.IndexTpl)
-    group.GET("/f/c/:id", webController.FeedChannelDetail)
-    group.GET("/f/i/:id", webController.FeedItemDetail)
+	group.GET("/s/:keyword/:start", webController.SearchFeedItems)
+	group.GET("/f/c/:id", webController.FeedChannelDetail)
+	group.GET("/f/i/:id", webController.FeedItemDetail)
 }
