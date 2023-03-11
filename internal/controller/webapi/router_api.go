@@ -23,6 +23,24 @@ func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 	})
 }
 
+func (ctl *Controller) SearchFeedItems(req *ghttp.Request) {
+	var (
+		feedItemList  []dao.RssFeedItem
+		searchKeyword string
+		start         int
+	)
+
+	searchKeyword = req.Get("keyword").String()
+	start = req.Get("start").Int()
+	feedItemList = feedService.SearchFeedItem(req.Context(), searchKeyword, start, 0)
+	req.Response.WriteTpl("search.html", g.Map{
+		"name":          "RSS Go",
+		"searchKeyword": searchKeyword,
+		"currentPage":   start,
+		"feedItems":     feedItemList,
+	})
+}
+
 func (ctl *Controller) FeedChannelDetail(req *ghttp.Request) {
 	var (
 		channelInfo dao.RssFeedChannel

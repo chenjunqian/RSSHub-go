@@ -180,65 +180,6 @@ func getDescriptionThumbnail(htmlStr string) (thumbnail string) {
 	return
 }
 
-func GetLatestFeedItem(ctx context.Context, start, size int) (rssFeedItemDtoList []dao.RssFeedItem) {
-	var (
-		itemList []model.RssFeedItem
-	)
-	if err := service.GetDatabase().Table("rss_feed_item rfi").
-		Select(model.RFIWithoutContentFieldSql + ", rfc.rss_link as rssLink, rfc.title as channelTitle, rfc.image_url as channelImageUrl").
-		Joins("inner join rss_feed_channel rfc on rfi.channel_id=rfc.id").
-		Group("rfc.id").
-		Order("rfi.input_date desc").
-		Limit(size).
-		Offset(start).
-		Find(&itemList).Error; err != nil {
-		g.Log().Error(ctx, err)
-	}
-
-	rssFeedItemDtoList = make([]dao.RssFeedItem, 0)
-
-	for i := 0; i < len(itemList); i++ {
-		var (
-			rssFeedItemDto dao.RssFeedItem
-			item           model.RssFeedItem
-		)
-		item = itemList[i]
-		rssFeedItemDto = dao.RssFeedItem{
-			Id:              item.Id,
-			ChannelId:       item.ChannelId,
-			Title:           item.Title,
-			Description:     item.Description,
-			Content:         item.Content,
-			Link:            item.Link,
-			RssLink:         item.RssLink,
-			Author:          item.Author,
-			Thumbnail:       item.Thumbnail,
-			ChannelImageUrl: item.ChannelImageUrl,
-			ChannelTitle:    item.ChannelTitle,
-			Count:           1000,
-		}
-		if item.Date == nil {
-			rssFeedItemDto.Date = item.InputDate.Format("Y-m-d")
-		} else {
-			rssFeedItemDto.Date = item.Date.Format("Y-m-d")
-		}
-
-		if item.Content == "" {
-			rssFeedItemDto.Content = item.Description
-		}
-
-		if rssFeedItemDto.Thumbnail == "" {
-			rssFeedItemDto.HasThumbnail = false
-		} else {
-			rssFeedItemDto.HasThumbnail = true
-		}
-
-		rssFeedItemDtoList = append(rssFeedItemDtoList, rssFeedItemDto)
-	}
-
-	return
-}
-
 func GetChannelInfoByChannelId(ctx context.Context, channelId string) (feedInfo dao.RssFeedChannel) {
 	var (
 		feedChannelInfo model.RssFeedChannel

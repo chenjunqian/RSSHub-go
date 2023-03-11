@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/resource/js/nav.js"></script>
     <title>RSS Go - {{.itemInfo.Title}}</title>
 </head>
 
@@ -17,24 +18,25 @@
     <div class="navbar bg-base-100">
         <div class="navbar-start">
             <div class="flex-1 ml-6">
-                <a class="normal-case text-xl lg:ml-6" href="/">RSS Go</a>
+                <a class="avatar" href="/">
+                    <div class="w-8 rounded-full">
+                        <img src="/resource/image/logo192.png" />
+                    </div>
+                </a>
             </div>
         </div>
         <div class="navbar-center">
-        </div>
-        <div class="navbar-end">
-            <div class="w-3/5 flex justify-center">
-                <div class="form-control w-5/6 max-w-2xl">
-                    <input type="text" placeholder="搜索更多Feed" class="input input-bordered" />
+            <div class="w-70 sm:w-96 md:w-96 lg:w-96 xl:w-96 flex justify-center">
+                <div class="form-control w-full max-w-2xl">
+                    <input id="searchInput" type="text" placeholder="搜索更多Feed" class="input input-bordered" />
                 </div>
             </div>
-            <button class="btn btn-square btn-ghost">
-                <img src="/resource/image/github-log.png" alt="" class="w-10 h-10">
-            </button>
+        </div>
+        <div class="navbar-end">
         </div>
     </div>
 
-    <div class="w-full flex justify-center pl-6 pr-6">
+    <div class="w-full flex justify-center pl-6 pr-6 mt-6">
         <div class="md:w-full lg:w-4/5 xl:w-4/5 max-w-3xl">
             <div class="w-full flex justify-center text-2xl font-extrabold">
                 {{.itemInfo.Title}}
