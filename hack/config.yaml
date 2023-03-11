@@ -9,4 +9,4 @@ gfcli:
     mod: "none"
     packSrc: "resource,manifest"
     # version: "v1.0.0"
-    extra: ""
+    extra: "-trimpath"
