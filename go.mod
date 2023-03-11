@@ -6,7 +6,6 @@ require (
 	github.com/GuoShaoOrg/feeds v1.2.0
 	github.com/anaskhan96/soup v1.2.4
 	github.com/gogf/gf/v2 v2.1.4
-	golang.org/x/net v0.4.0
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.5
 )
@@ -18,6 +17,7 @@ require (
 	github.com/mmcdole/goxpp v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	golang.org/x/net v0.4.0 // indirect
 )
 
 require (
