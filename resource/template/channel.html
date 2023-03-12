@@ -70,18 +70,28 @@
                     <div class="card glass card-compact w-full bg-base-100 shadow-xl mt-6">
                         {{if $item.HasThumbnail}}
                         <figure>
-                            <img src="{{$item.Thumbnail}}" alt="Thumbnail" class="object-cover w-full h-full" />
+                            <a href="/f/i/{{$item.Id}}">
+                                <img src="{{$item.Thumbnail}}" alt="Thumbnail" class="object-cover w-full h-full" />
+                            </a>
                         </figure>
                         {{else}}
                         {{end}}
-                        <a class="card-body" href="/f/i/{{$item.Id}}">
-                            <h2 class="card-title">{{$item.Title}}</h2>
-                            <p class="font-bold">{{$item.ChannelTitle}}</p>
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <a href="/f/i/{{$item.Id}}">
+                                    {{$item.Title}}
+                                </a>
+                            </h2>
+                            <p class="font-bold">
+                                <a href="/f/c/{{$item.ChannelId}}">
+                                    {{$item.ChannelTitle}}
+                                </a>
+                            </p>
                             <p>{{$item.Author}}</p>
                             <p>{{$item.Date}}</p>
                             <div class="card-actions justify-end">
                             </div>
-                        </a>
+                        </div>
                     </div>
                     {{end}}
                 </div>
