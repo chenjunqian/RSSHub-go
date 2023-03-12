@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/resource/image/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/css/feed_item.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="/resource/js/nav.js"></script>
@@ -51,7 +52,7 @@
                         {{if $item.HasThumbnail}}
                         <figure>
                             <a href="/f/i/{{$item.Id}}">
-                                <img src="{{$item.Thumbnail}}" alt="Thumbnail" class="object-cover w-full h-full" />
+                                <img src="{{$item.Thumbnail}}" alt="Thumbnail" class="w-full h-auto" />
                             </a>
                         </figure>
                         {{else}}
