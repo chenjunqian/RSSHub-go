@@ -40,6 +40,10 @@ func GetFeedItemByItemId(ctx context.Context, itemId string) (item dao.RssFeedIt
 		item.HasThumbnail = true
 	}
 
+	if item.Content == "" {
+		item.Content = item.Description
+	}
+
 	return
 }
 
