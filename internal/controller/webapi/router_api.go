@@ -1,6 +1,7 @@
 package webapi
 
 import (
+	"rsshub/internal/consts"
 	"rsshub/internal/dao"
 	feedService "rsshub/internal/service/feed"
 	response "rsshub/internal/service/middleware"
@@ -18,8 +19,8 @@ func (ctl *Controller) IndexTpl(req *ghttp.Request) {
 	latestFeedItemList = feedService.GetLatestFeedItem(req.Context(), 0, 10)
 
 	req.Response.WriteTpl("home.html", g.Map{
-		"name":               "RSS Go",
-		"latestFeedItemList": latestFeedItemList,
+		"name":            "RSS Go",
+		consts.FEED_ITEMS: latestFeedItemList,
 	})
 }
 
@@ -40,11 +41,11 @@ func (ctl *Controller) SearchFeedItems(req *ghttp.Request) {
 		totalPage = count / 10
 	}
 	req.Response.WriteTpl("search.html", g.Map{
-		"name":          "RSS Go",
-		"searchKeyword": searchKeyword,
-		"currentPage":   start,
-		"totalPage":     totalPage,
-		"feedItems":     feedItemList,
+		"name":            "RSS Go",
+		"searchKeyword":   searchKeyword,
+		"currentPage":     start,
+		"totalPage":       totalPage,
+		consts.FEED_ITEMS: feedItemList,
 	})
 }
 
@@ -57,8 +58,9 @@ func (ctl *Controller) FeedChannelDetail(req *ghttp.Request) {
 	channelId = req.Get("id").String()
 	channelInfo = feedService.GetChannelInfoByChannelId(req.Context(), channelId)
 	req.Response.WriteTpl("channel.html", g.Map{
-		"name":        "RSS Go",
-		"channelInfo": channelInfo,
+		"name":            "RSS Go",
+		"channelInfo":     channelInfo,
+		consts.FEED_ITEMS: channelInfo.Items,
 	})
 }
 

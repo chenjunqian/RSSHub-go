@@ -45,38 +45,7 @@
     <div class="flex justify-center">
         <div class="w-full ml-6 mr-6">
             <!-- feed item list -->
-            <div class="w-full flex justify-center">
-                <div class="md:w-full lg:w-3/5 xl:w-3/5 max-w-xl">
-                    {{range $index, $item := .latestFeedItemList}}
-                    <div class="card glass card-compact w-full bg-base-100 shadow-xl mt-6">
-                        {{if $item.HasThumbnail}}
-                        <figure>
-                            <a href="/f/i/{{$item.Id}}">
-                                <img src="{{$item.Thumbnail}}" alt="Thumbnail" class="w-full h-auto" />
-                            </a>
-                        </figure>
-                        {{else}}
-                        {{end}}
-                        <div class="card-body">
-                            <h2 class="card-title">
-                                <a href="/f/i/{{$item.Id}}">
-                                    {{$item.Title}}
-                                </a>
-                            </h2>
-                            <p class="font-bold">
-                                <a href="/f/c/{{$item.ChannelId}}">
-                                    {{$item.ChannelTitle}}
-                                </a>
-                            </p>
-                            <p>{{$item.Author}}</p>
-                            <p>{{$item.Date}}</p>
-                            <div class="card-actions justify-end">
-                            </div>
-                        </div>
-                    </div>
-                    {{end}}
-                </div>
-            </div>
+            {{include "module/list_item.html" .}}
         </div>
     </div>
 </body>
