@@ -1,12 +1,13 @@
 package main
 
 import (
-	_ "rsshub/boot"
-	_ "rsshub/router"
+	_ "rsshub/internal/packed"
 
-	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
+
+	"rsshub/internal/cmd"
 )
 
 func main() {
-	g.Server().Run()
+	cmd.Main.Run(gctx.New())
 }

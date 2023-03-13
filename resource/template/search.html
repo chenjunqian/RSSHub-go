@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/resource/image/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/css/feed_item.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/resource/js/nav.js"></script>
+    <title>RSS Go - {{.searchKeyword}}</title>
+</head>
+
+<body style="margin: 0; display:inherit;">
+    <!-- nav header -->
+    <div class="navbar bg-base-100">
+        <div class="navbar-start">
+            <div class="flex-1 ml-6">
+                <a class="avatar" href="/">
+                    <div class="w-8 rounded-full">
+                        <img src="/resource/image/logo192.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <div class="w-70 sm:w-96 md:w-96 lg:w-96 xl:w-96 flex justify-center">
+                <div class="form-control w-full max-w-2xl">
+                    <input id="searchInput" type="text" placeholder="搜索更多Feed" value="{{.searchKeyword}}"
+                        class="input input-bordered" />
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+        </div>
+    </div>
+
+    <div class="flex justify-center">
+        <div class="w-full ml-6 mr-6">
+            <!-- feed channel item list -->
+            {{include "module/list_item.html" .}}
+            <div class="flex justify-center mt-6">
+                <div class="btn-group">
+                    <button class="btn" id="prePageBtn">«</button>
+                    <button class="btn">第{{.currentPage}}页</button>
+                    <button class="btn" id="nextPageBtn">»</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    $(function () {
+        let currentPage = parseInt('{{.currentPage}}')
+        let totalPage = parseInt('{{.totalPage}}')
+        let nextPage = currentPage + 1
+        let prePage = currentPage - 1
+        let keyword = '{{.searchKeyword}}'
+        $('#nextPageBtn').click(function (event) {
+            if (currentPage >= totalPage) {
+                return
+            }
+            window.location.href = "/s/" + keyword + "/" + nextPage;
+        });
+        $('#prePageBtn').click(function (event) {
+            if (currentPage == 1) {
+                return
+            }
+            window.location.href = "/s/" + keyword + "/" + prePage;
+        });
+    });
+</script>
+
+</html>

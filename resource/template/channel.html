@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/resource/image/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/css/feed_item.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/resource/js/nav.js"></script>
+    <title>RSS Go - {{.channelInfo.Title}}</title>
+</head>
+
+<body style="margin: 0; display:inherit;">
+    <!-- nav header -->
+    <div class="navbar bg-base-100">
+        <div class="navbar-start">
+            <div class="flex-1 ml-6">
+                <a class="avatar" href="/">
+                    <div class="w-8 rounded-full">
+                        <img src="/resource/image/logo192.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <div class="w-70 sm:w-96 md:w-96 lg:w-96 xl:w-96 flex justify-center">
+                <div class="form-control w-full max-w-2xl">
+                    <input id="searchInput" type="text" placeholder="搜索更多Feed" class="input input-bordered" />
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+        </div>
+    </div>
+
+    <div class="flex justify-center">
+        <div class="w-full ml-6 mr-6">
+            <!-- feed channel info -->
+            <div class="flex justify-center">
+                <div class="md:w-full lg:w-4/5 xl:w-4/5 max-w-xl">
+                    <div class="w-full flex justify-center mt-6">
+                        <div class="avatar">
+                            <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img src="{{.channelInfo.ImageUrl}}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center mt-6">
+                        <p class="text-xl font-extrabold">{{.channelInfo.Title}}</p>
+                    </div>
+                    <div class="w-full flex justify-center mt-2">
+                        <p class="text-base">{{.channelInfo.ChannelDesc}}</p>
+                    </div>
+                    <div class="w-full flex justify-center mt-2">
+                        <p class="text-base">文章数: {{.channelInfo.Count}}</p>
+                    </div>
+                    <div class="w-full flex justify-center mt-2">
+                        <a class="text-base underline mr-4" href="{{.channelInfo.Link}}" target="_blank">源链接</a>
+                        <a class="text-base underline" href="{{.channelInfo.RssLink}}" target="_blank">RSS</a>
+                    </div>
+                </div>
+            </div>
+            <!-- feed channel item list -->
+            {{include "module/list_item.html" .}}
+        </div>
+    </div>
+</body>
+
+</html>

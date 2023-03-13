@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/resource/image/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/css/feed_item.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/resource/js/nav.js"></script>
+    <title>RSS Go - {{.itemInfo.Title}}</title>
+</head>
+
+<body style="margin: 0; display:inherit;">
+    <!-- nav header -->
+    <div class="navbar bg-base-100">
+        <div class="navbar-start">
+            <div class="flex-1 ml-6">
+                <a class="avatar" href="/">
+                    <div class="w-8 rounded-full">
+                        <img src="/resource/image/logo192.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <div class="w-70 sm:w-96 md:w-96 lg:w-96 xl:w-96 flex justify-center">
+                <div class="form-control w-full max-w-2xl">
+                    <input id="searchInput" type="text" placeholder="搜索更多Feed" class="input input-bordered" />
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+        </div>
+    </div>
+
+    <div class="w-full flex justify-center pl-6 pr-6 mt-6">
+        <div class="md:w-full lg:w-4/5 xl:w-4/5 max-w-3xl">
+            <div class="w-full flex justify-center text-2xl font-extrabold">
+                {{.itemInfo.Title}}
+            </div>
+            <div class="flex justify-center text-base mt-2">
+                作者: {{.itemInfo.Author}}&nbsp;&nbsp; <a class="underline" href="/f/c/{{.itemInfo.ChannelId}}">{{.itemInfo.ChannelTitle}}</a>&nbsp;&nbsp;{{.itemInfo.Date}}
+            </div>
+            <div class="flex justify-center text-base mt-2">
+            </div>
+            <div class="flex justify-center text-base mt-2 underline">
+                <a href="{{.itemInfo.Link}}" target="_blank">源链接</a>
+                <a class="ml-4" href="{{.itemInfo.RssLink}}" target="_blank">RSS</a>
+            </div>
+            <div class="w-full flex justify-center mt-6">
+                <div class="w-full" id="content">
+                    {{.itemInfo.Content}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    $(function () {
+        let contentEle = $("#content");
+        let imgs = contentEle.find("img")
+        imgs.each(function(i) {
+            $(this).css("max-width", "100%");
+            $(this).css("height", "auto");
+            $(this).css("marginLeft", "auto");
+            $(this).css("marginRight", "auto");
+            $(this).css("marginTop", "10px");
+            $(this).css("marginBottom", "10px");
+        })
+        let divs = contentEle.find("div");
+        divs.each(function(i) {
+            $(this).css("max-width", "100%");
+            $(this).css("height", "auto");
+        })
+    });
+</script>
+
+</html>

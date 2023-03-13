@@ -1,0 +1,35 @@
+server:
+  address: ":8083"
+  serverRoot: "resource/public"
+  dumpRouterMap: false
+
+logger:
+  path: "./logs/"
+  file: "{Y-m-d}.log"
+  stdout: true
+  rotateSize: "100M"
+  rotateBackupLimit: 10
+  rotateBackupExpire: "10d"
+  rotateBackupCompress: 9
+  rotateCheckInterval: "24h"
+
+redis:
+  default:
+    address: 127.0.0.1:6379
+    db: 1
+    pass: 123456
+
+database:
+  type: "mysql"
+  mysql:
+    user: "rsshub"
+    password: "qazxsw"
+    url: "127.0.0.1"
+    dbName: "rsshubdb"
+
+rsshub:
+  baseUrl: "http://127.0.0.1:8083"
+
+cookies:
+  zhihu: "this=is;zhihu=cookies"
+  bilibili: "this=is;zhihu=cookies"
