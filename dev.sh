@@ -8,5 +8,5 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   fi
 fi
 
-gf pack resource,manifest internal/packed/packed.go -y
+export env="dev"
 gf run main.go
